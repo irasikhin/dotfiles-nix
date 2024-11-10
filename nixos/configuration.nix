@@ -170,5 +170,13 @@
 
   environment.systemPackages = with pkgs; [
     docker-compose
+    freefilesync
   ];
+
+  # system.activationScripts.binbash = {
+  #  deps = [ "binsh" ];
+  #  text = ''
+  #       ln -s /bin/sh /bin/bash
+  #  '';
+  #};
 }

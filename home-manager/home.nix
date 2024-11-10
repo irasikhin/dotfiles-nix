@@ -61,6 +61,10 @@
         lshw # view gpu devices
         pamixer # sound control, configured in i3 config
         brillo # brightness control, configured in i3 config
+        gparted
+        parted
+        bash
+        feh
 	];
   
   programs.neovim = {
@@ -110,7 +114,11 @@
       ''];
     };
 
-    initExtra = "byobu; tput reset;";
+    initExtra = ''
+    [ -s "/opt/adguardvpn_cli/bash-completion.sh" ] && \. "/opt/adguardvpn_cli/bash-completion.sh"
+    byobu; 
+    tput reset;
+    '';
 	};
 
   home.file."${config.xdg.configHome}" = {
