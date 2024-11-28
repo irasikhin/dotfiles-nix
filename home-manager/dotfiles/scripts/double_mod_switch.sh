@@ -4,7 +4,7 @@
 LAST_PRESS_FILE="/tmp/last_mod_press"
 
 # Время ожидания для двойного нажатия (в секундах)
-DOUBLE_PRESS_TIME=0.25
+DOUBLE_PRESS_TIME=0.1
 
 # Проверяем наличие файла и считываем последнее время нажатия
 if [ -f "$LAST_PRESS_FILE" ]; then

@@ -99,6 +99,10 @@ bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
+# xrandr
+#exec --no-startup-id xrandr --output eDP-1 --auto --dpi 80
+#exec --no-startup-id xrandr --output DP-1 --auto --above eDP-1 --dpi 80
+
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
@@ -106,7 +110,7 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
-bindsym $mod+Shift+w exec "betterlockscreen -l dim"
+bindsym $mod+Shift+w exec "i3lock-color -k --keylayout 0 --image $HOME/.background-image-blur"
 #bindsym $mod+Shift+w exec "i3-msg exit"
 
 # resize window (you can also use the mouse for that)
@@ -182,36 +186,45 @@ bindsym XF86AudioPrev exec playerctl previous
 set $idea "idea"
 bindsym $mod+i workspace $idea
 assign [class=".*[I,i]dea.*"] $idea
+workspace $idea output DP-1 eDP-1
 
 # telegram
 set $msg "msg"
 bindsym $mod+m workspace $msg
 assign [class=".*Telegram.*"] $msg
+workspace $msg output eDP-1 DP-1
 
 # web
 set $web "web"
 bindsym $mod+u workspace $web
-assign [class=".*[L,l]ibrewolf.*"] $web
+assign [class=".*[l,l]ibrewolf.*"] $web
+assign [class=".*[F,f]irefox.*"] $web
+assign [class=".*[C,c]hromium.*"] $web
+workspace $web output eDP-1 DP-1
 
 # discord
 set $discord "discord"
 bindsym $mod+d workspace $discord
 assign [class=".*[D,d]iscord.*"] $discord
+workspace $discord output eDP-1 DP-1
 
 # obsidian
 set $obsidian "obsidian"
 bindsym $mod+o workspace $obsidian
 assign [class=".*[O,o]bsidian.*"] $obsidian
+workspace $obsidian output DP-1 eDP-1
 
 # slack
 set $slack "slack"
 bindsym $mod+n workspace $slack
 assign [class=".*[S,s]lack.*"] $slack
+workspace $slack output eDP-1 DP-1
 
 # vs code
 set $code "code"
 bindsym $mod+c workspace $code
 assign [class=".*[C,c]ode.*"] $code
+workspace $code output DP-1 eDP-1
 
 # clion
 set $clion "clion"
@@ -221,31 +234,32 @@ assign [class=".*[C,c]lion.*"] $clion
 set $terminal "terminal"
 bindsym Super_L exec --no-startup-id $HOME/.config/scripts/double_mod_switch.sh
 assign [class=".*[A,a]lacritty.*"] $terminal
+workspace $terminal output DP-1 eDP-1
 
 # spotify
 set $spotify "spotify"
 bindsym $mod+p workspace $spotify
 assign [class=".*[S,s]potify.*"] $spotify
+workspace $spotify output eDP-1 DP-1
 
 # thunderbird
 set $thunderbird "thunderbird"
 bindsym $mod+t workspace $thunderbird
 assign [class=".*[T,t]hunderbird.*"] $thunderbird
+workspace $thunderbird output eDP-1 DP-1
 
 # libreoffice
 set $libreoffice "libreoffice"
 bindsym $mod+b workspace $libreoffice
 assign [class=".*[L,l]ibreoffice.*"] $libreoffice
+workspace $libreoffice output DP-1 eDP-1
 
 for_window [class="^.*"] border pixel 0
 
-# exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock-color -c 04090e --nofork
-exec --no-startup-id betterlockscreen -u ~/.wallpaper -w
-exec --no-startup-id nm-applet
+exec_always --no-startup-id nm-applet
 exec --no-startup-id i3-msg 'workspace $terminal; exec alacritty'
 exec --no-startup-id i3-msg 'workspace $web; exec librewolf'
 exec --no-startup-id i3-msg 'workspace $idea; exec idea'
 exec --no-startup-id i3-msg 'workspace $msg; exec telegram-desktop'
 exec --no-startup-id i3-msg 'workspace $thunderbird; exec thunderbird'
-# exec_always --no-startup-id feh --no-fehbg --bg-scale /usr/local/share/wallpaper/jungle_fantasy_deer_butterflies_night_trees.jpg &
-# exec --no-startup-id feh --no-fehbg --bg-scale /usr/local/share/wallpaper/house_fairy_tale_art_101615_1920x1080.jpg &
+exec_always --no-startup-id $HOME/.config/scripts/update_background_image.sh

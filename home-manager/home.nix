@@ -18,7 +18,7 @@
         unzip
         zip
         python3
-        nodejs
+        nodejs-18_x
         clang
         zig
         gnumake
@@ -65,17 +65,45 @@
         parted
         bash
         feh
+        imagemagick
+        openconnect
+        networkmanager-openconnect
+        networkmanager-vpnc
+        spotify
+        ansible
+        chromium
+        go-task
+        dig
+        busybox
+        inetutils
+        libreoffice-qt
+        cloc
+        vscode
+        zoom-us
+        sshpass
+        autorandr
+        xlayoutdisplay
+        oath-toolkit
+        yamllint
+        postgresql
+        obsidian
+        yq-go
+        pnpm
+        okular
 	];
   
   programs.neovim = {
   	enable = true;
   	viAlias = true;
 	  vimAlias = true;
+    defaultEditor = true;
+    extraLuaPackages = luaPkgs: with luaPkgs; [];
   };
 
 	home.sessionVariables = {
 		EDITOR="nvim";
 	};
+  home.sessionPath = ["$HOME/.config/scripts"];
 	home.shellAliases = {
 		l = "eza";
 		ls = "eza";
@@ -115,7 +143,6 @@
     };
 
     initExtra = ''
-    [ -s "/opt/adguardvpn_cli/bash-completion.sh" ] && \. "/opt/adguardvpn_cli/bash-completion.sh"
     byobu; 
     tput reset;
     '';

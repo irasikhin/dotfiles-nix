@@ -23,6 +23,7 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.networkmanager.enableStrongSwan = true;
 
   # Set your time zone.
   time.timeZone = "Europe/Moscow";
@@ -47,6 +48,11 @@
 
   # Enable the XFCE Desktop Environment.
   services.xserver.displayManager.lightdm.enable = true;
+  services.xserver.displayManager.lightdm.greeters.gtk = {
+    extraConfig = ''
+      user-background = false
+    '';
+  };
   services.displayManager.defaultSession = "none+i3";
   services.xserver.desktopManager.xfce.enable = false;
   services.xserver.windowManager.i3 = {
@@ -54,7 +60,8 @@
     extraPackages = with pkgs; [
       rofi
       i3status-rust
-      i3lock
+      i3lock-color
+      i3lock-fancy
     ];
   };
 
@@ -133,7 +140,7 @@
   users.users.irasikhin = {
       isNormalUser = true;
       description = "Ivan Rasikhin";
-      extraGroups = [ "networkmanager" "wheel" "video" "docker"];
+      extraGroups = [ "networkmanager" "wheel" "video" "audio" "qemu-libvirtd" "docker" "libvirtd"];
       packages = with pkgs; [];
       shell = pkgs.zsh;
   };
@@ -156,8 +163,8 @@
   };
 
   environment.variables = {
-    GDK_SCALE = "2";
-    GDK_DPI_SCALE = "1";
+    GDK_SCALE = "1";
+    GDK_DPI_SCALE = "1.5";
   };  
   # services.xserver.dpi = 130;
   
@@ -171,6 +178,14 @@
   environment.systemPackages = with pkgs; [
     docker-compose
     freefilesync
+    strongswan
+    strongswanNM
+    openssl
+    python312Packages.pip-system-certs
+    libvirt
+    vagrant
+    wireguard-tools
+    tinyproxy
   ];
 
   # system.activationScripts.binbash = {
@@ -179,4 +194,71 @@
   #       ln -s /bin/sh /bin/bash
   #  '';
   #};
+  #services.strongswan = {
+  #    enable = true;
+  #};
+
+  networking.firewall.enable = false;
+  networking.firewall = {
+  # if packets are still dropped, they will show up in dmesg
+    logReversePathDrops = true;
+   # wireguard trips rpfilter up
+    extraCommands = ''
+     ip46tables -t mangle -I nixos-fw-rpfilter -p udp -m udp --sport 41194 -j RETURN
+     ip46tables -t mangle -I nixos-fw-rpfilter -p udp -m udp --dport 41194 -j RETURN
+   '';
+   extraStopCommands = ''
+     ip46tables -t mangle -D nixos-fw-rpfilter -p udp -m udp --sport 41194 -j RETURN || true
+     ip46tables -t mangle -D nixos-fw-rpfilter -p udp -m udp --dport 41194 -j RETURN || true
+   '';
+  };
+  # networking.usePredictableInterfaceNames = true;
+
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+  ];
+
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  services.blueman.enable = true;
+
+  security.sudo.wheelNeedsPassword = false;
+
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = [ "irasikhin" ];
+  #virtualisation.libvirtd = {
+  #  enable = true;
+  #  qemu = {
+  #    package = pkgs.qemu_kvm;
+  #    runAsRoot = true;
+  #    swtpm.enable = true;
+  #    ovmf = {
+  #      enable = true;
+  #      packages = [(pkgs.OVMF.override {
+  #        secureBoot = true;
+  #        tpmSupport = true;
+  #      }).fd];
+  #    };
+  #  };
+  #};
+  #programs.virt-manager.enable = true;
+  #boot.kernelModules = [ "kvm-amd" ];
+  nixpkgs.config.allowUnfree = true;
+
+  nixpkgs.config = {
+    packageOverrides = pkgs: {
+      vagrant = pkgs.vagrant.override { withLibvirt = false; };
+    };
+  };
+  #services.resolved.enable = true;
+  services.tinyproxy = {
+    enable = true;
+    settings = {
+      Port = 8888;
+      Listen = "127.0.0.1";
+      Timeout = 600;
+      Allow = "127.0.0.1";
+      Upstream = "socks5 127.0.0.1:1337";
+    };
+  };
 }
