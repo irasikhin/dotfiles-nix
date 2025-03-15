@@ -1,6 +1,17 @@
 { config, pkgs, inputs, lib, ... }:
 
-{
+let
+  myHelm = pkgs.wrapHelm pkgs.kubernetes-helm {
+    plugins = with pkgs.kubernetes-helmPlugins; [
+      helm-diff
+      helm-secrets
+      helm-s3
+    ];
+  };
+  myHelmfile = pkgs.helmfile.override {
+    inherit (myHelm.passthru) pluginsDir;
+  };
+in {
   home.username = "irasikhin";
   home.homeDirectory = "/home/irasikhin";
   home.stateVersion = "22.11";
@@ -51,11 +62,11 @@
         xbindkeys
         xorg.xmodmap
         networkmanagerapplet
-        temurin-bin
         maven
         telegram-desktop
         font-awesome
         jetbrains.idea-community-bin
+        jetbrains.idea-ultimate
         acpi
         light # change brightness
         lshw # view gpu devices
@@ -70,7 +81,7 @@
         networkmanager-openconnect
         networkmanager-vpnc
         spotify
-        ansible
+        ansible_2_17
         chromium
         go-task
         dig
@@ -90,6 +101,29 @@
         yq-go
         pnpm
         okular
+        insomnia
+        kubectl
+        kustomize
+        cointop
+        quarkus
+        qrencode
+        httpie
+        skopeo
+        nmap
+        kind
+        sops
+        age
+        myHelm
+        myHelmfile
+        cargo
+        ventoy
+        aria2
+        proxychains
+        speedtest-cli
+        nh
+        p7zip
+        xarchiver
+        yandex-disk
 	];
   
   programs.neovim = {
@@ -126,7 +160,7 @@
 
     oh-my-zsh = {
       enable = true;
-      plugins = ["git" "docker" "fzf"];
+      plugins = ["git" "docker" "fzf" "kubectl" "helm"];
     };
 
     history.size = 10000;
@@ -197,4 +231,5 @@
       # package.disabled = true;
     };
   };
+
 }

@@ -1,36 +1,27 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, pkgs, callPackage, ... }:
+{ config, pkgs, callPackage, lib, ... }:
 
 {
   imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+    [
+      ./hardware-configuration.nix # Import hardware-specific configuration
     ];
 
-  # Bootloader.
+  # Configure system bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  # Set hostname and networking settings
+  networking.hostName = "irnixos";
+  networking.wireless.enable = false; # Disable wireless networking (will use NetworkManager)
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  networking.networkmanager.enable = true; # Enable NetworkManager
+  networking.networkmanager.enableStrongSwan = true; # Enable strongSwan VPN support
 
-  # Enable networking
-  networking.networkmanager.enable = true;
-  networking.networkmanager.enableStrongSwan = true;
-
-  # Set your time zone.
+  # Set system locale and time zone
+  i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "Europe/Moscow";
 
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
+  # Additional locale settings
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "ru_RU.UTF-8";
     LC_IDENTIFICATION = "ru_RU.UTF-8";
@@ -43,41 +34,37 @@
     LC_TIME = "ru_RU.UTF-8";
   };
 
-  # Enable the X11 windowing system.
+  # Enable X server and configure display manager/window manager
   services.xserver.enable = true;
-
-  # Enable the XFCE Desktop Environment.
+  services.xserver.desktopManager.xfce.enable = false;
   services.xserver.displayManager.lightdm.enable = true;
   services.xserver.displayManager.lightdm.greeters.gtk = {
     extraConfig = ''
       user-background = false
     '';
   };
-  services.displayManager.defaultSession = "none+i3";
-  services.xserver.desktopManager.xfce.enable = false;
+  services.displayManager.defaultSession = "none+i3"; # Use i3 as window manager
   services.xserver.windowManager.i3 = {
     enable = true;
     extraPackages = with pkgs; [
-      rofi
-      i3status-rust
-      i3lock-color
-      i3lock-fancy
+      rofi # Application launcher
+      i3status-rust # Status bar for i3
+      i3lock-color # Lock screen
+      i3lock-fancy # Fancier lock screen
     ];
   };
-
-  # Configure keymap in X11
   services.xserver.xkb = {
-    layout = "us,ru";
+    layout = "us,ru"; # Enable US and Russian keyboard layouts
     variant = "qwerty";
-    options = "grp:shifts_toggle";
+    options = "grp:shifts_toggle"; # Toggle layout using both shift keys
   };
 
-  console.keyMap = "us";
+  console.keyMap = "us"; # Set console keymap
 
-  # Enable CUPS to print documents.
+  # Disable printing support (CUPS)
   services.printing.enable = false;
 
-  # Enable sound with pipewire.
+  # Enable audio using PipeWire
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -85,70 +72,44 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
-  # Install firefox.
+  # Enable Firefox browser
   programs.firefox.enable = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  #
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
+  # Enable GnuPG agent with SSH support
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
   };
 
-  # List services that you want to enable:
+  # Enable OpenSSH daemon for remote access
+  services.openssh.enable = true;
 
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  # Set system state version (important for maintaining compatibility)
+  system.stateVersion = "24.05";
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.05"; # Did you read the comment?
-
-
-  # Enable Flakes
+  # Enable Nix Flakes
   nix.package = pkgs.nixVersions.stable;
   nix.extraOptions = ''
     experimental-features = nix-command flakes
     '';
 
+  # Configure user account
   users.users.irasikhin = {
       isNormalUser = true;
       description = "Ivan Rasikhin";
       extraGroups = [ "networkmanager" "wheel" "video" "audio" "qemu-libvirtd" "docker" "libvirtd"];
       packages = with pkgs; [];
-      shell = pkgs.zsh;
+      shell = pkgs.zsh; # Set default shell to Zsh
   };
   programs.zsh.enable = true;
   programs.tmux = {
     enable = true;
     clock24 = true;
   };
+
+  # Enable key remapping (Caps Lock to Escape)
   services.interception-tools = {
     enable = true;
     plugins = with pkgs; [
@@ -162,19 +123,26 @@
     '';
   };
 
+  # Set environment variables
   environment.variables = {
     GDK_SCALE = "1";
     GDK_DPI_SCALE = "1.5";
-  };  
-  # services.xserver.dpi = 130;
-  
-  # light
+  };
+
+  # Enable light control program
   programs.light.enable = true;
 
-  # docker
+  # Enable Docker with Btrfs storage driver
   virtualisation.docker.enable = true;
   virtualisation.docker.storageDriver = "btrfs";
+  virtualisation.docker.daemon.settings = {
+    "data-root" = "/home/irasikhin/.docker-data";
+    "default-address-pools" = [
+      { "base" = "192.170.0.0/16"; "size" = 24; }
+    ];
+  };
 
+  # Install essential system packages
   environment.systemPackages = with pkgs; [
     docker-compose
     freefilesync
@@ -186,63 +154,40 @@
     vagrant
     wireguard-tools
     tinyproxy
+    xvfb-run
+    swt
+    distrobox
+    dive
+    podman-tui
+    autoconf
+    gnumake
+    graphviz
+    pandoc
+    file
+    gcc
+    alsa-lib
+    autossh
   ];
 
-  # system.activationScripts.binbash = {
-  #  deps = [ "binsh" ];
-  #  text = ''
-  #       ln -s /bin/sh /bin/bash
-  #  '';
-  #};
-  #services.strongswan = {
-  #    enable = true;
-  #};
+  # Enable firewall
+  networking.firewall.enable = true;
 
-  networking.firewall.enable = false;
-  networking.firewall = {
-  # if packets are still dropped, they will show up in dmesg
-    logReversePathDrops = true;
-   # wireguard trips rpfilter up
-    extraCommands = ''
-     ip46tables -t mangle -I nixos-fw-rpfilter -p udp -m udp --sport 41194 -j RETURN
-     ip46tables -t mangle -I nixos-fw-rpfilter -p udp -m udp --dport 41194 -j RETURN
-   '';
-   extraStopCommands = ''
-     ip46tables -t mangle -D nixos-fw-rpfilter -p udp -m udp --sport 41194 -j RETURN || true
-     ip46tables -t mangle -D nixos-fw-rpfilter -p udp -m udp --dport 41194 -j RETURN || true
-   '';
-  };
-  # networking.usePredictableInterfaceNames = true;
-
+  # Enable Nix-ld (to run non-NixOS binaries)
   programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = with pkgs; [
-  ];
+  programs.nix-ld.libraries = with pkgs; [];
 
-  hardware.bluetooth.enable = true; # enables support for Bluetooth
-  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  # Enable Bluetooth support
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
   services.blueman.enable = true;
 
+  # Allow users in wheel group to execute sudo commands without password
   security.sudo.wheelNeedsPassword = false;
 
+  # Enable VirtualBox support
   virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "irasikhin" ];
-  #virtualisation.libvirtd = {
-  #  enable = true;
-  #  qemu = {
-  #    package = pkgs.qemu_kvm;
-  #    runAsRoot = true;
-  #    swtpm.enable = true;
-  #    ovmf = {
-  #      enable = true;
-  #      packages = [(pkgs.OVMF.override {
-  #        secureBoot = true;
-  #        tpmSupport = true;
-  #      }).fd];
-  #    };
-  #  };
-  #};
-  #programs.virt-manager.enable = true;
-  #boot.kernelModules = [ "kvm-amd" ];
+
   nixpkgs.config.allowUnfree = true;
 
   nixpkgs.config = {
@@ -250,7 +195,8 @@
       vagrant = pkgs.vagrant.override { withLibvirt = false; };
     };
   };
-  #services.resolved.enable = true;
+
+  # Enable TinyProxy
   services.tinyproxy = {
     enable = true;
     settings = {
@@ -261,4 +207,14 @@
       Upstream = "socks5 127.0.0.1:1337";
     };
   };
+
+  # Enable Java (Temurin JDK 21)
+  programs.java = {
+    enable = true;
+    package = pkgs.temurin-bin-21;
+  };
+
+  swapDevices = lib.mkForce [];
+  systemd.services.nix-daemon.environment = { http_proxy="http://127.0.0.1:8888"; https_proxy="http://127.0.0.1:8888"; };
 }
+

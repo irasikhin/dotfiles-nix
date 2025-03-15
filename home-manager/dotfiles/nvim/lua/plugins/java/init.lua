@@ -10,7 +10,7 @@ return {
             java = {
               settings = {
                 format = {
-                  enabled = false
+                  enabled = false,
                 },
               },
             },
@@ -21,14 +21,7 @@ return {
             require("java").setup({
               -- Your custom nvim-java configuration goes here
               root_markers = {
-                "settings.gradle",
-                "settings.gradle.kts",
-                "pom.xml",
-                "build.gradle",
-                "mvnw",
-                "gradlew",
-                "build.gradle",
-                "build.gradle.kts",
+                ".git/backend/pom.xml",
               },
             })
           end,
