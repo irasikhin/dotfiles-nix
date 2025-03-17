@@ -82,7 +82,6 @@ in {
         networkmanager-vpnc
         spotify
         ansible_2_17
-        chromium
         go-task
         dig
         busybox
@@ -124,6 +123,7 @@ in {
         p7zip
         xarchiver
         yandex-disk
+        ungoogled-chromium
 	];
   
   programs.neovim = {
