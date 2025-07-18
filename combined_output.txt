@@ -1,0 +1,2707 @@
+
+===== НАЧАЛО ФАЙЛА: ./LICENSE =====
+
+Creative Commons Legal Code
+
+CC0 1.0 Universal
+
+    CREATIVE COMMONS CORPORATION IS NOT A LAW FIRM AND DOES NOT PROVIDE
+    LEGAL SERVICES. DISTRIBUTION OF THIS DOCUMENT DOES NOT CREATE AN
+    ATTORNEY-CLIENT RELATIONSHIP. CREATIVE COMMONS PROVIDES THIS
+    INFORMATION ON AN "AS-IS" BASIS. CREATIVE COMMONS MAKES NO WARRANTIES
+    REGARDING THE USE OF THIS DOCUMENT OR THE INFORMATION OR WORKS
+    PROVIDED HEREUNDER, AND DISCLAIMS LIABILITY FOR DAMAGES RESULTING FROM
+    THE USE OF THIS DOCUMENT OR THE INFORMATION OR WORKS PROVIDED
+    HEREUNDER.
+
+Statement of Purpose
+
+The laws of most jurisdictions throughout the world automatically confer
+exclusive Copyright and Related Rights (defined below) upon the creator
+and subsequent owner(s) (each and all, an "owner") of an original work of
+authorship and/or a database (each, a "Work").
+
+Certain owners wish to permanently relinquish those rights to a Work for
+the purpose of contributing to a commons of creative, cultural and
+scientific works ("Commons") that the public can reliably and without fear
+of later claims of infringement build upon, modify, incorporate in other
+works, reuse and redistribute as freely as possible in any form whatsoever
+and for any purposes, including without limitation commercial purposes.
+These owners may contribute to the Commons to promote the ideal of a free
+culture and the further production of creative, cultural and scientific
+works, or to gain reputation or greater distribution for their Work in
+part through the use and efforts of others.
+
+For these and/or other purposes and motivations, and without any
+expectation of additional consideration or compensation, the person
+associating CC0 with a Work (the "Affirmer"), to the extent that he or she
+is an owner of Copyright and Related Rights in the Work, voluntarily
+elects to apply CC0 to the Work and publicly distribute the Work under its
+terms, with knowledge of his or her Copyright and Related Rights in the
+Work and the meaning and intended legal effect of CC0 on those rights.
+
+1. Copyright and Related Rights. A Work made available under CC0 may be
+protected by copyright and related or neighboring rights ("Copyright and
+Related Rights"). Copyright and Related Rights include, but are not
+limited to, the following:
+
+  i. the right to reproduce, adapt, distribute, perform, display,
+     communicate, and translate a Work;
+ ii. moral rights retained by the original author(s) and/or performer(s);
+iii. publicity and privacy rights pertaining to a person's image or
+     likeness depicted in a Work;
+ iv. rights protecting against unfair competition in regards to a Work,
+     subject to the limitations in paragraph 4(a), below;
+  v. rights protecting the extraction, dissemination, use and reuse of data
+     in a Work;
+ vi. database rights (such as those arising under Directive 96/9/EC of the
+     European Parliament and of the Council of 11 March 1996 on the legal
+     protection of databases, and under any national implementation
+     thereof, including any amended or successor version of such
+     directive); and
+vii. other similar, equivalent or corresponding rights throughout the
+     world based on applicable law or treaty, and any national
+     implementations thereof.
+
+2. Waiver. To the greatest extent permitted by, but not in contravention
+of, applicable law, Affirmer hereby overtly, fully, permanently,
+irrevocably and unconditionally waives, abandons, and surrenders all of
+Affirmer's Copyright and Related Rights and associated claims and causes
+of action, whether now known or unknown (including existing as well as
+future claims and causes of action), in the Work (i) in all territories
+worldwide, (ii) for the maximum duration provided by applicable law or
+treaty (including future time extensions), (iii) in any current or future
+medium and for any number of copies, and (iv) for any purpose whatsoever,
+including without limitation commercial, advertising or promotional
+purposes (the "Waiver"). Affirmer makes the Waiver for the benefit of each
+member of the public at large and to the detriment of Affirmer's heirs and
+successors, fully intending that such Waiver shall not be subject to
+revocation, rescission, cancellation, termination, or any other legal or
+equitable action to disrupt the quiet enjoyment of the Work by the public
+as contemplated by Affirmer's express Statement of Purpose.
+
+3. Public License Fallback. Should any part of the Waiver for any reason
+be judged legally invalid or ineffective under applicable law, then the
+Waiver shall be preserved to the maximum extent permitted taking into
+account Affirmer's express Statement of Purpose. In addition, to the
+extent the Waiver is so judged Affirmer hereby grants to each affected
+person a royalty-free, non transferable, non sublicensable, non exclusive,
+irrevocable and unconditional license to exercise Affirmer's Copyright and
+Related Rights in the Work (i) in all territories worldwide, (ii) for the
+maximum duration provided by applicable law or treaty (including future
+time extensions), (iii) in any current or future medium and for any number
+of copies, and (iv) for any purpose whatsoever, including without
+limitation commercial, advertising or promotional purposes (the
+"License"). The License shall be deemed effective as of the date CC0 was
+applied by Affirmer to the Work. Should any part of the License for any
+reason be judged legally invalid or ineffective under applicable law, such
+partial invalidity or ineffectiveness shall not invalidate the remainder
+of the License, and in such case Affirmer hereby affirms that he or she
+will not (i) exercise any of his or her remaining Copyright and Related
+Rights in the Work or (ii) assert any associated claims and causes of
+action with respect to the Work, in either case contrary to Affirmer's
+express Statement of Purpose.
+
+4. Limitations and Disclaimers.
+
+ a. No trademark or patent rights held by Affirmer are waived, abandoned,
+    surrendered, licensed or otherwise affected by this document.
+ b. Affirmer offers the Work as-is and makes no representations or
+    warranties of any kind concerning the Work, express, implied,
+    statutory or otherwise, including without limitation warranties of
+    title, merchantability, fitness for a particular purpose, non
+    infringement, or the absence of latent or other defects, accuracy, or
+    the present or absence of errors, whether or not discoverable, all to
+    the greatest extent permissible under applicable law.
+ c. Affirmer disclaims responsibility for clearing rights of other persons
+    that may apply to the Work or any use thereof, including without
+    limitation any person's Copyright and Related Rights in the Work.
+    Further, Affirmer disclaims responsibility for obtaining any necessary
+    consents, permissions or other rights required for any use of the
+    Work.
+ d. Affirmer understands and acknowledges that Creative Commons is not a
+    party to this document and has no duty or obligation with respect to
+    this CC0 or use of the Work.
+
+===== КОНЕЦ ФАЙЛА: ./LICENSE =====
+
+
+===== НАЧАЛО ФАЙЛА: ./README.md =====
+
+# dotfiles-nix
+My dotfiles, written in nix
+
+===== КОНЕЦ ФАЙЛА: ./README.md =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/i3/config =====
+
+set $mod Mod4
+set $alt Mod1
+default_border none
+font hack:monospace 12
+floating_modifier $mod
+workspace_auto_back_and_forth yes
+bindsym $mod+Return exec termite -e /bin/zsh
+bindsym $mod+Shift+q kill
+bindsym $mod+Shift+a focus parent,kill
+
+# rofi
+bindsym $alt+d exec "rofi -show combi -sidebar-mode"
+bindsym $mod+Tab exec "rofi -show window"
+
+# change focus
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+semicolon move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# focus the child container
+#bindsym $mod+d focus child
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# switch to workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+# xrandr
+#exec --no-startup-id xrandr --output eDP-1 --auto --dpi 80
+#exec --no-startup-id xrandr --output DP-1 --auto --above eDP-1 --dpi 80
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+bindsym $mod+Shift+w exec "i3lock-color -k --keylayout 0 --image $HOME/.background-image-blur"
+#bindsym $mod+Shift+w exec "i3-msg exit"
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+# These bindings trigger as soon as you enter the resize mode
+
+# Pressing left will shrink the window’s width.
+# Pressing right will grow the window’s width.
+# Pressing up will shrink the window’s height.
+# Pressing down will grow the window’s height.
+  bindsym j resize shrink width 10 px or 10 ppt
+    bindsym k resize grow height 10 px or 10 ppt
+    bindsym l resize shrink height 10 px or 10 ppt
+    bindsym semicolon resize grow width 10 px or 10 ppt
+
+# same bindings, but for the arrow keys
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
+
+# back to normal: Enter or Escape or $mod+r
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+bar {
+  font pango: FiraCode Nerd Font 16
+  position top
+	status_command i3status-rs ~/.config/i3/status.toml
+  colors {
+    separator #666666
+    background #222222
+    statusline #dddddd
+    focused_workspace #0088CC #0088CC #ffffff
+    active_workspace #333333 #333333 #ffffff
+    inactive_workspace #333333 #333333 #888888
+    urgent_workspace #2f343a #900000 #ffffff
+  }
+}
+
+focus_on_window_activation focus
+
+# PipeWire
+bindsym XF86AudioRaiseVolume exec --no-startup-id pamixer -i 5
+bindsym XF86AudioLowerVolume exec --no-startup-id pamixer -d 5
+bindsym XF86AudioMute exec --no-startup-id pamixer -t
+
+# Pulse Audio controls
+# bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
+# bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
+# bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+
+# Sreen brightness controls
+bindsym XF86MonBrightnessUp exec --no-startup-id brillo -A 5
+bindsym XF86MonBrightnessDown exec --no-startup-id brillo -U 5
+
+# Touchpad controls
+# bindsym XF86TouchpadToggle exec /some/path/toggletouchpad.sh # toggle touchpad
+
+# Media player controls
+bindsym XF86AudioPlay exec playerctl play
+bindsym XF86AudioPause exec playerctl pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+# idea
+set $idea "idea"
+bindsym $mod+i workspace $idea
+assign [class=".*[I,i]dea.*"] $idea
+workspace $idea output DP-1 eDP-1
+
+# telegram
+set $msg "msg"
+bindsym $mod+m workspace $msg
+assign [class=".*telegram-desktop.*"] $msg
+workspace $msg output eDP-1 DP-1
+
+# web
+set $web "web"
+bindsym $mod+u workspace $web
+assign [class=".*[l,l]ibrewolf.*"] $web
+assign [class=".*[F,f]irefox.*"] $web
+assign [class=".*[C,c]hromium.*"] $web
+assign [class=".*[F,f]loorp.*"] $web
+workspace $web output eDP-1 DP-1
+
+# discord
+set $discord "discord"
+bindsym $mod+d workspace $discord
+assign [class=".*[D,d]iscord.*"] $discord
+workspace $discord output eDP-1 DP-1
+
+# obsidian
+set $obsidian "obsidian"
+bindsym $mod+o workspace $obsidian
+assign [class=".*[O,o]bsidian.*"] $obsidian
+workspace $obsidian output DP-1 eDP-1
+
+# slack
+set $slack "slack"
+bindsym $mod+n workspace $slack
+assign [class=".*[S,s]lack.*"] $slack
+workspace $slack output eDP-1 DP-1
+
+# vs code
+set $code "code"
+bindsym $mod+c workspace $code
+assign [class=".*[C,c]ode.*"] $code
+workspace $code output DP-1 eDP-1
+
+# clion
+set $clion "clion"
+bindsym $mod+y workspace $clion
+assign [class=".*[C,c]lion.*"] $clion
+
+set $terminal "terminal"
+bindsym Super_L exec --no-startup-id $HOME/.config/scripts/double_mod_switch.sh
+assign [class=".*[A,a]lacritty.*"] $terminal
+workspace $terminal output DP-1 eDP-1
+
+# spotify
+set $spotify "spotify"
+bindsym $mod+p workspace $spotify
+assign [class=".*[S,s]potify.*"] $spotify
+workspace $spotify output eDP-1 DP-1
+
+# thunderbird
+set $thunderbird "thunderbird"
+bindsym $mod+t workspace $thunderbird
+assign [class=".*[T,t]hunderbird.*"] $thunderbird
+workspace $thunderbird output eDP-1 DP-1
+
+for_window [class="^.*"] border pixel 0
+
+exec_always --no-startup-id nm-applet
+exec --no-startup-id i3-msg 'workspace $terminal; exec alacritty'
+exec --no-startup-id i3-msg 'workspace $web; exec floorp'
+exec --no-startup-id i3-msg 'workspace $idea; exec idea'
+exec --no-startup-id i3-msg 'workspace $msg; exec telegram-desktop'
+exec --no-startup-id i3-msg 'workspace $thunderbird; exec thunderbird'
+exec_always --no-startup-id $HOME/.config/scripts/update_background_image.sh
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/i3/config =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/i3/status.toml =====
+
+[theme]
+theme = "dracula"
+
+[icons]
+icons = "awesome6"
+
+[[block]]
+block = "disk_space"
+info_type = "available"
+alert_unit = "GB"
+alert = 10.0
+warning = 15.0
+format = " $icon $available "
+format_alt = " $icon $available / $total "
+
+[[block]]
+block = "memory"
+format = " $icon $mem_used_percents.eng(w:1) "
+format_alt = " $icon_swap $swap_free.eng(w:3,u:B,p:M)/$swap_total.eng(w:3,u:B,p:M)($swap_used_percents.eng(w:2)) "
+interval = 30
+warning_mem = 70
+critical_mem = 90
+
+[[block]]
+block = "load"
+format = " $icon 1min avg: $1m.eng(w:4) "
+interval = 1
+
+[[block]]
+block = "cpu"
+interval = 1
+format = " $icon $barchart $utilization "
+format_alt = " $icon $frequency{ $boost|} "
+info_cpu = 20
+warning_cpu = 50
+critical_cpu = 90
+
+[[block]]
+block = "temperature"
+format = " $icon $max max "
+format_alt = " $icon $min min, $max max, $average avg "
+interval = 10
+chip = "k10temp-pci-00c3"
+
+
+[[block]]
+block = "sound"
+
+[[block]]
+block = "battery"
+interval = 1
+
+[[block]]
+block = "backlight"
+device = "amdgpu_bl1"
+
+[[block]]
+block = "time"
+interval = 60
+[block.format]
+full = " $icon $timestamp.datetime(f:'%a %Y-%m-%d %R %Z', l:ru_RU) "
+short = " $icon $timestamp.datetime(f:%R) "
+
+[[block]]
+block = "keyboard_layout"
+driver = "setxkbmap"
+interval = 15
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/i3/status.toml =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/.gitignore =====
+
+tt.*
+.tests
+doc/tags
+debug
+.repro
+foo.*
+*.log
+data
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/.gitignore =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/.neoconf.json =====
+
+{
+  "neodev": {
+    "library": {
+      "enabled": true,
+      "plugins": true
+    }
+  },
+  "neoconf": {
+    "plugins": {
+      "lua_ls": {
+        "enabled": true
+      }
+    }
+  }
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/.neoconf.json =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/LICENSE =====
+
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/LICENSE =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/README.md =====
+
+# 💤 LazyVim
+
+A starter template for [LazyVim](https://github.com/LazyVim/LazyVim).
+Refer to the [documentation](https://lazyvim.github.io/installation) to get started.
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/README.md =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/init.lua =====
+
+-- bootstrap lazy.nvim, LazyVim and your plugins
+require("config.lazy")
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lazyvim.json =====
+
+{
+  "extras": [
+    "lazyvim.plugins.extras.coding.mini-surround",
+    "lazyvim.plugins.extras.dap.core",
+    "lazyvim.plugins.extras.editor.fzf",
+    "lazyvim.plugins.extras.editor.illuminate",
+    "lazyvim.plugins.extras.editor.mini-files",
+    "lazyvim.plugins.extras.formatting.black",
+    "lazyvim.plugins.extras.lang.git",
+    "lazyvim.plugins.extras.lang.json",
+    "lazyvim.plugins.extras.lang.kotlin",
+    "lazyvim.plugins.extras.lang.markdown",
+    "lazyvim.plugins.extras.lang.rust",
+    "lazyvim.plugins.extras.lang.scala",
+    "lazyvim.plugins.extras.util.gitui",
+    "lazyvim.plugins.extras.util.project",
+    "lazyvim.plugins.extras.util.rest",
+    "lazyvim.plugins.extras.util.startuptime"
+  ],
+  "news": {
+    "NEWS.md": "6520"
+  },
+  "version": 6
+}
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lazyvim.json =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/config/autocmds.lua =====
+
+-- Autocmds are automatically loaded on the VeryLazy event
+-- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
+-- Add any additional autocmds here
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/config/autocmds.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/config/keymaps.lua =====
+
+-- Keymaps are automatically loaded on the VeryLazy event
+-- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
+-- Add any additional keymaps here
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/config/keymaps.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/config/lazy.lua =====
+
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup({
+  spec = {
+    -- add LazyVim and import its plugins
+    { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    -- import/override with your plugins
+    { import = "plugins" },
+  },
+  defaults = {
+    -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
+    -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.
+    lazy = false,
+    -- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
+    -- have outdated releases, which may break your Neovim install.
+    version = false, -- always use the latest git commit
+    -- version = "*", -- try installing the latest stable version for plugins that support semver
+  },
+  install = { colorscheme = { "tokyonight", "habamax" } },
+  checker = {
+    enabled = true, -- check for plugin updates periodically
+    notify = false, -- notify on update
+  }, -- automatically check for plugin updates
+  performance = {
+    rtp = {
+      -- disable some rtp plugins
+      disabled_plugins = {
+        "gzip",
+        -- "matchit",
+        -- "matchparen",
+        -- "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
+    },
+  },
+})
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/config/lazy.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/config/options.lua =====
+
+-- Options are automatically loaded before lazy.nvim startup
+-- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
+-- Add any additional options here
+local opt = vim.opt
+opt.timeoutlen = 0
+opt.guifont = "Fira Code:h14"
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/config/options.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/colorscheme/init.lua =====
+
+return {
+  -- add gruvbox
+  { "ellisonleao/gruvbox.nvim", priority = 1000, config = true, opts = {
+    contrast = "dark",
+  } },
+  { "xiantang/darcula-dark.nvim" },
+  { "navarasu/onedark.nvim" },
+  { "Mofiqul/vscode.nvim" },
+  { "santos-gabriel-dario/darcula-solid.nvim" },
+  { "projekt0n/github-nvim-theme", name = "github-theme" },
+  -- Configure LazyVim to load gruvbox
+  {
+    "LazyVim/LazyVim",
+    opts = {
+      colorscheme = "gruvbox",
+    },
+  },
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/colorscheme/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/disabled.lua =====
+
+return {
+  { "akinsho/bufferline.nvim", enabled = false },
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/disabled.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/example.lua =====
+
+-- since this is just an example spec, don't actually load anything here and return an empty spec
+-- stylua: ignore
+if true then return {} end
+
+-- every spec file under the "plugins" directory will be loaded automatically by lazy.nvim
+--
+-- In your plugin files, you can:
+-- * add extra plugins
+-- * disable/enabled LazyVim plugins
+-- * override the configuration of LazyVim plugins
+return {
+  -- add gruvbox
+  { "ellisonleao/gruvbox.nvim" },
+
+  -- Configure LazyVim to load gruvbox
+  {
+    "LazyVim/LazyVim",
+    opts = {
+      colorscheme = "gruvbox",
+    },
+  },
+
+  -- change trouble config
+  {
+    "folke/trouble.nvim",
+    -- opts will be merged with the parent spec
+    opts = { use_diagnostic_signs = true },
+  },
+
+  -- disable trouble
+  { "folke/trouble.nvim", enabled = false },
+
+  -- override nvim-cmp and add cmp-emoji
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = { "hrsh7th/cmp-emoji" },
+    ---@param opts cmp.ConfigSchema
+    opts = function(_, opts)
+      table.insert(opts.sources, { name = "emoji" })
+    end,
+  },
+
+  -- change some telescope options and a keymap to browse plugin files
+  {
+    "nvim-telescope/telescope.nvim",
+    keys = {
+      -- add a keymap to browse plugin files
+      -- stylua: ignore
+      {
+        "<leader>fp",
+        function() require("telescope.builtin").find_files({ cwd = require("lazy.core.config").options.root }) end,
+        desc = "Find Plugin File",
+      },
+    },
+    -- change some options
+    opts = {
+      defaults = {
+        layout_strategy = "horizontal",
+        layout_config = { prompt_position = "top" },
+        sorting_strategy = "ascending",
+        winblend = 0,
+      },
+    },
+  },
+
+  -- add pyright to lspconfig
+  {
+    "neovim/nvim-lspconfig",
+    ---@class PluginLspOpts
+    opts = {
+      ---@type lspconfig.options
+      servers = {
+        -- pyright will be automatically installed with mason and loaded with lspconfig
+        pyright = {},
+      },
+    },
+  },
+
+  -- add tsserver and setup with typescript.nvim instead of lspconfig
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "jose-elias-alvarez/typescript.nvim",
+      init = function()
+        require("lazyvim.util").lsp.on_attach(function(_, buffer)
+          -- stylua: ignore
+          vim.keymap.set( "n", "<leader>co", "TypescriptOrganizeImports", { buffer = buffer, desc = "Organize Imports" })
+          vim.keymap.set("n", "<leader>cR", "TypescriptRenameFile", { desc = "Rename File", buffer = buffer })
+        end)
+      end,
+    },
+    ---@class PluginLspOpts
+    opts = {
+      ---@type lspconfig.options
+      servers = {
+        -- tsserver will be automatically installed with mason and loaded with lspconfig
+        tsserver = {},
+      },
+      -- you can do any additional lsp server setup here
+      -- return true if you don't want this server to be setup with lspconfig
+      ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
+      setup = {
+        -- example to setup with typescript.nvim
+        tsserver = function(_, opts)
+          require("typescript").setup({ server = opts })
+          return true
+        end,
+        -- Specify * to use this function as a fallback for any server
+        -- ["*"] = function(server, opts) end,
+      },
+    },
+  },
+
+  -- for typescript, LazyVim also includes extra specs to properly setup lspconfig,
+  -- treesitter, mason and typescript.nvim. So instead of the above, you can use:
+  { import = "lazyvim.plugins.extras.lang.typescript" },
+
+  -- add more treesitter parsers
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "bash",
+        "html",
+        "javascript",
+        "json",
+        "lua",
+        "markdown",
+        "markdown_inline",
+        "python",
+        "query",
+        "regex",
+        "tsx",
+        "typescript",
+        "vim",
+        "yaml",
+      },
+    },
+  },
+
+  -- since `vim.tbl_deep_extend`, can only merge tables and not lists, the code above
+  -- would overwrite `ensure_installed` with the new value.
+  -- If you'd rather extend the default config, use the code below instead:
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function(_, opts)
+      -- add tsx and treesitter
+      vim.list_extend(opts.ensure_installed, {
+        "tsx",
+        "typescript",
+      })
+    end,
+  },
+
+  -- the opts function can also be used to change the default opts:
+  {
+    "nvim-lualine/lualine.nvim",
+    event = "VeryLazy",
+    opts = function(_, opts)
+      table.insert(opts.sections.lualine_x, "😄")
+    end,
+  },
+
+  -- or you can return new options to override all the defaults
+  {
+    "nvim-lualine/lualine.nvim",
+    event = "VeryLazy",
+    opts = function()
+      return {
+        --[[add your custom lualine config here]]
+      }
+    end,
+  },
+
+  -- use mini.starter instead of alpha
+  { import = "lazyvim.plugins.extras.ui.mini-starter" },
+
+  -- add jsonls and schemastore packages, and setup treesitter for json, json5 and jsonc
+  { import = "lazyvim.plugins.extras.lang.json" },
+
+  -- add any tools you want to have installed below
+  {
+    "williamboman/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "stylua",
+        "shellcheck",
+        "shfmt",
+        "flake8",
+      },
+    },
+  },
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/example.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/fzf-lua/init.lua =====
+
+return {
+  "ibhagwan/fzf-lua",
+  cmd = "FzfLua",
+  opts = {
+    defaults = {
+      formatter = "path.filename_first",
+    },
+    formatter = "path.filename_first",
+    files = {
+      formatter = "path.filename_first",
+    },
+    winopts = {
+      fullscreen = true,
+      preview = {
+        default = "bat",
+      },
+    },
+  },
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/fzf-lua/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/maven.lua =====
+
+return {
+  "eatgrass/maven.nvim",
+  cmd = { "Maven", "MavenExec" },
+  dependencies = "nvim-lua/plenary.nvim",
+  config = function()
+    require("maven").setup({
+      executable = "mvn",
+    })
+  end,
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/maven.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/mini.bufremove/init.lua =====
+
+return { "echasnovski/mini.bufremove", version = false }
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/mini.bufremove/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/mini.cursorword/init.lua =====
+
+return {
+  "echasnovski/mini.cursorword",
+  enabled = false,
+  version = false,
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/mini.cursorword/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/mini.files/init.lua =====
+
+return {
+  "echasnovski/mini.files",
+  opts = {
+    windows = {
+      preview = false,
+    },
+  },
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/mini.files/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/refactoring/init.lua =====
+
+return {
+  "ThePrimeagen/refactoring.nvim",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    "nvim-treesitter/nvim-treesitter",
+  },
+  lazy = false,
+  config = function()
+    require("refactoring").setup()
+  end,
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/refactoring/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/telescope/init.lua =====
+
+return {
+  {
+    "nvim-telescope/telescope.nvim",
+    enabled = false,
+    opts = {
+      defaults = {
+        path_display = {
+          shorten = 5,
+          filename_first = {},
+        },
+      },
+    },
+  },
+  {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    enabled = false,
+    opts = nil,
+  },
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/telescope/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/treesitter/init.lua =====
+
+return {
+  "nvim-treesitter/nvim-treesitter",
+  opts = {
+    ensure_installed = { "java", "nix", "cpp" },
+  },
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/treesitter/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/which-key/init.lua =====
+
+return {
+  "folke/which-key.nvim",
+  opts = {
+    delay = 0,
+  },
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/which-key/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/zen-mode/init.lua =====
+
+return {
+  "folke/zen-mode.nvim",
+  opts = {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  },
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/zen-mode/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/java/init.lua =====
+
+local java_filetypes = { "java" }
+local function extend_or_override(config, custom, ...)
+  if type(custom) == "function" then
+    config = custom(config, ...) or config
+  elseif custom then
+    config = vim.tbl_deep_extend("force", config, custom) --[[@as table]]
+  end
+  return config
+end
+
+return {
+  "mfussenegger/nvim-jdtls",
+  dependencies = { "folke/which-key.nvim" },
+  ft = java_filetypes,
+  opts = function()
+    local cmd = { vim.fn.exepath("jdtls") }
+    if LazyVim.has("mason.nvim") then
+      local mason_registry = require("mason-registry")
+      local lombok_jar = mason_registry.get_package("jdtls"):get_install_path() .. "/lombok.jar"
+      table.insert(cmd, string.format("--jvm-arg=-javaagent:%s", lombok_jar))
+    end
+    return {
+      -- How to find the root dir for a given filename. The default comes from
+      -- lspconfig which provides a function specifically for java projects.
+      root_dir = LazyVim.lsp.get_raw_config("jdtls").default_config.root_dir,
+
+      -- How to find the project name for a given root dir.
+      project_name = function(root_dir)
+        return root_dir and vim.fs.basename(root_dir)
+      end,
+
+      -- Where are the config and workspace dirs for a project?
+      jdtls_config_dir = function(project_name)
+        return vim.fn.stdpath("cache") .. "/jdtls/" .. project_name .. "/config"
+      end,
+      jdtls_workspace_dir = function(project_name)
+        return vim.fn.stdpath("cache") .. "/jdtls/" .. project_name .. "/workspace"
+      end,
+
+      -- How to run jdtls. This can be overridden to a full java command-line
+      -- if the Python wrapper script doesn't suffice.
+      cmd = cmd,
+      full_cmd = function(opts)
+        local fname = vim.api.nvim_buf_get_name(0)
+        local root_dir = opts.root_dir(fname)
+        local project_name = opts.project_name(root_dir)
+        local cmd = vim.deepcopy(opts.cmd)
+        table.insert(cmd, "--jvm-arg=-XX:+UseG1GC")
+        table.insert(cmd, "--jvm-arg=-Xms12g")
+        table.insert(cmd, "--jvm-arg=-Xmx12g")
+        table.insert(cmd, "-XX:+UseG1GC")
+        table.insert(cmd, "-Xms12g")
+        table.insert(cmd, "-Xmx12g")
+        if project_name then
+          vim.list_extend(cmd, {
+            "-configuration",
+            opts.jdtls_config_dir(project_name),
+            "-data",
+            opts.jdtls_workspace_dir(project_name),
+          })
+        end
+        return cmd
+      end,
+
+      -- These depend on nvim-dap, but can additionally be disabled by setting false here.
+      dap = { hotcodereplace = "auto", config_overrides = {} },
+      -- Can set this to false to disable main class scan, which is a performance killer for large project
+      dap_main = false,
+      test = true,
+      settings = {
+        java = {
+          inlayHints = {
+            parameterNames = {
+              enabled = "all",
+            },
+          },
+        },
+      },
+    }
+  end,
+  config = function(_, opts)
+    -- Find the extra bundles that should be passed on the jdtls command-line
+    -- if nvim-dap is enabled with java debug/test.
+    local bundles = {} ---@type string[]
+    if LazyVim.has("mason.nvim") then
+      local mason_registry = require("mason-registry")
+      if opts.dap and LazyVim.has("nvim-dap") and mason_registry.is_installed("java-debug-adapter") then
+        local java_dbg_pkg = mason_registry.get_package("java-debug-adapter")
+        local java_dbg_path = java_dbg_pkg:get_install_path()
+        local jar_patterns = {
+          java_dbg_path .. "/extension/server/com.microsoft.java.debug.plugin-*.jar",
+        }
+        -- java-test also depends on java-debug-adapter.
+        if opts.test and mason_registry.is_installed("java-test") then
+          local java_test_pkg = mason_registry.get_package("java-test")
+          local java_test_path = java_test_pkg:get_install_path()
+          vim.list_extend(jar_patterns, {
+            java_test_path .. "/extension/server/*.jar",
+          })
+        end
+        for _, jar_pattern in ipairs(jar_patterns) do
+          for _, bundle in ipairs(vim.split(vim.fn.glob(jar_pattern), "\n")) do
+            table.insert(bundles, bundle)
+          end
+        end
+      end
+    end
+    local function attach_jdtls()
+      local fname = vim.api.nvim_buf_get_name(0)
+
+      -- Configuration can be augmented and overridden by opts.jdtls
+      local config = extend_or_override({
+        cmd = opts.full_cmd(opts),
+        root_dir = opts.root_dir(fname),
+        init_options = {
+          bundles = bundles,
+        },
+        settings = opts.settings,
+        -- enable CMP capabilities
+        capabilities = LazyVim.has("cmp-nvim-lsp") and require("cmp_nvim_lsp").default_capabilities() or nil,
+      }, opts.jdtls)
+
+      -- Existing server will be reused if the root_dir matches.
+      require("jdtls").start_or_attach(config)
+      -- not need to require("jdtls.setup").add_commands(), start automatically adds commands
+    end
+
+    -- Attach the jdtls for each java buffer. HOWEVER, this plugin loads
+    -- depending on filetype, so this autocmd doesn't run for the first file.
+    -- For that, we call directly below.
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = java_filetypes,
+      callback = attach_jdtls,
+    })
+
+    -- Setup keymap and dap after the lsp is fully attached.
+    -- https://github.com/mfussenegger/nvim-jdtls#nvim-dap-configuration
+    -- https://neovim.io/doc/user/lsp.html#LspAttach
+    vim.api.nvim_create_autocmd("LspAttach", {
+      callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client and client.name == "jdtls" then
+          local wk = require("which-key")
+          wk.add({
+            {
+              mode = "n",
+              buffer = args.buf,
+              { "<leader>cx", group = "extract" },
+              { "<leader>cxv", require("jdtls").extract_variable_all, desc = "Extract Variable" },
+              { "<leader>cxc", require("jdtls").extract_constant, desc = "Extract Constant" },
+              { "<leader>cgs", require("jdtls").super_implementation, desc = "Goto Super" },
+              { "<leader>cgS", require("jdtls.tests").goto_subjects, desc = "Goto Subjects" },
+              { "<leader>co", require("jdtls").organize_imports, desc = "Organize Imports" },
+            },
+          })
+          wk.add({
+            {
+              mode = "v",
+              buffer = args.buf,
+              { "<leader>cx", group = "extract" },
+              {
+                "<leader>cxm",
+                [[<ESC><CMD>lua require('jdtls').extract_method(true)<CR>]],
+                desc = "Extract Method",
+              },
+              {
+                "<leader>cxv",
+                [[<ESC><CMD>lua require('jdtls').extract_variable_all(true)<CR>]],
+                desc = "Extract Variable",
+              },
+              {
+                "<leader>cxc",
+                [[<ESC><CMD>lua require('jdtls').extract_constant(true)<CR>]],
+                desc = "Extract Constant",
+              },
+            },
+          })
+
+          if LazyVim.has("mason.nvim") then
+            local mason_registry = require("mason-registry")
+            if opts.dap and LazyVim.has("nvim-dap") and mason_registry.is_installed("java-debug-adapter") then
+              -- custom init for Java debugger
+              require("jdtls").setup_dap(opts.dap)
+              if opts.dap_main then
+                require("jdtls.dap").setup_dap_main_class_configs(opts.dap_main)
+              end
+
+              -- Java Test require Java debugger to work
+              if opts.test and mason_registry.is_installed("java-test") then
+                -- custom keymaps for Java test runner (not yet compatible with neotest)
+                wk.add({
+                  {
+                    mode = "n",
+                    buffer = args.buf,
+                    { "<leader>t", group = "test" },
+                    {
+                      "<leader>tt",
+                      function()
+                        require("jdtls.dap").test_class({
+                          config_overrides = type(opts.test) ~= "boolean" and opts.test.config_overrides or nil,
+                        })
+                      end,
+                      desc = "Run All Test",
+                    },
+                    {
+                      "<leader>tr",
+                      function()
+                        require("jdtls.dap").test_nearest_method({
+                          config_overrides = type(opts.test) ~= "boolean" and opts.test.config_overrides or nil,
+                        })
+                      end,
+                      desc = "Run Nearest Test",
+                    },
+                    { "<leader>tT", require("jdtls.dap").pick_test, desc = "Run Test" },
+                  },
+                })
+              end
+            end
+          end
+
+          -- User can set additional keymaps in opts.on_attach
+          if opts.on_attach then
+            opts.on_attach(args)
+          end
+        end
+      end,
+    })
+
+    -- Avoid race condition by calling attach the first time, since the autocmd won't fire.
+    attach_jdtls()
+  end,
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/java/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/mini.misc/init.lua =====
+
+return {
+  "echasnovski/mini.misc",
+  opts = {},
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/mini.misc/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/nix/init.lua =====
+
+return {
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        nil_ls = {},
+      },
+    },
+  },
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        nix = { "nixfmt" },
+      },
+    },
+  },
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/nix/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/cpp/init.lua =====
+
+return {
+  {
+    "p00f/clangd_extensions.nvim",
+    lazy = true,
+    config = function() end,
+    opts = {
+      inlay_hints = {
+        inline = false,
+      },
+      ast = {
+        --These require codicons (https://github.com/microsoft/vscode-codicons)
+        role_icons = {
+          type = "",
+          declaration = "",
+          expression = "",
+          specifier = "",
+          statement = "",
+          ["template argument"] = "",
+        },
+        kind_icons = {
+          Compound = "",
+          Recovery = "",
+          TranslationUnit = "",
+          PackExpansion = "",
+          TemplateTypeParm = "",
+          TemplateTemplateParm = "",
+          TemplateParamObject = "",
+        },
+      },
+    },
+  },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        -- Ensure mason installs the server
+        clangd = {
+          keys = {
+            { "<leader>ch", "<cmd>ClangdSwitchSourceHeader<cr>", desc = "Switch Source/Header (C/C++)" },
+          },
+          root_dir = function(fname)
+            return require("lspconfig.util").root_pattern(
+              "Makefile",
+              "configure.ac",
+              "configure.in",
+              "config.h.in",
+              "meson.build",
+              "meson_options.txt",
+              "build.ninja"
+            )(fname) or require("lspconfig.util").root_pattern("compile_commands.json", "compile_flags.txt")(
+              fname
+            ) or require("lspconfig.util").find_git_ancestor(fname)
+          end,
+          capabilities = {
+            offsetEncoding = { "utf-16" },
+          },
+          cmd = {
+            "clangd",
+            "--background-index",
+            "--clang-tidy",
+            "--header-insertion=iwyu",
+            "--completion-style=detailed",
+            "--function-arg-placeholders",
+            "--fallback-style=llvm",
+          },
+          init_options = {
+            usePlaceholders = true,
+            completeUnimported = true,
+            clangdFileStatus = true,
+          },
+        },
+      },
+      setup = {
+        clangd = function(_, opts)
+          local clangd_ext_opts = LazyVim.opts("clangd_extensions.nvim")
+          require("clangd_extensions").setup(vim.tbl_deep_extend("force", clangd_ext_opts or {}, { server = opts }))
+          return false
+        end,
+      },
+    },
+  },
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/lua/plugins/cpp/init.lua =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/nvim/stylua.toml =====
+
+indent_type = "Spaces"
+indent_width = 2
+column_width = 120
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/nvim/stylua.toml =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/scripts/update_background_image.sh =====
+
+#!/usr/bin/env bash
+
+# Set the directory to search. You can modify this to your desired directory.
+SEARCH_DIR="$HOME/.config/wallpaper"
+
+# Destination directory for the selected image
+DEST_DIR="$HOME/.background-image"
+
+# Find all jpg and png files recursively and store them in an array
+mapfile -t image_files < <(find "$SEARCH_DIR" -type f \( -iname '*.jpg' -o -iname '*.png' \))
+
+# Check if the array is not empty
+if [ ${#image_files[@]} -eq 0 ]; then
+    echo "No image files found in the specified directory."
+    exit 1
+fi
+
+# Randomly select an image from the array
+RANDOM_IMAGE="${image_files[RANDOM % ${#image_files[@]}]}"
+
+# Copy the randomly selected image to the destination directory
+cp "$RANDOM_IMAGE" "$DEST_DIR"
+
+# Output the path of the copied image
+echo "Randomly selected image copied to $DEST_DIR: $(basename "$RANDOM_IMAGE")"
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/scripts/update_background_image.sh =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/scripts/double_mod_switch.sh =====
+
+#!/usr/bin/env bash
+
+# File to store the time of the last key press
+LAST_PRESS_FILE="/tmp/last_mod_press"
+
+# Time interval for double press detection (in seconds)
+DOUBLE_PRESS_TIME=0.15
+
+# Get the current time
+current_time=$(date +%s.%N)
+
+# Check if the file exists and read the last press time
+if [ -f "$LAST_PRESS_FILE" ]; then
+  last_time=$(cat "$LAST_PRESS_FILE")
+  diff=$(echo "$current_time - $last_time" | bc)
+
+  # If the press occurred within the interval, switch to the terminal workspace
+  if (($(echo "$diff < $DOUBLE_PRESS_TIME" | bc -l))); then
+    i3-msg workspace terminal
+    rm "$LAST_PRESS_FILE"
+    exit 0
+  fi
+fi
+
+# Update or create the file with the current time
+echo "$current_time" >"$LAST_PRESS_FILE"
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/scripts/double_mod_switch.sh =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/color =====
+
+BACKGROUND=k
+FOREGROUND=w
+MONOCHROME=0
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/color =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/color.tmux =====
+
+BYOBU_DARK="\#333333"
+BYOBU_LIGHT="\#EEEEEE"
+BYOBU_ACCENT="\#75507B"
+BYOBU_HIGHLIGHT="\#DD4814"
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/color.tmux =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/datetime.tmux =====
+
+BYOBU_DATE="%Y-%m-%d "
+BYOBU_TIME="%H:%M:%S"
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/datetime.tmux =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/profile =====
+
+source $BYOBU_PREFIX/share/byobu/profiles/common
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/profile =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/profile.tmux =====
+
+source $BYOBU_PREFIX/share/byobu/profiles/tmux
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/profile.tmux =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/keybindings =====
+
+source $BYOBU_PREFIX/share/byobu/keybindings/common
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/keybindings =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/keybindings.tmux =====
+
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/keybindings.tmux =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/windows =====
+
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/windows =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/windows.tmux =====
+
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/windows.tmux =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/backend =====
+
+BYOBU_BACKEND=tmux
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/backend =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/.screenrc =====
+
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/.screenrc =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/.tmux.conf =====
+
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/.tmux.conf =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/status =====
+
+#    status - Byobu's default status enabled/disabled settings
+#
+#      Override these in $BYOBU_CONFIG_DIR/status
+#      where BYOBU_CONFIG_DIR is XDG_CONFIG_HOME if defined,
+#      and $HOME/.byobu otherwise.
+#
+#    Copyright (C) 2009-2011 Canonical Ltd.
+#    Copyright (C) 2023 Dustin Kirkland
+#
+#    Authors: Dustin Kirkland <kirkland@byobu.org>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, version 3 of the License.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Status beginning with '#' are disabled.
+
+# Screen has two status lines, with 4 quadrants for status
+screen_upper_left="color"
+screen_upper_right="color whoami hostname ip_address menu"
+screen_lower_left="color logo distro release #arch session"
+screen_lower_right="color network #disk_io custom #entropy raid reboot_required updates_available #apport #services #mail users uptime #fan_speed #cpu_temp battery wifi_quality #processes #packages load_average cpu_count cpu_freq memory #swap disk #time_utc date time"
+
+# Tmux has one status line, with 2 halves for status
+tmux_left="logo #distro release #arch session"
+# You can have as many tmux right lines below here, and cycle through them using Shift-F5
+tmux_right="#network #disk_io #custom #entropy raid reboot_required updates_available #apport #services #mail #users uptime #fan_speed #cpu_temp #battery #wifi_quality #processes #packages load_average cpu_count cpu_freq memory #swap disk #whoami #hostname #ip_address #time_utc date time"
+#tmux_right="network disk_io uptime processes packages load_average cpu_count cpu_freq memory disk date time"
+#tmux_right="network #disk_io #custom entropy raid reboot_required updates_available #apport #services #mail users uptime fan_speed cpu_temp battery wifi_quality #processes #packages load_average cpu_count cpu_freq memory #swap #disk whoami hostname ip_address #time_utc date time"
+#tmux_right="network #disk_io custom #entropy raid reboot_required updates_available #apport #services #mail users uptime #fan_speed #cpu_temp battery wifi_quality #processes #packages load_average cpu_count cpu_freq memory #swap #disk #whoami #hostname ip_address #time_utc date time"
+#tmux_right="#network disk_io #custom entropy #raid #reboot_required #updates_available #apport #services #mail #users #uptime fan_speed cpu_temp #battery #wifi_quality #processes #packages #load_average #cpu_count #cpu_freq #memory #swap whoami hostname ip_address #time_utc disk date time"
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/status =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/statusrc =====
+
+#    statusrc - Byobu's default status configurations
+#
+#      Override these in $BYOBU_CONFIG_DIR/statusrc
+#      where BYOBU_CONFIG_DIR is XDG_CONFIG_HOME if defined,
+#      and $HOME/.byobu otherwise.
+#
+#    Copyright (C) 2009-2011 Canonical Ltd.
+#
+#    Authors: Dustin Kirkland <kirkland@byobu.org>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, version 3 of the License.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Configurations that you can override; if you leave these commented out,
+# Byobu will try to auto-detect them.
+
+# This should be auto-detected for most distro, but setting it here will save
+# some call to lsb_release and the like.
+#BYOBU_DISTRO=Ubuntu
+
+# Default: depends on the distro (which is either auto-detected, either set
+# via $DISTRO)
+#LOGO="\o/"
+
+# Abbreviate the release to N characters
+# By default, this is disabled.  But if you set RELEASE_ABBREVIATED=1
+# and your lsb_release is "precise", only "p" will be displayed
+#RELEASE_ABBREVIATED=1
+
+# Default: /
+#MONITORED_DISK=/
+
+# Minimum disk throughput that triggers the notification (in kB/s)
+# Default: 50
+#DISK_IO_THRESHOLD=50
+
+# Default: eth0
+#MONITORED_NETWORK=eth0
+
+# Unit used for network throughput (either bits per second or bytes per second)
+# Default: bits
+#NETWORK_UNITS=bytes
+
+# Minimum network throughput that triggers the notification (in kbit/s)
+# Default: 20
+#NETWORK_THRESHOLD=20
+
+# You can add an additional source of temperature here
+#MONITORED_TEMP=/proc/acpi/thermal_zone/THM0/temperature
+
+# Default: C
+#TEMP=F
+
+#SERVICES="eucalyptus-nc|NC eucalyptus-cloud|CLC eucalyptus-walrus eucalyptus-cc|CC eucalyptus-sc|SC"
+
+#FAN=$(find /sys -type f -name fan1_input | head -n1)
+
+# You can set this to 1 to report your external/public ip address
+# Default: 0
+#IP_EXTERNAL=0
+
+# The users notification normally counts ssh sessions; set this configuration to '1'
+# to instead count number of distinct users logged onto the system
+# Default: 0
+#USERS_DISTINCT=0
+
+# Set this to zero to hide seconds int the time display
+# Default 1
+#TIME_SECONDS=0
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/statusrc =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/prompt =====
+
+[ -r /nix/store/s2vw0i68gpas4q3ny73dzafbbxrn6jm5-byobu-6.12/share/byobu/profiles/bashrc ] && . /nix/store/s2vw0i68gpas4q3ny73dzafbbxrn6jm5-byobu-6.12/share/byobu/profiles/bashrc  #byobu-prompt#
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/prompt =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/byobu/.welcome-displayed =====
+
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/byobu/.welcome-displayed =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/dotfiles/alacritty/alacritty.toml =====
+
+[font]
+size = 12.0
+
+[font.bold]
+family = "monospace"
+style = "Fire Code"
+
+[font.bold_italic]
+family = "monospace"
+style = "Fira Code"
+
+[font.italic]
+family = "monospace"
+style = "Fira Code"
+
+[font.normal]
+family = "monospace"
+style = "Fira Code"
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/dotfiles/alacritty/alacritty.toml =====
+
+
+===== НАЧАЛО ФАЙЛА: ./home-manager/home.nix =====
+
+{
+  config,
+  pkgs,
+  inputs,
+  lib,
+  ...
+}:
+
+let
+  myHelm = pkgs.wrapHelm pkgs.kubernetes-helm {
+    plugins = with pkgs.kubernetes-helmPlugins; [
+      helm-diff
+      helm-secrets
+      helm-s3
+    ];
+  };
+  myHelmfile = pkgs.helmfile.override {
+    inherit (myHelm.passthru) pluginsDir;
+  };
+in
+{
+  home.username = "irasikhin";
+  home.homeDirectory = "/home/irasikhin";
+  home.stateVersion = "22.11";
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+      allowUnfreePredicate = (_: true);
+    };
+  };
+
+  # Let Home Manager install and manage itself.
+  programs.home-manager.enable = true;
+  home.packages = with pkgs; [
+    htop
+    unzip
+    zip
+    python3
+    nodejs
+    clang
+    zig
+    gnumake
+    git
+    lua
+    lazygit
+    bat
+    fzf
+    ripgrep
+    jq
+    tree
+    eza
+    alacritty
+    kitty
+    coreutils-prefixed
+    screen
+    tmux
+    byobu
+    fzf
+    fd
+    antigen
+    docker
+    zsh-autosuggestions
+    pango
+    fira-code
+    nerd-fonts.fira-code
+    librewolf
+    pass
+    xclip
+    bc
+    xorg.xev
+    xbindkeys
+    xorg.xmodmap
+    networkmanagerapplet
+    maven
+    telegram-desktop
+    font-awesome
+    jetbrains.idea-community-bin
+    acpi
+    light # change brightness
+    lshw # view gpu devices
+    pamixer # sound control, configured in i3 config
+    brillo # brightness control, configured in i3 config
+    gparted
+    parted
+    bash
+    feh
+    imagemagick
+    openconnect
+    networkmanager-openconnect
+    networkmanager-vpnc
+    spotify
+    ansible_2_17
+    go-task
+    dig
+    busybox
+    inetutils
+    libreoffice
+    cloc
+    vscode
+    zoom-us
+    sshpass
+    autorandr
+    xlayoutdisplay
+    oath-toolkit
+    yamllint
+    postgresql
+    obsidian
+    yq-go
+    pnpm
+    insomnia
+    kubectl
+    kustomize
+    cointop
+    quarkus
+    qrencode
+    httpie
+    httpie-desktop
+    bruno
+    skopeo
+    nmap
+    kind
+    sops
+    age
+    myHelm
+    myHelmfile
+    cargo
+    aria2
+    proxychains
+    speedtest-cli
+    nh
+    p7zip
+    xarchiver
+    yandex-disk
+    ungoogled-chromium
+    jira-cli-go
+    opentofu
+    terranix
+    terragrunt
+    tflint
+    nixfmt-rfc-style
+    npins
+    treefmt
+    jdt-language-server
+    mergiraf
+    nil
+    floorp
+    yandex-music
+    ytt
+    redocly
+    clang
+    clang-tools
+    xorg.libX11
+    xorg.libXi
+    boost
+    meson
+    inkscape
+    openapi-generator-cli
+    gimp
+    jmeter
+  ];
+
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+    defaultEditor = true;
+    extraLuaPackages = luaPkgs: with luaPkgs; [ ];
+  };
+
+  home.sessionVariables = {
+    EDITOR = "nvim";
+  };
+  home.sessionPath = [ "$HOME/.config/scripts" ];
+  home.shellAliases = {
+    l = "eza";
+    ls = "eza";
+    cat = "bat";
+  };
+
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+    options = [
+      "--cmd j"
+    ];
+  };
+
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
+
+    oh-my-zsh = {
+      enable = true;
+      plugins = [
+        "git"
+        "docker"
+        "fzf"
+        "kubectl"
+        "helm"
+      ];
+    };
+
+    history.size = 10000;
+    history.ignoreAllDups = true;
+    history.path = "$HOME/.zsh_history";
+    history.ignorePatterns = [
+      "rm *"
+      "pkill *"
+      "cp *"
+    ];
+
+    antidote = {
+      enable = true;
+      plugins = [
+        ''
+          zsh-users/zsh-autosuggestions
+          ohmyzsh/ohmyzsh path:lib/git.zsh
+        ''
+      ];
+    };
+
+    initContent = ''
+      byobu; 
+      tput reset;
+      source /home/irasikhin/jira.sh;
+    '';
+  };
+
+  home.file."${config.xdg.configHome}" = {
+    source = ./dotfiles;
+    recursive = true;
+  };
+
+  programs.tmux = {
+    enable = true;
+    sensibleOnTop = false;
+    shortcut = "a";
+    # aggressiveResize = true; -- Disabled to be iTerm-friendly
+    baseIndex = 1;
+    newSession = true;
+    # Stop tmux+escape craziness.
+    escapeTime = 0;
+    # Force tmux to use /tmp for sockets (WSL2 compat)
+    secureSocket = false;
+
+    plugins = with pkgs; [
+      tmuxPlugins.better-mouse-mode
+    ];
+
+    extraConfig = ''
+      set -g default-terminal "tmux-256color"
+      set -ga terminal-overrides ",*256col*:Tc"
+      set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
+      set-environment -g COLORTERM "truecolor"
+
+      set-option -g mouse on
+      bind | split-window -h -c "#{pane_current_path}"
+      bind - split-window -v -c "#{pane_current_path}"
+      bind c new-window -c "#{pane_current_path}"
+    '';
+  };
+
+  programs.starship = {
+    enable = true;
+    # Configuration written to ~/.config/starship.toml
+    settings = {
+      add_newline = false;
+
+      character = {
+        success_symbol = "[➜](bold green)";
+        error_symbol = "[➜](bold red)";
+      };
+
+      package.disabled = true;
+    };
+  };
+
+}
+
+===== КОНЕЦ ФАЙЛА: ./home-manager/home.nix =====
+
+
+===== НАЧАЛО ФАЙЛА: ./nixos/hardware-configuration.nix =====
+
+# Do not modify this file!  It was generated by ‘nixos-generate-config’
+# and may be overwritten by future invocations.  Please make changes
+# to /etc/nixos/configuration.nix instead.
+{
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}:
+
+{
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+  ];
+
+  boot.initrd.availableKernelModules = [
+    "nvme"
+    "xhci_pci"
+    "thunderbolt"
+    "usb_storage"
+    "sd_mod"
+    "sdhci_pci"
+  ];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ "kvm-amd" ];
+
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/409ed545-d283-48bb-bed7-d37c5a24a932";
+    fsType = "btrfs";
+    options = [ "subvol=@" ];
+  };
+
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/117B-2AA0";
+    fsType = "vfat";
+    options = [
+      "fmask=0077"
+      "dmask=0077"
+    ];
+  };
+
+  fileSystems."/home" = {
+    device = "/dev/disk/by-uuid/2e014b54-871e-4f14-80a2-745b61f626bf";
+    fsType = "btrfs";
+  };
+
+  swapDevices = [ ];
+
+  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
+  # (the default) this is the recommended approach. When using systemd-networkd it's
+  # still possible to use this option, but it's recommended to use it in conjunction
+  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
+  networking.useDHCP = lib.mkDefault true;
+  # networking.interfaces.wlp4s0.useDHCP = lib.mkDefault true;
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+  # enable brillo
+  hardware.brillo.enable = true;
+
+  # for usb
+  services.gvfs.enable = true;
+  services.udisks2.enable = true;
+  services.devmon.enable = true;
+}
+
+===== КОНЕЦ ФАЙЛА: ./nixos/hardware-configuration.nix =====
+
+
+===== НАЧАЛО ФАЙЛА: ./nixos/configuration.nix =====
+
+{
+  config,
+  pkgs,
+  callPackage,
+  lib,
+  ...
+}:
+
+{
+  imports = [
+    ./hardware-configuration.nix # Import hardware-specific configuration
+  ];
+
+  # Configure system bootloader
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  # Set hostname and networking settings
+  networking.hostName = "irnixos";
+  networking.wireless.enable = false; # Disable wireless networking (will use NetworkManager)
+
+  services.resolved = {
+    enable = false;
+    domains = [ "~." ];
+  };
+  networking.networkmanager = {
+    enable = true;
+    enableStrongSwan = true;
+  };
+
+  # Set system locale and time zone
+  i18n.defaultLocale = "en_US.UTF-8";
+  time.timeZone = "Europe/Moscow";
+
+  # Additional locale settings
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "ru_RU.UTF-8";
+    LC_IDENTIFICATION = "ru_RU.UTF-8";
+    LC_MEASUREMENT = "ru_RU.UTF-8";
+    LC_MONETARY = "ru_RU.UTF-8";
+    LC_NAME = "ru_RU.UTF-8";
+    LC_NUMERIC = "ru_RU.UTF-8";
+    LC_PAPER = "ru_RU.UTF-8";
+    LC_TELEPHONE = "ru_RU.UTF-8";
+    LC_TIME = "ru_RU.UTF-8";
+  };
+
+  # Enable X server and configure display manager/window manager
+  services.xserver.enable = true;
+  services.xserver.desktopManager.xfce.enable = false;
+  services.xserver.displayManager.lightdm.enable = true;
+  services.xserver.displayManager.lightdm.greeters.gtk = {
+    extraConfig = ''
+      user-background = false
+    '';
+  };
+  services.displayManager.defaultSession = "none+i3"; # Use i3 as window manager
+  services.xserver.windowManager.i3 = {
+    enable = true;
+    extraPackages = with pkgs; [
+      rofi # Application launcher
+      i3status-rust # Status bar for i3
+      i3lock-color # Lock screen
+      i3lock-fancy # Fancier lock screen
+    ];
+  };
+  services.xserver.xkb = {
+    layout = "us,ru"; # Enable US and Russian keyboard layouts
+    options = "grp:shifts_toggle"; # Toggle layout using both shift keys
+  };
+
+  console.keyMap = "us"; # Set console keymap
+
+  # Disable printing support (CUPS)
+  services.printing.enable = false;
+
+  # Enable audio using PipeWire
+  services.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
+
+  # Enable Firefox browser
+  programs.firefox.enable = true;
+
+  # Enable GnuPG agent with SSH support
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
+
+  # Enable OpenSSH daemon for remote access
+  services.openssh.enable = true;
+
+  # Set system state version (important for maintaining compatibility)
+  system.stateVersion = "24.05";
+
+  # Enable Nix Flakes
+  nix.package = pkgs.nixVersions.stable;
+  nix.extraOptions = ''
+    experimental-features = nix-command flakes
+  '';
+
+  # Configure user account
+  users.users.irasikhin = {
+    isNormalUser = true;
+    description = "Ivan Rasikhin";
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "video"
+      "audio"
+      "qemu-libvirtd"
+      "docker"
+      "libvirtd"
+    ];
+    packages = with pkgs; [ ];
+    shell = pkgs.zsh; # Set default shell to Zsh
+  };
+  programs.zsh.enable = true;
+  programs.tmux = {
+    enable = true;
+    clock24 = true;
+  };
+
+  # Enable key remapping (Caps Lock to Escape)
+  services.interception-tools = {
+    enable = true;
+    plugins = with pkgs; [
+      interception-tools-plugins.caps2esc
+    ];
+    udevmonConfig = ''
+      - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.caps2esc}/bin/caps2esc -m 1 | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
+        DEVICE:
+          EVENTS:
+            EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
+    '';
+  };
+
+  # Set environment variables
+  environment.variables = {
+    GDK_SCALE = "1";
+    GDK_DPI_SCALE = "1.5";
+  };
+
+  # Enable light control program
+  programs.light.enable = true;
+
+  # Enable Docker with Btrfs storage driver
+  virtualisation.docker.enable = true;
+  virtualisation.docker.storageDriver = "btrfs";
+  virtualisation.docker.daemon.settings = {
+    "data-root" = "/home/irasikhin/.docker-data";
+    "default-address-pools" = [
+      {
+        "base" = "192.170.0.0/16";
+        "size" = 24;
+      }
+    ];
+  };
+
+  # Install essential system packages
+  environment.systemPackages = with pkgs; [
+    docker-compose
+    freefilesync
+    strongswan
+    strongswanNM
+    openssl
+    python312Packages.pip-system-certs
+    libvirt
+    vagrant
+    wireguard-tools
+    tinyproxy
+    xvfb-run
+    swt
+    distrobox
+    dive
+    podman-tui
+    autoconf
+    gnumake
+    graphviz
+    pandoc
+    file
+    gcc
+    alsa-lib
+    autossh
+    clang
+    clang-tools
+  ];
+
+  # Enable firewall
+  networking.firewall.enable = true;
+
+  # Enable Nix-ld (to run non-NixOS binaries)
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [ ];
+
+  # Enable Bluetooth support
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+  services.blueman.enable = true;
+
+  # Allow users in wheel group to execute sudo commands without password
+  security.sudo.wheelNeedsPassword = false;
+
+  # Enable VirtualBox support
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = [ "irasikhin" ];
+
+  nixpkgs.config.allowUnfree = true;
+
+  nixpkgs.config = {
+    packageOverrides = pkgs: {
+      vagrant = pkgs.vagrant.override { withLibvirt = false; };
+    };
+  };
+
+  # Enable TinyProxy
+  services.tinyproxy = {
+    enable = true;
+    settings = {
+      Port = 8888;
+      Listen = "127.0.0.1";
+      Timeout = 600;
+      Allow = "127.0.0.1";
+      Upstream = "socks5 127.0.0.1:1337";
+    };
+  };
+
+  # Enable Java (Temurin JDK 21)
+  programs.java = {
+    enable = true;
+    package = pkgs.temurin-bin-21;
+  };
+
+  swapDevices = lib.mkForce [ ];
+}
+
+===== КОНЕЦ ФАЙЛА: ./nixos/configuration.nix =====
+
+
+===== НАЧАЛО ФАЙЛА: ./rebuild.sh =====
+
+#!/bin/sh
+
+set -e
+
+sudo nixos-rebuild switch --flake .#irnixos
+home-manager switch --flake .#irasikhin@irnixos
+
+===== КОНЕЦ ФАЙЛА: ./rebuild.sh =====
+
+
+===== НАЧАЛО ФАЙЛА: ./treefmt.toml =====
+
+[formatter.nixfmt-rfc-style]
+command = "nixfmt"
+includes = ["*.nix"]
+
+===== КОНЕЦ ФАЙЛА: ./treefmt.toml =====
+
+
+===== НАЧАЛО ФАЙЛА: ./flake.nix =====
+
+{
+  description = "ir flakies";
+
+  inputs = {
+    # Nixpkgs
+    nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
+
+    # Home manager
+    home-manager.url = "github:nix-community/home-manager/release-25.05";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Hardware
+    hardware.url = "github:nixos/nixos-hardware";
+  };
+
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      nixos-hardware,
+      ...
+    }@inputs:
+    {
+      # NixOS configuration entrypoint
+      # Available through 'nixos-rebuild --flake .#your-hostname'
+
+      nixosConfigurations = {
+        irnixos = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; };
+          modules = [
+            ./nixos/configuration.nix
+            nixos-hardware.nixosModules.lenovo-thinkpad-p14s-amd-gen2
+          ];
+        };
+      };
+
+      # home-manager configuration entrypoint
+      # Available through 'home-manager --flake .#your-username@your-hostname'
+      homeConfigurations = {
+        "irasikhin@irnixos" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = { inherit inputs; }; # Pass flake inputs to our config
+          # > Our main home-manager configuration file <
+          modules = [
+            ./home-manager/home.nix
+          ];
+        };
+      };
+    };
+}
+
+===== КОНЕЦ ФАЙЛА: ./flake.nix =====
+
+
+===== НАЧАЛО ФАЙЛА: ./flake.lock =====
+
+{
+  "nodes": {
+    "hardware": {
+      "locked": {
+        "lastModified": 1752666637,
+        "narHash": "sha256-P8J72psdc/rWliIvp8jUpoQ6qRDlVzgSDDlgkaXQ0Fw=",
+        "owner": "nixos",
+        "repo": "nixos-hardware",
+        "rev": "d1bfa8f6ccfb5c383e1eba609c1eb67ca24ed153",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixos-hardware",
+        "type": "github"
+      }
+    },
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1752544374,
+        "narHash": "sha256-ReX0NG6nIAEtQQjLqeu1vUU2jjZuMlpymNtb4VQYeus=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "2e00ed310c218127e02ffcf28ddd4e0f669fde3e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "ref": "release-25.05",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "nixos-hardware": {
+      "locked": {
+        "lastModified": 1752666637,
+        "narHash": "sha256-P8J72psdc/rWliIvp8jUpoQ6qRDlVzgSDDlgkaXQ0Fw=",
+        "owner": "NixOS",
+        "repo": "nixos-hardware",
+        "rev": "d1bfa8f6ccfb5c383e1eba609c1eb67ca24ed153",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixos-hardware",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1752764464,
+        "narHash": "sha256-n9ko6gsf0bngkazQVJ5COT5qMTWDjcbPLsJgkUxlz8c=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "14ab08dbe038601b2d1ebeb5270e7d8fc499679e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "release-25.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "hardware": "hardware",
+        "home-manager": "home-manager",
+        "nixos-hardware": "nixos-hardware",
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
+
+===== КОНЕЦ ФАЙЛА: ./flake.lock =====
+
+
+===== НАЧАЛО ФАЙЛА: ./file_concat.sh =====
+
+#!/bin/bash
+
+OUTPUT_FILE="combined_output.txt"
+>"$OUTPUT_FILE"
+
+# Обрабатываем отдельно текущую директорию и поддиректории
+find . -mindepth 1 \( -path './.*' -prune \) -o -type f ! -name "$OUTPUT_FILE" -print | while read -r file; do
+  echo -e "\n===== НАЧАЛО ФАЙЛА: $file =====\n" >>"$OUTPUT_FILE"
+  cat "$file" >>"$OUTPUT_FILE"
+  echo -e "\n===== КОНЕЦ ФАЙЛА: $file =====\n" >>"$OUTPUT_FILE"
+done
+
+echo "Файлы рекурсивно объединены в $OUTPUT_FILE (скрытые файлы из корня исключены)."
+
+===== КОНЕЦ ФАЙЛА: ./file_concat.sh =====
+

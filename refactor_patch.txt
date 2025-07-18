@@ -1,0 +1,895 @@
+===== START: CREATE_OR_REPLACE ./flake.nix =====
+{
+  description = "NixOS Configuration";
+
+  inputs = {
+    # Using unstable for fresher packages, especially for development
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hardware.url = "github:nixos/nixos-hardware";
+
+    # The magic for Neovim plugins
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+  };
+
+  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  let
+    system = "x86_64-linux";
+    # Create a pkgs instance with our overlays
+    pkgs = import nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
+      overlays = [
+        # Add the neovim overlay to pkgs
+        inputs.neovim-nightly-overlay.overlays.default
+      ];
+    };
+  in
+  {
+    nixosConfigurations = {
+      irnixos = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs; };
+        modules = [
+          # Pass pkgs with overlay to the system configuration
+          { _module.args.pkgs = pkgs; }
+          ./nixos/configuration.nix
+          inputs.hardware.nixosModules.lenovo-thinkpad-p14s-amd-gen2
+        ];
+      };
+    };
+
+    homeConfigurations = {
+      "irasikhin@irnixos" = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs; # Pass the pkgs with overlay
+        extraSpecialArgs = { inherit inputs; };
+        modules = [ ./home-manager/home.nix ];
+      };
+    };
+  };
+}
+===== END: CREATE_OR_REPLACE ./flake.nix =====
+
+===== START: CREATE_OR_REPLACE ./home-manager/home.nix =====
+# This is the main entrypoint for home-manager configuration.
+# It imports all other modules.
+{ ... }: {
+  imports = [
+    ./modules/cli.nix
+    ./modules/gui.nix
+    ./modules/shells.nix
+    ./modules/programs/neovim.nix
+    ./modules/programs/i3.nix
+  ];
+
+  # Basic user settings
+  home.username = "irasikhin";
+  home.homeDirectory = "/home/irasikhin";
+  # It's a good practice to update stateVersion to the current release
+  home.stateVersion = "24.05";
+
+  # Global session variables
+  home.sessionVariables = { EDITOR = "nvim"; };
+
+  # Allow proprietary software
+  nixpkgs.config.allowUnfree = true;
+
+  # Enable home-manager itself
+  programs.home-manager.enable = true;
+}
+===== END: CREATE_OR_REPLACE ./home-manager/home.nix =====
+
+===== START: CREATE_OR_REPLACE ./home-manager/modules/cli.nix =====
+# Manages Command Line Interface tools
+{ pkgs, ... }: {
+  home.packages = with pkgs; [
+    # Core utils
+    htop
+    unzip
+    zip
+    git
+    lazygit
+    bat
+    fzf
+    ripgrep
+    jq
+    tree
+    eza
+    coreutils-prefixed
+    fd
+    cloc
+    bc
+    lshw
+    gparted
+    parted
+    feh
+    imagemagick
+    sshpass
+    oath-toolkit
+    yamllint
+    qrencode
+    httpie
+    skopeo
+    nmap
+    sops
+    age
+    aria2
+    proxychains
+    speedtest-cli
+    p7zip
+    xarchiver
+    tflint
+    nixfmt-rfc-style
+    treefmt
+    nil
+    ytt
+    dive
+    podman-tui
+    autoconf
+    gnumake
+    graphviz
+    pandoc
+    file
+    gcc
+    autossh
+    clang-tools # clangd is in neovim.nix
+
+    # For development
+    python3
+    nodejs
+    clang
+    zig
+    go-task
+    maven
+    cargo
+    pnpm
+    ansible_2_17
+    quarkus
+    kind
+    (pkgs.wrapHelm pkgs.kubernetes-helm {
+      plugins = with pkgs.kubernetes-helmPlugins; [
+        helm-diff
+        helm-secrets
+        helm-s3
+      ];
+    })
+    helmfile
+    kubectl
+    kustomize
+    jira-cli-go
+    opentofu
+    terragrunt
+    openapi-generator-cli
+
+    # For Nix development
+    nh
+    npins
+    mergiraf
+  ];
+
+  home.shellAliases = {
+    l = "eza";
+    ls = "eza";
+    cat = "bat";
+  };
+}
+===== END: CREATE_OR_REPLACE ./home-manager/modules/cli.nix =====
+
+===== START: CREATE_OR_REPLACE ./home-manager/modules/gui.nix =====
+# Manages Graphical User Interface applications
+{ pkgs, ... }: {
+  home.packages = with pkgs; [
+    # Terminals
+    alacritty
+    kitty
+
+    # Fonts
+    pango
+    fira-code
+    (nerd-fonts.override { fonts = [ "FiraCode" ]; })
+    font-awesome
+
+    # Browsers
+    librewolf
+    floorp
+    ungoogled-chromium
+
+    # System tools & utilities
+    pass # password-store
+    xclip
+    brillo
+    networkmanagerapplet
+    openconnect
+    networkmanager-openconnect
+    networkmanager-vpnc
+    autorandr
+    xlayoutdisplay
+    inkscape
+    gimp
+    jmeter
+    libreoffice
+
+    # Applications
+    telegram-desktop
+    (jetbrains.idea-community.override {
+      plugins = with pkgs.jetbrains; [ ]; # Add plugins here if needed
+    })
+    spotify
+    vscode
+    zoom-us
+    obsidian
+    insomnia
+    httpie-desktop
+    bruno
+    yandex-disk
+    yandex-music
+    # cointop # This is a TUI, fits better in cli.nix maybe, but ok here.
+  ];
+
+  # Your Alacritty config.
+  # For more complex configs, consider using `home.file`
+  programs.alacritty.settings = {
+    font = {
+      size = 12.0;
+      normal = { family = "FiraCode Nerd Font"; style = "Regular"; };
+      bold = { family = "FiraCode Nerd Font"; style = "Bold"; };
+      italic = { family = "FiraCode Nerd Font"; style = "Italic"; };
+    };
+  };
+}
+===== END: CREATE_OR_REPLACE ./home-manager/modules/gui.nix =====
+
+===== START: CREATE_OR_REPLACE ./home-manager/modules/programs/i3.nix =====
+{ pkgs, ... }:
+
+let
+  # This creates a package with your scripts in its /bin directory
+  my-scripts = pkgs.runCommand "my-i3-scripts" { } ''
+    mkdir -p $out/bin
+    cp ${../../../scripts/double_mod_switch.sh} $out/bin/double_mod_switch
+    cp ${../../../scripts/update_background_image.sh} $out/bin/update_background_image
+    chmod +x $out/bin/*
+  '';
+in
+{
+  # Add the scripts package to your path
+  home.packages = [ my-scripts ];
+
+  # Manage i3 config file declaratively.
+  # This avoids hardcoded paths and makes the config fully reproducible.
+  xdg.configFile."i3/config".text = ''
+    # This file is managed by Nix.
+    set $mod Mod4
+    set $alt Mod1
+    default_border none
+    font pango:FiraCode Nerd Font 12
+    floating_modifier $mod
+    workspace_auto_back_and_forth yes
+    bindsym $mod+Return exec termite -e /bin/zsh
+    bindsym $mod+Shift+q kill
+    bindsym $mod+Shift+a focus parent,kill
+
+    # rofi
+    bindsym $alt+d exec "rofi -show combi -sidebar-mode"
+    bindsym $mod+Tab exec "rofi -show window"
+
+    # change focus
+    bindsym $mod+j focus left
+    bindsym $mod+k focus down
+    bindsym $mod+l focus up
+    bindsym $mod+semicolon focus right
+
+    # alternatively, you can use the cursor keys:
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
+
+    # move focused window
+    bindsym $mod+Shift+j move left
+    bindsym $mod+Shift+k move down
+    bindsym $mod+Shift+l move up
+    bindsym $mod+Shift+semicolon move right
+
+    # alternatively, you can use the cursor keys:
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
+
+    # split in horizontal orientation
+    bindsym $mod+h split h
+
+    # split in vertical orientation
+    bindsym $mod+v split v
+
+    # enter fullscreen mode for the focused container
+    bindsym $mod+f fullscreen toggle
+
+    # change container layout (stacked, tabbed, toggle split)
+    bindsym $mod+s layout stacking
+    bindsym $mod+w layout tabbed
+    bindsym $mod+e layout toggle split
+
+    # toggle tiling / floating
+    bindsym $mod+Shift+space floating toggle
+
+    # change focus between tiling / floating windows
+    bindsym $mod+space focus mode_toggle
+
+    # focus the parent container
+    bindsym $mod+a focus parent
+
+    # Define names for default workspaces
+    set $ws1 "1"
+    set $ws2 "2"
+    set $ws3 "3"
+    set $ws4 "4"
+    set $ws5 "5"
+    set $ws6 "6"
+    set $ws7 "7"
+    set $ws8 "8"
+    set $ws9 "9"
+    set $ws10 "10"
+
+    # switch to workspace
+    bindsym $mod+1 workspace $ws1
+    bindsym $mod+2 workspace $ws2
+    bindsym $mod+3 workspace $ws3
+    bindsym $mod+4 workspace $ws4
+    bindsym $mod+5 workspace $ws5
+    bindsym $mod+6 workspace $ws6
+    bindsym $mod+7 workspace $ws7
+    bindsym $mod+8 workspace $ws8
+    bindsym $mod+9 workspace $ws9
+    bindsym $mod+0 workspace $ws10
+
+    # move focused container to workspace
+    bindsym $mod+Shift+1 move container to workspace $ws1
+    bindsym $mod+Shift+2 move container to workspace $ws2
+    bindsym $mod+Shift+3 move container to workspace $ws3
+    bindsym $mod+Shift+4 move container to workspace $ws4
+    bindsym $mod+Shift+5 move container to workspace $ws5
+    bindsym $mod+Shift+6 move container to workspace $ws6
+    bindsym $mod+Shift+7 move container to workspace $ws7
+    bindsym $mod+Shift+8 move container to workspace $ws8
+    bindsym $mod+Shift+9 move container to workspace $ws9
+    bindsym $mod+Shift+0 move container to workspace $ws10
+
+    # reload the configuration file
+    bindsym $mod+Shift+c reload
+    # restart i3 inplace
+    bindsym $mod+Shift+r restart
+    # exit i3
+    bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+    bindsym $mod+Shift+w exec "i3lock-color -k --keylayout 0 --image $HOME/.background-image"
+
+    # resize mode
+    mode "resize" {
+      bindsym j resize shrink width 10 px or 10 ppt
+      bindsym k resize grow height 10 px or 10 ppt
+      bindsym l resize shrink height 10 px or 10 ppt
+      bindsym semicolon resize grow width 10 px or 10 ppt
+
+      bindsym Left resize shrink width 10 px or 10 ppt
+      bindsym Down resize grow height 10 px or 10 ppt
+      bindsym Up resize shrink height 10 px or 10 ppt
+      bindsym Right resize grow width 10 px or 10 ppt
+
+      bindsym Return mode "default"
+      bindsym Escape mode "default"
+      bindsym $mod+r mode "default"
+    }
+    bindsym $mod+r mode "resize"
+
+    bar {
+      font pango: FiraCode Nerd Font 16
+      position top
+      status_command i3status-rs ~/.config/i3/status.toml
+      colors {
+        separator #666666
+        background #222222
+        statusline #dddddd
+        focused_workspace #0088CC #0088CC #ffffff
+        active_workspace #333333 #333333 #ffffff
+        inactive_workspace #333333 #333333 #888888
+        urgent_workspace #2f343a #900000 #ffffff
+      }
+    }
+
+    focus_on_window_activation focus
+
+    # Media controls
+    bindsym XF86AudioRaiseVolume exec --no-startup-id pamixer -i 5
+    bindsym XF86AudioLowerVolume exec --no-startup-id pamixer -d 5
+    bindsym XF86AudioMute exec --no-startup-id pamixer -t
+    bindsym XF86MonBrightnessUp exec --no-startup-id brillo -A 5
+    bindsym XF86MonBrightnessDown exec --no-startup-id brillo -U 5
+    bindsym XF86AudioPlay exec playerctl play
+    bindsym XF86AudioPause exec playerctl pause
+    bindsym XF86AudioNext exec playerctl next
+    bindsym XF86AudioPrev exec playerctl previous
+
+    # Application workspaces
+    set $idea "idea"
+    bindsym $mod+i workspace $idea
+    assign [class=".*[I,i]dea.*"] $idea
+
+    set $msg "msg"
+    bindsym $mod+m workspace $msg
+    assign [class=".*telegram-desktop.*"] $msg
+
+    set $web "web"
+    bindsym $mod+u workspace $web
+    assign [class=".*[l,l]ibrewolf.*"] $web
+    assign [class=".*[F,f]irefox.*"] $web
+    assign [class=".*[C,c]hromium.*"] $web
+    assign [class=".*[F,f]loorp.*"] $web
+
+    set $discord "discord"
+    bindsym $mod+d workspace $discord
+    assign [class=".*[D,d]iscord.*"] $discord
+
+    set $obsidian "obsidian"
+    bindsym $mod+o workspace $obsidian
+    assign [class=".*[O,o]bsidian.*"] $obsidian
+
+    set $slack "slack"
+    bindsym $mod+n workspace $slack
+    assign [class=".*[S,s]lack.*"] $slack
+
+    set $code "code"
+    bindsym $mod+c workspace $code
+    assign [class=".*[C,c]ode.*"] $code
+
+    set $clion "clion"
+    bindsym $mod+y workspace $clion
+    assign [class=".*[C,c]lion.*"] $clion
+
+    set $terminal "terminal"
+    bindsym Super_L exec --no-startup-id "double_mod_switch"
+    assign [class=".*[A,a]lacritty.*"] $terminal
+
+    set $spotify "spotify"
+    bindsym $mod+p workspace $spotify
+    assign [class=".*[S,s]potify.*"] $spotify
+
+    set $thunderbird "thunderbird"
+    bindsym $mod+t workspace $thunderbird
+    assign [class=".*[T,t]hunderbird.*"] $thunderbird
+
+    for_window [class="^.*"] border pixel 0
+
+    # Autostart applications
+    exec_always --no-startup-id nm-applet
+    exec --no-startup-id i3-msg 'workspace $terminal; exec alacritty'
+    exec --no-startup-id i3-msg 'workspace $web; exec floorp'
+    exec --no-startup-id i3-msg 'workspace $idea; exec idea'
+    exec --no-startup-id i3-msg 'workspace $msg; exec telegram-desktop'
+    exec --no-startup-id i3-msg 'workspace $thunderbird; exec thunderbird'
+    exec_always --no-startup-id "update_background_image"
+  '';
+
+  # Link the i3 status config file
+  xdg.configFile."i3/status.toml".source = ../../dotfiles/i3/status.toml;
+}
+===== END: CREATE_OR_REPLACE ./home-manager/modules/programs/i3.nix =====
+
+===== START: CREATE_OR_REPLACE ./home-manager/modules/programs/neovim.nix =====
+# Fully declarative Neovim configuration
+{ pkgs, ... }:
+
+let
+  # Tools previously managed by Mason
+  toolPkgs = with pkgs; [
+    # LSPs
+    jdtls
+    clangd
+    nil-ls
+    rust-analyzer
+    kotlin-language-server
+    metals # for scala
+    jsonls
+    # pyright # from example, add if needed for python
+    # tsserver # from example, add if needed for typescript
+
+    # Formatters
+    black # python
+    stylua
+    shfmt
+    nixfmt-rfc-style # better nix formatter
+
+    # Linters
+    shellcheck
+    flake8
+
+    # DAP
+    java-debug-adapter
+    java-test
+
+    # Other tools for plugins
+    fzf
+    bat
+  ];
+
+  # All Neovim plugins, declared as Nix packages
+  pluginPkgs = with pkgs.vimPlugins; [
+    # Core
+    lazy-nvim
+    LazyVim
+
+    # Colorschemes
+    gruvbox-nvim
+    darcula-dark-nvim
+    onedark-nvim
+    vscode-nvim
+    darcula-solid-nvim
+    github-nvim-theme
+
+    # UI/UX
+    fzf-lua # Replaces telescope
+    which-key-nvim
+    zen-mode-nvim
+
+    # Mini plugins (packaged elegantly)
+    (mini-nvim.withPlugins (p: [ p.files p.bufremove p.misc ]))
+
+    # Utils & Dependencies
+    plenary-nvim
+    nvim-lspconfig
+    nvim-treesitter.withAllGrammars # install all parsers at once, easier
+    nvim-cmp
+    cmp-nvim-lsp
+    conform-nvim # for formatting
+
+    # Dev plugins
+    maven-nvim
+    refactoring-nvim
+    nvim-jdtls
+    clangd_extensions-nvim
+  ];
+
+in
+{
+  programs.neovim = {
+    enable = true;
+    # Use the fresh neovim from the overlay
+    package = pkgs.neovim;
+
+    # Make all tools available ONLY inside neovim's PATH
+    extraPackages = toolPkgs;
+
+    # Declare all plugins for Nix to manage
+    plugins = pluginPkgs;
+
+    # Aliases
+    viAlias = true;
+    vimAlias = true;
+    defaultEditor = true;
+  };
+
+  # Link your existing, but now cleaned, lua config
+  xdg.configFile."nvim" = {
+    source = ../../dotfiles/nvim; # Path to your nvim lua config
+    recursive = true;
+  };
+}
+===== END: CREATE_OR_REPLACE ./home-manager/modules/programs/neovim.nix =====
+
+===== START: CREATE_OR_REPLACE ./home-manager/modules/shells.nix =====
+# Manages shell configuration (zsh, tmux, etc.)
+{ pkgs, ... }: {
+  home.packages = with pkgs; [
+    # Shells & Muxers
+    screen
+    tmux
+    byobu
+    zsh-autosuggestions
+    antigen
+  ];
+
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+    options = [ "--cmd j" ];
+  };
+
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
+
+    oh-my-zsh = {
+      enable = true;
+      plugins = [ "git" "docker" "fzf" "kubectl" "helm" ];
+    };
+
+    history = {
+      size = 10000;
+      ignoreAllDups = true;
+      path = "$HOME/.zsh_history";
+      ignorePatterns = [ "rm *" "pkill *" "cp *" ];
+    };
+
+    # Antidote is cleaner than sourcing directly
+    antidote = {
+      enable = true;
+      plugins = [ "zsh-users/zsh-autosuggestions" ];
+    };
+
+    initExtra = ''
+      # This is safer than initContent
+      if command -v byobu >/dev/null 2>&1; then
+        byobu
+      fi
+      
+      if [ -f "$HOME/jira.sh" ]; then
+        source "$HOME/jira.sh"
+      fi
+
+      tput reset
+    '';
+  };
+
+  programs.tmux = {
+    enable = true;
+    sensibleOnTop = false;
+    shortcut = "a";
+    baseIndex = 1;
+    newSession = true;
+    escapeTime = 0;
+    secureSocket = false; # For WSL2 compat, ok on linux too
+
+    plugins = with pkgs.tmuxPlugins; [ better-mouse-mode ];
+
+    extraConfig = ''
+      set -g default-terminal "tmux-256color"
+      set -ga terminal-overrides ",*256col*:Tc"
+      set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
+      set-environment -g COLORTERM "truecolor"
+
+      set-option -g mouse on
+      bind | split-window -h -c "#{pane_current_path}"
+      bind - split-window -v -c "#{pane_current_path}"
+      bind c new-window -c "#{pane_current_path}"
+    '';
+  };
+
+  programs.starship = {
+    enable = true;
+    settings = {
+      add_newline = false;
+      character = {
+        success_symbol = "[➜](bold green)";
+        error_symbol = "[➜](bold red)";
+      };
+      package.disabled = true;
+    };
+  };
+
+  # Byobu config files
+  xdg.configFile."byobu" = {
+    source = ../dotfiles/byobu;
+    recursive = true;
+  };
+}
+===== END: CREATE_OR_REPLACE ./home-manager/modules/shells.nix =====
+
+===== START: CREATE_OR_REPLACE ./home-manager/dotfiles/nvim/lua/config/lazy.lua =====
+-- Nix/home-manager is managing the installation of lazy.nvim and all plugins,
+-- so we don't need to clone it manually. This file just configures it.
+
+require("lazy").setup({
+  spec = {
+    -- add LazyVim and import its plugins
+    { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    -- import/override with your plugins
+    { import = "plugins" },
+  },
+  defaults = {
+    -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
+    -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.
+    lazy = false,
+    -- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
+    -- have outdated releases, which may break your Neovim install.
+    version = false, -- always use the latest git commit
+    -- version = "*", -- try installing the latest stable version for plugins that support semver
+  },
+  install = { colorscheme = { "tokyonight", "habamax" } },
+  checker = {
+    enabled = true, -- check for plugin updates periodically
+    notify = false, -- notify on update
+  }, -- automatically check for plugin updates
+  performance = {
+    rtp = {
+      -- disable some rtp plugins
+      disabled_plugins = {
+        "gzip",
+        -- "matchit",
+        -- "matchparen",
+        -- "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
+    },
+  },
+})
+===== END: CREATE_OR_REPLACE ./home-manager/dotfiles/nvim/lua/config/lazy.lua =====
+
+===== START: CREATE_OR_REPLACE ./home-manager/dotfiles/nvim/lua/plugins/java/init.lua =====
+-- This file is much simpler now.
+-- Nix handles the installation and pathing of jdtls, lombok, and debug adapters.
+return {
+  "mfussenegger/nvim-jdtls",
+  ft = { "java" },
+  dependencies = { "folke/which-key.nvim" },
+  config = function()
+    -- The wrapper script for jdtls provided by nixpkgs
+    -- automatically finds debug adapters and other bundles.
+    -- We just need to start it.
+
+    local jdtls_setup = require("jdtls.setup")
+    local root_markers = { ".git", "mvnw", "gradlew", "pom.xml" }
+    local root_dir = jdtls_setup.find_root(root_markers)
+    if not root_dir then
+      return
+    end
+
+    local project_name = vim.fn.fnamemodify(root_dir, ":p:h:t")
+    local workspace_dir = vim.fn.stdpath("cache") .. "/jdtls/" .. project_name
+
+    -- See `:help jdtls-config` for more options.
+    local config = {
+      -- Your custom JVM options.
+      -- Note: 12g is a LOT of memory. Consider starting lower, e.g., -Xmx4g
+      cmd = { "jdtls", "-Xmx4g", "-Xms1g", "--jvm-arg=-XX:+UseG1GC" },
+      root_dir = root_dir,
+      workspace_dir = workspace_dir,
+      settings = {
+        java = {
+          inlayHints = {
+            parameterNames = {
+              enabled = "all",
+            },
+          },
+        },
+      },
+      init_options = {
+        bundles = {},
+      },
+      on_attach = function(client, bufnr)
+        -- Your existing keymaps and LspAttach logic from the old file can be pasted here.
+        -- It remains valid.
+        local wk = require("which-key")
+        wk.add({
+          {
+            mode = "n",
+            buffer = bufnr,
+            { "<leader>cx", group = "extract" },
+            { "<leader>cxv", function() require("jdtls").extract_variable_all(false) end, desc = "Extract Variable" },
+            { "<leader>cxc", function() require("jdtls").extract_constant(false) end, desc = "Extract Constant" },
+            { "<leader>cgs", require("jdtls").super_implementation, desc = "Goto Super" },
+            { "<leader>cgS", require("jdtls.tests").goto_subjects, desc = "Goto Subjects" },
+            { "<leader>co", require("jdtls").organize_imports, desc = "Organize Imports" },
+          },
+          {
+            mode = "v",
+            buffer = bufnr,
+            { "<leader>cx", group = "extract" },
+            { "<leader>cxm", [[<ESC><CMD>lua require('jdtls').extract_method(true)<CR>]], desc = "Extract Method" },
+          },
+        })
+
+        -- Setup DAP. It's much cleaner now.
+        require("jdtls").setup_dap({ hotcodereplace = "auto" })
+        wk.add({
+          {
+            mode = "n",
+            buffer = bufnr,
+            { "<leader>t", group = "test" },
+            { "<leader>tt", function() require("jdtls.dap").test_class() end, desc = "Run All Test" },
+            { "<leader>tr", function() require("jdtls.dap").test_nearest_method() end, desc = "Run Nearest Test" },
+            { "<leader>tT", require("jdtls.dap").pick_test, desc = "Run Test" },
+          },
+        })
+      end,
+    }
+
+    require("jdtls").start_or_attach(config)
+  end,
+}
+===== END: CREATE_OR_REPLACE ./home-manager/dotfiles/nvim/lua/plugins/java/init.lua =====
+
+===== START: CREATE_OR_REPLACE ./scripts/double_mod_switch.sh =====
+#!/usr/bin/env bash
+
+# File to store the time of the last key press
+LAST_PRESS_FILE="/tmp/last_mod_press"
+
+# Time interval for double press detection (in seconds)
+DOUBLE_PRESS_TIME=0.15
+
+# Get the current time
+current_time=$(date +%s.%N)
+
+# Check if the file exists and read the last press time
+if [ -f "$LAST_PRESS_FILE" ]; then
+  last_time=$(cat "$LAST_PRESS_FILE")
+  diff=$(echo "$current_time - $last_time" | bc)
+
+  # If the press occurred within the interval, switch to the terminal workspace
+  if (($(echo "$diff < $DOUBLE_PRESS_TIME" | bc -l))); then
+    i3-msg workspace terminal
+    rm "$LAST_PRESS_FILE"
+    exit 0
+  fi
+fi
+
+# Update or create the file with the current time
+echo "$current_time" >"$LAST_PRESS_FILE"
+===== END: CREATE_OR_REPLACE ./scripts/double_mod_switch.sh =====
+
+===== START: CREATE_OR_REPLACE ./scripts/update_background_image.sh =====
+#!/usr/bin/env bash
+
+# Set the directory to search. You can modify this to your desired directory.
+SEARCH_DIR="$HOME/.config/wallpaper"
+
+# Destination for the selected image
+# i3 will use this static path to set the lock screen background
+DEST_IMAGE="$HOME/.background-image"
+
+# Ensure the wallpaper directory exists
+if [ ! -d "$SEARCH_DIR" ]; then
+    echo "Wallpaper directory not found: $SEARCH_DIR"
+    exit 1
+fi
+
+# Find all jpg and png files recursively and store them in an array
+mapfile -t image_files < <(find "$SEARCH_DIR" -type f \( -iname '*.jpg' -o -iname '*.png' -o -iname '*.jpeg' \))
+
+# Check if the array is not empty
+if [ ${#image_files[@]} -eq 0 ]; then
+    echo "No image files found in the specified directory."
+    exit 1
+fi
+
+# Randomly select an image from the array
+RANDOM_IMAGE="${image_files[RANDOM % ${#image_files[@]}]}"
+
+# Copy the randomly selected image to the destination
+cp "$RANDOM_IMAGE" "$DEST_IMAGE"
+# Also set it as the background using feh
+feh --bg-scale "$DEST_IMAGE"
+
+echo "Set background to: $(basename "$RANDOM_IMAGE")"
+===== END: CREATE_OR_REPLACE ./scripts/update_background_image.sh =====
+
+===== START: DELETE ./home-manager/dotfiles/nvim/lua/plugins/example.lua =====
+===== END: DELETE ./home-manager/dotfiles/nvim/lua/plugins/example.lua =====
+
+===== START: DELETE ./home-manager/dotfiles/nvim/lua/plugins/treesitter/init.lua =====
+===== END: DELETE ./home-manager/dotfiles/nvim/lua/plugins/treesitter/init.lua =====
+
+===== START: DELETE ./home-manager/dotfiles/nvim/lua/plugins/telescope/init.lua =====
+===== END: DELETE ./home-manager/dotfiles/nvim/lua/plugins/telescope/init.lua =====
+
+===== START: DELETE ./home-manager/dotfiles/scripts/update_background_image.sh =====
+===== END: DELETE ./home-manager/dotfiles/scripts/update_background_image.sh =====
+
+===== START: DELETE ./home-manager/dotfiles/scripts/double_mod_switch.sh =====
+===== END: DELETE ./home-manager/dotfiles/scripts/double_mod_switch.sh =====
+
+===== START: DELETE ./home-manager/dotfiles/alacritty/alacritty.toml =====
+===== END: DELETE ./home-manager/dotfiles/alacritty/alacritty.toml =====
+
+===== START: DELETE ./home-manager/dotfiles/i3/config =====
+===== END: DELETE ./home-manager/dotfiles/i3/config =====
