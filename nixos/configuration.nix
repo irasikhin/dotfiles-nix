@@ -1,15 +1,25 @@
 {
   config,
   pkgs,
-  callPackage,
+  # Accept 'inputs' here to access the overlay
+  inputs,
   lib,
   ...
 }:
 
 {
   imports = [
-    ./hardware-configuration.nix # Import hardware-specific configuration
+    ./hardware-configuration.nix
   ];
+
+  # Add the overlay to the system's package set.
+  # This is the idiomatic way to do it for NixOS.
+  nixpkgs.overlays = [
+    inputs.neovim-nightly-overlay.overlays.default
+  ];
+
+
+  # --- The rest of your configuration remains unchanged ---
 
   # Configure system bootloader
   boot.loader.systemd-boot.enable = true;
@@ -108,7 +118,6 @@
   # Configure user account
   users.users.irasikhin = {
     isNormalUser = true;
-    description = "Ivan Rasikhin";
     extraGroups = [
       "networkmanager"
       "wheel"
@@ -213,10 +222,9 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.config = {
-    packageOverrides = pkgs: {
-      vagrant = pkgs.vagrant.override { withLibvirt = false; };
-    };
+  # This should be fine here.
+  nixpkgs.config.packageOverrides = pkgs: {
+    vagrant = pkgs.vagrant.override { withLibvirt = false; };
   };
 
   # Enable TinyProxy

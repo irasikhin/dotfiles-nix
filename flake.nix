@@ -34,10 +34,8 @@
         specialArgs = { inherit inputs; };
         modules = [
           ./nixos/configuration.nix
-          # THIS IS THE FIX:
-          # We import the hardware module by its path within the flake input's source tree,
-          # not as a flake output attribute.
-          "${inputs.hardware}/lenovo/thinkpad/p14s/amd-gen2"
+          # THE CORRECTED PATH:
+          "${inputs.hardware}/lenovo/thinkpad/p14s-amd/gen2"
         ];
       };
     };

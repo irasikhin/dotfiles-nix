@@ -91,7 +91,7 @@
 
   # Byobu config files
   xdg.configFile."byobu" = {
-    source = ../dotfiles/byobu;
+    source = ../../dotfiles/byobu;
     recursive = true;
   };
 }
