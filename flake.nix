@@ -2,7 +2,6 @@
   description = "NixOS Configuration";
 
   inputs = {
-    # Using unstable for fresher packages, especially for development
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     home-manager = {
@@ -12,19 +11,17 @@
 
     hardware.url = "github:nixos/nixos-hardware";
 
-    # The magic for Neovim plugins
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
   let
     system = "x86_64-linux";
-    # Create a pkgs instance with our overlays
+    # This pkgs instance is used for home-manager, which receives it directly.
     pkgs = import nixpkgs {
       inherit system;
       config.allowUnfree = true;
       overlays = [
-        # Add the neovim overlay to pkgs
         inputs.neovim-nightly-overlay.overlays.default
       ];
     };
@@ -33,19 +30,21 @@
     nixosConfigurations = {
       irnixos = nixpkgs.lib.nixosSystem {
         inherit system;
+        # Pass all inputs down to the modules. This is the key.
         specialArgs = { inherit inputs; };
         modules = [
-          # Pass pkgs with overlay to the system configuration
-          { _module.args.pkgs = pkgs; }
           ./nixos/configuration.nix
-          inputs.hardware.nixosModules.lenovo-thinkpad-p14s-amd-gen2
+          # THIS IS THE FIX:
+          # We import the hardware module by its path within the flake input's source tree,
+          # not as a flake output attribute.
+          "${inputs.hardware}/lenovo/thinkpad/p14s/amd-gen2"
         ];
       };
     };
 
     homeConfigurations = {
       "irasikhin@irnixos" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs; # Pass the pkgs with overlay
+        inherit pkgs; # Home Manager gets the pkgs with the overlay directly. This is correct.
         extraSpecialArgs = { inherit inputs; };
         modules = [ ./home-manager/home.nix ];
       };
