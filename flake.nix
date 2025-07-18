@@ -9,15 +9,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # The input name is 'hardware', which is what we will use.
     hardware.url = "github:nixos/nixos-hardware";
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, hardware, ... }@inputs:
   let
     system = "x86_64-linux";
-    # This pkgs instance is used for home-manager, which receives it directly.
     pkgs = import nixpkgs {
       inherit system;
       config.allowUnfree = true;
@@ -30,19 +30,19 @@
     nixosConfigurations = {
       irnixos = nixpkgs.lib.nixosSystem {
         inherit system;
-        # Pass all inputs down to the modules. This is the key.
         specialArgs = { inherit inputs; };
         modules = [
           ./nixos/configuration.nix
-          # THE CORRECTED PATH:
-          "${inputs.hardware}/lenovo/thinkpad/p14s-amd/gen2"
+          # THIS IS THE FIX: Using your original, working method.
+          # The argument `hardware` matches the input name now.
+          hardware.nixosModules.lenovo-thinkpad-p14s-amd-gen2
         ];
       };
     };
 
     homeConfigurations = {
       "irasikhin@irnixos" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs; # Home Manager gets the pkgs with the overlay directly. This is correct.
+        inherit pkgs;
         extraSpecialArgs = { inherit inputs; };
         modules = [ ./home-manager/home.nix ];
       };

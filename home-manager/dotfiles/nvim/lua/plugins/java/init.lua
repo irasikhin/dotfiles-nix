@@ -1,17 +1,10 @@
--- This file is much simpler now.
--- Nix handles the installation and pathing of jdtls, lombok, and debug adapters.
 return {
   "mfussenegger/nvim-jdtls",
   ft = { "java" },
   dependencies = { "folke/which-key.nvim" },
   config = function()
-    -- The wrapper script for jdtls provided by nixpkgs
-    -- automatically finds debug adapters and other bundles.
-    -- We just need to start it.
-
     local jdtls_setup = require("jdtls.setup")
-    local root_markers = { ".git", "mvnw", "gradlew", "pom.xml" }
-    local root_dir = jdtls_setup.find_root(root_markers)
+    local root_dir = jdtls_setup.find_root({ ".git", "mvnw", "gradlew", "pom.xml" })
     if not root_dir then
       return
     end
@@ -19,28 +12,17 @@ return {
     local project_name = vim.fn.fnamemodify(root_dir, ":p:h:t")
     local workspace_dir = vim.fn.stdpath("cache") .. "/jdtls/" .. project_name
 
-    -- See `:help jdtls-config` for more options.
     local config = {
-      -- Your custom JVM options.
-      -- Note: 12g is a LOT of memory. Consider starting lower, e.g., -Xmx4g
       cmd = { "jdtls", "-Xmx4g", "-Xms1g", "--jvm-arg=-XX:+UseG1GC" },
       root_dir = root_dir,
       workspace_dir = workspace_dir,
       settings = {
         java = {
-          inlayHints = {
-            parameterNames = {
-              enabled = "all",
-            },
-          },
+          inlayHints = { parameterNames = { enabled = "all" } },
         },
       },
-      init_options = {
-        bundles = {},
-      },
+      init_options = { bundles = {} },
       on_attach = function(client, bufnr)
-        -- Your existing keymaps and LspAttach logic from the old file can be pasted here.
-        -- It remains valid.
         local wk = require("which-key")
         wk.add({
           {
@@ -61,7 +43,6 @@ return {
           },
         })
 
-        -- Setup DAP. It's much cleaner now.
         require("jdtls").setup_dap({ hotcodereplace = "auto" })
         wk.add({
           {

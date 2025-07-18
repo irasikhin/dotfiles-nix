@@ -1,7 +1,6 @@
 { pkgs, ... }:
 
 let
-  # This creates a package with your scripts in its /bin directory
   my-scripts = pkgs.runCommand "my-i3-scripts" { } ''
     mkdir -p $out/bin
     cp ${../../../scripts/double_mod_switch.sh} $out/bin/double_mod_switch
@@ -10,13 +9,9 @@ let
   '';
 in
 {
-  # Add the scripts package to your path
   home.packages = [ my-scripts ];
 
-  # Manage i3 config file declaratively.
-  # This avoids hardcoded paths and makes the config fully reproducible.
   xdg.configFile."i3/config".text = ''
-    # This file is managed by Nix.
     set $mod Mod4
     set $alt Mod1
     default_border none
@@ -26,59 +21,33 @@ in
     bindsym $mod+Return exec termite -e /bin/zsh
     bindsym $mod+Shift+q kill
     bindsym $mod+Shift+a focus parent,kill
-
-    # rofi
     bindsym $alt+d exec "rofi -show combi -sidebar-mode"
     bindsym $mod+Tab exec "rofi -show window"
-
-    # change focus
     bindsym $mod+j focus left
     bindsym $mod+k focus down
     bindsym $mod+l focus up
     bindsym $mod+semicolon focus right
-
-    # alternatively, you can use the cursor keys:
     bindsym $mod+Left focus left
     bindsym $mod+Down focus down
     bindsym $mod+Up focus up
     bindsym $mod+Right focus right
-
-    # move focused window
     bindsym $mod+Shift+j move left
     bindsym $mod+Shift+k move down
     bindsym $mod+Shift+l move up
     bindsym $mod+Shift+semicolon move right
-
-    # alternatively, you can use the cursor keys:
     bindsym $mod+Shift+Left move left
     bindsym $mod+Shift+Down move down
     bindsym $mod+Shift+Up move up
     bindsym $mod+Shift+Right move right
-
-    # split in horizontal orientation
     bindsym $mod+h split h
-
-    # split in vertical orientation
     bindsym $mod+v split v
-
-    # enter fullscreen mode for the focused container
     bindsym $mod+f fullscreen toggle
-
-    # change container layout (stacked, tabbed, toggle split)
     bindsym $mod+s layout stacking
     bindsym $mod+w layout tabbed
     bindsym $mod+e layout toggle split
-
-    # toggle tiling / floating
     bindsym $mod+Shift+space floating toggle
-
-    # change focus between tiling / floating windows
     bindsym $mod+space focus mode_toggle
-
-    # focus the parent container
     bindsym $mod+a focus parent
-
-    # Define names for default workspaces
     set $ws1 "1"
     set $ws2 "2"
     set $ws3 "3"
@@ -89,8 +58,6 @@ in
     set $ws8 "8"
     set $ws9 "9"
     set $ws10 "10"
-
-    # switch to workspace
     bindsym $mod+1 workspace $ws1
     bindsym $mod+2 workspace $ws2
     bindsym $mod+3 workspace $ws3
@@ -101,8 +68,6 @@ in
     bindsym $mod+8 workspace $ws8
     bindsym $mod+9 workspace $ws9
     bindsym $mod+0 workspace $ws10
-
-    # move focused container to workspace
     bindsym $mod+Shift+1 move container to workspace $ws1
     bindsym $mod+Shift+2 move container to workspace $ws2
     bindsym $mod+Shift+3 move container to workspace $ws3
@@ -113,33 +78,24 @@ in
     bindsym $mod+Shift+8 move container to workspace $ws8
     bindsym $mod+Shift+9 move container to workspace $ws9
     bindsym $mod+Shift+0 move container to workspace $ws10
-
-    # reload the configuration file
     bindsym $mod+Shift+c reload
-    # restart i3 inplace
     bindsym $mod+Shift+r restart
-    # exit i3
     bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
     bindsym $mod+Shift+w exec "i3lock-color -k --keylayout 0 --image $HOME/.background-image"
-
-    # resize mode
     mode "resize" {
       bindsym j resize shrink width 10 px or 10 ppt
       bindsym k resize grow height 10 px or 10 ppt
       bindsym l resize shrink height 10 px or 10 ppt
       bindsym semicolon resize grow width 10 px or 10 ppt
-
       bindsym Left resize shrink width 10 px or 10 ppt
       bindsym Down resize grow height 10 px or 10 ppt
       bindsym Up resize shrink height 10 px or 10 ppt
       bindsym Right resize grow width 10 px or 10 ppt
-
       bindsym Return mode "default"
       bindsym Escape mode "default"
       bindsym $mod+r mode "default"
     }
     bindsym $mod+r mode "resize"
-
     bar {
       font pango: FiraCode Nerd Font 16
       position top
@@ -154,10 +110,7 @@ in
         urgent_workspace #2f343a #900000 #ffffff
       }
     }
-
     focus_on_window_activation focus
-
-    # Media controls
     bindsym XF86AudioRaiseVolume exec --no-startup-id pamixer -i 5
     bindsym XF86AudioLowerVolume exec --no-startup-id pamixer -d 5
     bindsym XF86AudioMute exec --no-startup-id pamixer -t
@@ -167,58 +120,43 @@ in
     bindsym XF86AudioPause exec playerctl pause
     bindsym XF86AudioNext exec playerctl next
     bindsym XF86AudioPrev exec playerctl previous
-
-    # Application workspaces
     set $idea "idea"
     bindsym $mod+i workspace $idea
     assign [class=".*[I,i]dea.*"] $idea
-
     set $msg "msg"
     bindsym $mod+m workspace $msg
     assign [class=".*telegram-desktop.*"] $msg
-
     set $web "web"
     bindsym $mod+u workspace $web
     assign [class=".*[l,l]ibrewolf.*"] $web
     assign [class=".*[F,f]irefox.*"] $web
     assign [class=".*[C,c]hromium.*"] $web
     assign [class=".*[F,f]loorp.*"] $web
-
     set $discord "discord"
     bindsym $mod+d workspace $discord
     assign [class=".*[D,d]iscord.*"] $discord
-
     set $obsidian "obsidian"
     bindsym $mod+o workspace $obsidian
     assign [class=".*[O,o]bsidian.*"] $obsidian
-
     set $slack "slack"
     bindsym $mod+n workspace $slack
     assign [class=".*[S,s]lack.*"] $slack
-
     set $code "code"
     bindsym $mod+c workspace $code
     assign [class=".*[C,c]ode.*"] $code
-
     set $clion "clion"
     bindsym $mod+y workspace $clion
     assign [class=".*[C,c]lion.*"] $clion
-
     set $terminal "terminal"
     bindsym Super_L exec --no-startup-id "double_mod_switch"
     assign [class=".*[A,a]lacritty.*"] $terminal
-
     set $spotify "spotify"
     bindsym $mod+p workspace $spotify
     assign [class=".*[S,s]potify.*"] $spotify
-
     set $thunderbird "thunderbird"
     bindsym $mod+t workspace $thunderbird
     assign [class=".*[T,t]hunderbird.*"] $thunderbird
-
     for_window [class="^.*"] border pixel 0
-
-    # Autostart applications
     exec_always --no-startup-id nm-applet
     exec --no-startup-id i3-msg 'workspace $terminal; exec alacritty'
     exec --no-startup-id i3-msg 'workspace $web; exec floorp'
@@ -228,6 +166,5 @@ in
     exec_always --no-startup-id "update_background_image"
   '';
 
-  # Link the i3 status config file
   xdg.configFile."i3/status.toml".source = ../../dotfiles/i3/status.toml;
 }

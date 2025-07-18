@@ -12,15 +12,11 @@
   # Basic user settings
   home.username = "irasikhin";
   home.homeDirectory = "/home/irasikhin";
-  # It's a good practice to update stateVersion to the current release
   home.stateVersion = "24.05";
 
-  # Global session variables
   home.sessionVariables = { EDITOR = "nvim"; };
 
-  # Allow proprietary software
   nixpkgs.config.allowUnfree = true;
 
-  # Enable home-manager itself
   programs.home-manager.enable = true;
 }
