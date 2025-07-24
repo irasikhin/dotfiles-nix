@@ -157,6 +157,7 @@ in
     openapi-generator-cli
     gimp
     jmeter
+    librechat
   ];
 
   programs.neovim = {
