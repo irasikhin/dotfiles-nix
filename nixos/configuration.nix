@@ -190,6 +190,7 @@
     autossh
     clang
     clang-tools
+    archi
   ];
 
   # Enable firewall
