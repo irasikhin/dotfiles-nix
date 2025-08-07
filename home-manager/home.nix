@@ -158,6 +158,10 @@ in
     gimp
     jmeter
     librechat
+    allure
+    aider-chat
+    aichat
+    electrum
   ];
 
   programs.neovim = {
