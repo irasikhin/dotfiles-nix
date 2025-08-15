@@ -162,6 +162,9 @@ in
     aider-chat
     aichat
     electrum
+    ollama-rocm
+    google-chrome
+    jbang
   ];
 
   programs.neovim = {
