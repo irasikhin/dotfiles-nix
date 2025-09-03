@@ -165,6 +165,10 @@ in
     ollama-rocm
     google-chrome
     jbang
+    flameshot
+    appimage-run
+    python311Packages.psycopg2
+    opentofu
   ];
 
   programs.neovim = {
@@ -172,7 +176,15 @@ in
     viAlias = true;
     vimAlias = true;
     defaultEditor = true;
-    extraLuaPackages = luaPkgs: with luaPkgs; [ ];
+    plugins = [
+      {
+        plugin = pkgs.vimPlugins.gruvbox-nvim;
+      }
+    ];
+    extraConfig = ''
+      colorscheme gruvbox
+      set clipboard=unnamedplus
+    '';
   };
 
   home.sessionVariables = {
@@ -284,5 +296,4 @@ in
       package.disabled = true;
     };
   };
-
 }
