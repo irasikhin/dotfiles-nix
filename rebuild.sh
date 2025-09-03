@@ -3,4 +3,4 @@
 set -e
 
 sudo nixos-rebuild switch --flake .#irnixos
-home-manager switch --flake .#irasikhin@irnixos
+home-manager switch --flake .#ir@irnixos

@@ -47,13 +47,8 @@
 
   # Enable X server and configure display manager/window manager
   services.xserver.enable = true;
-  services.xserver.desktopManager.xfce.enable = false;
+  services.xserver.desktopManager.xfce.enable = true;
   services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.displayManager.lightdm.greeters.gtk = {
-    extraConfig = ''
-      user-background = false
-    '';
-  };
   services.displayManager.defaultSession = "none+i3"; # Use i3 as window manager
   services.xserver.windowManager.i3 = {
     enable = true;
@@ -121,6 +116,26 @@
     packages = with pkgs; [ ];
     shell = pkgs.zsh; # Set default shell to Zsh
   };
+  users.users.ir = {
+    isNormalUser = true;
+    description = "ir";
+    hashedPassword = "$y$j9T$VSfLbEanbkafZY0WsSyfq0$Wnyqh6PLQ2hRw9.439rJvXEX0jz/jQmku5nqDlIRck3";
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "video"
+      "audio"
+      "qemu-libvirtd"
+      "docker"
+      "libvirtd"
+      "irasikhin"
+      "users"
+    ];
+    home = "/home/ir";
+
+    packages = with pkgs; [ ];
+    shell = pkgs.zsh; # Set default shell to Zsh
+  };
   programs.zsh.enable = true;
   programs.tmux = {
     enable = true;
@@ -148,7 +163,7 @@
   };
 
   # Enable light control program
-  programs.light.enable = true;
+  programs.light.enable = false;
 
   # Enable Docker with Btrfs storage driver
   virtualisation.docker.enable = true;
@@ -191,13 +206,17 @@
     clang
     clang-tools
     archi
+    python311Packages.psycopg2
+    neovim
+    home-manager
+    git
   ];
 
   # Enable firewall
   networking.firewall.enable = true;
 
   # Enable Nix-ld (to run non-NixOS binaries)
-  programs.nix-ld.enable = true;
+  programs.nix-ld.enable = false;
   programs.nix-ld.libraries = with pkgs; [ ];
 
   # Enable Bluetooth support
@@ -209,16 +228,10 @@
   security.sudo.wheelNeedsPassword = false;
 
   # Enable VirtualBox support
-  virtualisation.virtualbox.host.enable = true;
-  users.extraGroups.vboxusers.members = [ "irasikhin" ];
+  virtualisation.virtualbox.host.enable = false;
+  users.extraGroups.vboxusers.members = [ "irasikhin" "ir" ];
 
   nixpkgs.config.allowUnfree = true;
-
-  nixpkgs.config = {
-    packageOverrides = pkgs: {
-      vagrant = pkgs.vagrant.override { withLibvirt = false; };
-    };
-  };
 
   # Enable TinyProxy
   services.tinyproxy = {
