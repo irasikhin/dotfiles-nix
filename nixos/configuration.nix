@@ -49,6 +49,7 @@
   services.xserver.enable = true;
   services.xserver.desktopManager.xfce.enable = true;
   services.xserver.displayManager.lightdm.enable = true;
+  services.xserver.displayManager.sddm.wayland.enable = true;
   services.displayManager.defaultSession = "none+i3"; # Use i3 as window manager
   services.xserver.windowManager.i3 = {
     enable = true;
@@ -58,6 +59,10 @@
       i3lock-color # Lock screen
       i3lock-fancy # Fancier lock screen
     ];
+  };
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
   };
   services.xserver.xkb = {
     layout = "us,ru"; # Enable US and Russian keyboard layouts
@@ -119,7 +124,7 @@
   users.users.ir = {
     isNormalUser = true;
     description = "ir";
-    hashedPassword = "$y$j9T$VSfLbEanbkafZY0WsSyfq0$Wnyqh6PLQ2hRw9.439rJvXEX0jz/jQmku5nqDlIRck3";
+    hashedPassword = "";
     extraGroups = [
       "networkmanager"
       "wheel"
@@ -186,6 +191,7 @@
     strongswanNM
     openssl
     python312Packages.pip-system-certs
+    python312Packages.click
     libvirt
     vagrant
     wireguard-tools
@@ -210,13 +216,14 @@
     neovim
     home-manager
     git
+    ntfs3g
   ];
 
   # Enable firewall
   networking.firewall.enable = true;
 
   # Enable Nix-ld (to run non-NixOS binaries)
-  programs.nix-ld.enable = false;
+  programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [ ];
 
   # Enable Bluetooth support
@@ -245,10 +252,10 @@
     };
   };
 
-  # Enable Java (Temurin JDK 21)
+  # Enable Java (Temurin JDK 24)
   programs.java = {
     enable = true;
-    package = pkgs.temurin-bin-21;
+    package = pkgs.temurin-bin-24;
   };
 
   swapDevices = lib.mkForce [ ];
