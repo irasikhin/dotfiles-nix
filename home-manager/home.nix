@@ -19,8 +19,8 @@ let
   };
 in
 {
-  home.username = "irasikhin";
-  home.homeDirectory = "/home/irasikhin";
+  home.username = "ir";
+  home.homeDirectory = "/home/ir";
   home.stateVersion = "22.11";
   nixpkgs = {
     config = {
@@ -35,7 +35,15 @@ in
     htop
     unzip
     zip
-    python3
+    (pkgs.python3.withPackages (python-pkgs: [
+      python-pkgs.pandas
+      python-pkgs.requests
+      python-pkgs.click
+      python-pkgs.pyyaml
+      python-pkgs.jinja2
+      python-pkgs.distlib
+      ansible
+    ]))
     nodejs
     clang
     zig
@@ -169,6 +177,13 @@ in
     appimage-run
     python311Packages.psycopg2
     opentofu
+    woeusb-ng
+    k9s
+    deluge
+    parted
+    python312Packages.click
+    dbeaver-bin
+    vhs
   ];
 
   programs.neovim = {
@@ -244,7 +259,7 @@ in
     initContent = ''
       byobu; 
       tput reset;
-      source /home/irasikhin/jira.sh;
+      source /home/ir/jira.sh;
     '';
   };
 
