@@ -212,7 +212,7 @@
     clang
     clang-tools
     archi
-    python311Packages.psycopg2
+    python312Packages.psycopg2
     neovim
     home-manager
     git
@@ -236,7 +236,10 @@
 
   # Enable VirtualBox support
   virtualisation.virtualbox.host.enable = false;
-  users.extraGroups.vboxusers.members = [ "irasikhin" "ir" ];
+  users.extraGroups.vboxusers.members = [
+    "irasikhin"
+    "ir"
+  ];
 
   nixpkgs.config.allowUnfree = true;
 
@@ -259,4 +262,8 @@
   };
 
   swapDevices = lib.mkForce [ ];
+
+  nixpkgs.config.permittedInsecurePackages = [
+    "python3.13-ecdsa-0.19.1"
+  ];
 }
