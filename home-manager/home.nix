@@ -152,7 +152,6 @@ in
     mergiraf
     nil
     floorp
-    yandex-music
     ytt
     redocly
     clang
@@ -169,7 +168,6 @@ in
     allure
     aider-chat
     aichat
-    electrum
     ollama-rocm
     google-chrome
     jbang
