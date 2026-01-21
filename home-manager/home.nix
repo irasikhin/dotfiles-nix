@@ -183,6 +183,8 @@ in
     vhs
     hurl
     clojure
+    ncdu
+    dust
   ];
 
   programs.neovim = {
