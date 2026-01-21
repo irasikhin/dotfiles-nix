@@ -255,13 +255,10 @@
     };
   };
 
-  # Enable Java (Temurin JDK 24)
   programs.java = {
     enable = true;
     package = pkgs.temurin-bin-24;
   };
-
-  swapDevices = lib.mkForce [ ];
 
   nixpkgs.config.permittedInsecurePackages = [
     "python3.13-ecdsa-0.19.1"
