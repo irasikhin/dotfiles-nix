@@ -174,7 +174,7 @@
   virtualisation.docker.enable = true;
   virtualisation.docker.storageDriver = "btrfs";
   virtualisation.docker.daemon.settings = {
-    "data-root" = "/home/irasikhin/.docker-data";
+    "data-root" = "/home/ir/.docker-data";
     "default-address-pools" = [
       {
         "base" = "192.170.0.0/16";
