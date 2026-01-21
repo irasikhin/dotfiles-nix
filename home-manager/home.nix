@@ -139,7 +139,6 @@ in
     p7zip
     xarchiver
     yandex-disk
-    ungoogled-chromium
     jira-cli-go
     opentofu
     terranix
@@ -182,6 +181,8 @@ in
     python312Packages.click
     dbeaver-bin
     vhs
+    hurl
+    clojure
   ];
 
   programs.neovim = {
@@ -309,4 +310,5 @@ in
       package.disabled = true;
     };
   };
+
 }
