@@ -185,6 +185,7 @@ in
     clojure
     ncdu
     dust
+    hwatch
   ];
 
   programs.neovim = {
@@ -226,6 +227,9 @@ in
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+    shellAliases = {
+      wdapp = "hwatch \"docker ps --format '{{.ID}} {{.Names}}' | grep application\"";
+    };
 
     oh-my-zsh = {
       enable = true;
