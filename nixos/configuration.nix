@@ -267,4 +267,13 @@
   nixpkgs.config.permittedInsecurePackages = [
     "python3.13-ecdsa-0.19.1"
   ];
+
+  services.autossh.sessions = [
+	  {
+	    name = "runner";
+	    user = "ir"; 
+	    monitoringPort = 20000;   
+	    extraArguments = "-N -D 1337 runner";
+	  }
+  ]
 }
