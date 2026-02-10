@@ -167,6 +167,7 @@ in
     allure
     aider-chat
     aichat
+    opencode
     ollama-rocm
     google-chrome
     jbang
