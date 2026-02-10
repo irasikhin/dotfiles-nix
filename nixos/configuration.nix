@@ -275,5 +275,5 @@
 	    monitoringPort = 20000;   
 	    extraArguments = "-N -D 1337 runner";
 	  }
-  ]
+  ];
 }
