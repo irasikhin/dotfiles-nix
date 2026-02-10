@@ -5,26 +5,29 @@
     # Nixpkgs
     nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
 
+    # Unstable for JDK 25
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
     # Home manager
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # Hardware
-    hardware.url = "github:nixos/nixos-hardware";
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
   };
 
   outputs =
     {
       self,
       nixpkgs,
+      nixpkgs-unstable,
       home-manager,
       nixos-hardware,
       ...
     }@inputs:
     {
       # NixOS configuration entrypoint
-      # Available through 'nixos-rebuild --flake .#your-hostname'
-
+      # Available through 'nixos-rebuild --flake .#irnixos'
       nixosConfigurations = {
         irnixos = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; };
@@ -36,7 +39,7 @@
       };
 
       # home-manager configuration entrypoint
-      # Available through 'home-manager --flake .#your-username@your-hostname'
+      # Available through 'home-manager --flake .#ir@irnixos'
       homeConfigurations = {
         "ir@irnixos" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
@@ -49,3 +52,4 @@
       };
     };
 }
+

@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   pkgs,
   callPackage,
@@ -217,6 +218,7 @@
     home-manager
     git
     ntfs3g
+    (inputs.nixpkgs-unstable.legacyPackages.x86_64-linux.zulu25)
   ];
 
   # Enable firewall
@@ -254,10 +256,12 @@
       Upstream = "socks5 127.0.0.1:1337";
     };
   };
+  services.v2raya.enable = true;
+  services.v2raya.cliPackage = pkgs.xray;
 
   programs.java = {
     enable = true;
-    package = pkgs.temurin-bin-24;
+    package = inputs.nixpkgs-unstable.legacyPackages.x86_64-linux.zulu25;
   };
 
   nixpkgs.config.permittedInsecurePackages = [
