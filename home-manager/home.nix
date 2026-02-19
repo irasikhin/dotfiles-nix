@@ -172,6 +172,7 @@ in
     google-chrome
     jbang
     flameshot
+    peek
     appimage-run
     python311Packages.psycopg2
     opentofu
@@ -187,6 +188,7 @@ in
     ncdu
     dust
     hwatch
+    xclip
   ];
 
   programs.neovim = {
