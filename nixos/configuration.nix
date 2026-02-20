@@ -26,7 +26,7 @@
   };
   networking.networkmanager = {
     enable = true;
-    enableStrongSwan = true;
+    plugins = [pkgs.networkmanager-strongswan];
   };
 
   # Set system locale and time zone
@@ -212,7 +212,6 @@
     autossh
     clang
     clang-tools
-    archi
     python312Packages.psycopg2
     neovim
     home-manager
