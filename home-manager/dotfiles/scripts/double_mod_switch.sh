@@ -4,7 +4,7 @@
 LAST_PRESS_FILE="/tmp/last_mod_press"
 
 # Time threshold for double-press detection in nanoseconds (0.15 seconds)
-DOUBLE_PRESS_TIME=150000000
+DOUBLE_PRESS_TIME=200000000
 
 # Get current time in seconds + nanoseconds as a single integer
 current_time=$(date +%s%N)
