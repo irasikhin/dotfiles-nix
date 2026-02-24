@@ -26,7 +26,7 @@
   };
   networking.networkmanager = {
     enable = true;
-    plugins = [pkgs.networkmanager-strongswan];
+    plugins = [pkgs.networkmanager-strongswan pkgs.networkmanager-openconnect];
   };
 
   # Set system locale and time zone
@@ -217,6 +217,8 @@
     home-manager
     git
     ntfs3g
+    coreutils
+    bc
     (inputs.nixpkgs-unstable.legacyPackages.x86_64-linux.zulu25)
   ];
 
