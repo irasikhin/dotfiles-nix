@@ -59,7 +59,6 @@ in
     eza
     alacritty
     kitty
-    coreutils-prefixed
     screen
     tmux
     byobu
@@ -82,7 +81,7 @@ in
     maven
     telegram-desktop
     font-awesome
-    jetbrains.idea-community-bin
+    jetbrains.idea-oss
     acpi
     light # change brightness
     lshw # view gpu devices
@@ -100,7 +99,6 @@ in
     ansible_2_17
     go-task
     dig
-    busybox
     inetutils
     libreoffice
     cloc
@@ -150,7 +148,7 @@ in
     jdt-language-server
     mergiraf
     nil
-    floorp
+    floorp-bin
     ytt
     redocly
     clang
@@ -189,6 +187,8 @@ in
     dust
     hwatch
     xclip
+    mktoc
+    mkdocs
   ];
 
   programs.neovim = {
@@ -319,5 +319,4 @@ in
       package.disabled = true;
     };
   };
-
 }
