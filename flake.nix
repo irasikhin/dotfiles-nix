@@ -3,26 +3,26 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:NixOS/nixpkgs/release-25.11";
-
-    # Unstable for JDK 25
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # Home manager
-    home-manager.url = "github:nix-community/home-manager/release-25.11";
+    home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # Hardware
     nixos-hardware.url = "github:NixOS/nixos-hardware";
+
+    # Nvf
+    nvf.url = "github:notashelf/nvf";
   };
 
   outputs =
     {
       self,
       nixpkgs,
-      nixpkgs-unstable,
       home-manager,
       nixos-hardware,
+      nvf,
       ...
     }@inputs:
     {
@@ -32,6 +32,7 @@
         irnixos = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; };
           modules = [
+            nvf.nixosModules.default
             ./nixos/configuration.nix
             nixos-hardware.nixosModules.lenovo-thinkpad-p14s-amd-gen2
           ];
@@ -52,4 +53,3 @@
       };
     };
 }
-

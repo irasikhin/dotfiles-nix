@@ -1,0 +1,162 @@
+* {
+  font-family: "FiraCode Nerd Font", "Font Awesome 6 Free", "Font Awesome 6 Brands";
+  font-size: 20px;
+  min-height: 0;
+}
+
+window#waybar {
+  background-color: #282828;
+  color: #ebdbb2;
+  border-bottom: 2px solid #3c3836;
+}
+
+#workspaces button {
+  padding: 0 12px;
+  color: #a89984;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  border-bottom: 3px solid transparent;
+}
+
+#workspaces button:hover {
+  background-color: #3c3836;
+  color: #ebdbb2;
+}
+
+#workspaces button.focused {
+  color: #fabd2f;
+  background-color: #3c3836;
+  border-bottom: 3px solid #b8bb26;
+}
+
+#workspaces button.urgent {
+  color: #fb4934;
+  background-color: #3c3836;
+  border-bottom: 3px solid #fb4934;
+}
+
+#window {
+  color: #a89984;
+  font-style: italic;
+}
+
+#clock {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+#battery,
+#cpu,
+#memory,
+#temperature,
+#disk,
+#network,
+#bluetooth,
+#pulseaudio,
+#backlight,
+#idle_inhibitor,
+#language,
+#tray,
+#mode {
+  padding: 0 12px;
+  color: #ebdbb2;
+}
+
+#cpu {
+  color: #83a598;
+}
+
+#memory {
+  color: #d3869b;
+}
+
+#temperature {
+  color: #fabd2f;
+}
+
+#temperature.critical {
+  color: #fb4934;
+  animation: blink 1s linear infinite;
+}
+
+#disk {
+  color: #fe8019;
+}
+
+#network {
+  color: #8ec07c;
+}
+
+#bluetooth {
+  color: #83a598;
+}
+
+#pulseaudio {
+  color: #fabd2f;
+}
+
+#backlight {
+  color: #d79921;
+}
+
+#idle_inhibitor {
+  color: #665c54;
+}
+
+#idle_inhibitor.activated {
+  color: #fb4934;
+}
+
+#language {
+  color: #b8bb26;
+  font-weight: bold;
+}
+
+#battery {
+  color: #b8bb26;
+}
+
+#battery.warning {
+  color: #fe8019;
+}
+
+#battery.critical {
+  color: #fb4934;
+  animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+  to { color: #282828; }
+}
+
+#network.disconnected {
+  color: #fb4934;
+}
+
+#pulseaudio.muted {
+  color: #665c54;
+}
+
+#tray {
+  color: #a89984;
+}
+
+#custom-disk-root,
+#custom-disk-home {
+  color: #fe8019;
+  padding: 0 8px;
+}
+
+#custom-proxy-9999,
+#custom-proxy-7777,
+#custom-proxy-8888 {
+  color: #b8bb26;
+  padding: 0 8px;
+}
+
+#custom-notification {
+  color: #a89984;
+  padding: 0 12px;
+  font-size: 18px;
+}

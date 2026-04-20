@@ -1,0 +1,161 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 42,
+  "modules-left": ["sway/workspaces", "sway/mode", "sway/window"],
+  "modules-center": [],
+  "modules-right": ["custom/proxy-9999", "custom/proxy-7777", "custom/proxy-8888", "sway/language", "idle_inhibitor", "pulseaudio", "backlight", "bluetooth", "network", "cpu", "temperature", "memory", "disk#root", "disk#home", "battery", "clock", "custom/notification", "tray"],
+
+  "sway/workspaces": {
+    "disable-scroll": true,
+    "all-outputs": true,
+    "format": "{name}"
+  },
+
+  "sway/mode": {
+    "format": "{}"
+  },
+
+  "sway/window": {
+    "max-length": 40,
+    "tooltip": false
+  },
+
+  "sway/language": {
+    "format": "󰌌 {short}",
+    "tooltip-format": "{long}"
+  },
+
+  "clock": {
+    "format": "󰥔 {:%H:%M}",
+    "format-alt": "󰃭 {:%A, %d %B %Y}",
+    "tooltip-format": "{:%Y-%m-%d | %H:%M:%S}"
+  },
+
+  "cpu": {
+    "format": "󰻠 {usage}%",
+    "interval": 5,
+    "tooltip-format": "{avg_frequency} GHz"
+  },
+
+  "memory": {
+    "format": "󰍛 {percentage}%",
+    "tooltip-format": "{used:0.1f}G / {total:0.1f}G",
+    "interval": 5
+  },
+
+  "temperature": {
+    "format": "󰔏 {temperatureC}°C",
+    "critical-threshold": 80,
+    "format-critical": "󰸁 {temperatureC}°C",
+    "interval": 5
+  },
+
+  "disk#root": {
+    "format": "󰋊 R{percentage_used}%",
+    "tooltip-format": "{used} of {total}",
+    "path": "/",
+    "interval": 30
+  },
+
+  "disk#home": {
+    "format": "󰋊 H{percentage_used}%",
+    "tooltip-format": "{used} of {total}",
+    "path": "/home",
+    "interval": 30
+  },
+
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "󰁹 {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-plugged": "󰚥 {capacity}%",
+    "tooltip-format": "{timeTo}"
+  },
+
+  "network": {
+    "format-wifi": "󰖩 {signalStrength}%",
+    "format-ethernet": "󰈀 {ifname}",
+    "format-disconnected": "󰖪 off",
+    "tooltip-format": "{ifname}: {ipaddr}/{cidr}\n↑ {bandwidthUpBits} ↓ {bandwidthDownBits}",
+    "interval": 5
+  },
+
+  "bluetooth": {
+    "format": "󰂯 {status}",
+    "format-connected": "󰂱 {device_alias}",
+    "format-disabled": "",
+    "tooltip-format": "{controller_alias}\n{num_connections} connected",
+    "on-click": "blueman-manager"
+  },
+
+  "pulseaudio": {
+    "format": "󰕾 {volume}%",
+    "format-muted": "󰖁 mute",
+    "on-click": "pamixer -t",
+    "on-click-right": "pavucontrol"
+  },
+
+  "backlight": {
+    "format": "󰃟 {percent}%"
+  },
+
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "󰅶",
+      "deactivated": "󰾪"
+    },
+    "tooltip-format-activated": "Idle inhibitor: ON",
+    "tooltip-format-deactivated": "Idle inhibitor: OFF"
+  },
+
+  "tray": {
+    "spacing": 10
+  },
+
+  "custom/proxy-9999": {
+    "exec": "systemctl --user is-active gost-9999.service >/dev/null 2>&1 && echo '9' || echo ''",
+    "format": "󰒄 {}",
+    "interval": 30,
+    "tooltip-format": "Proxy 9999"
+  },
+
+  "custom/proxy-7777": {
+    "exec": "systemctl --user is-active gost-7777.service >/dev/null 2>&1 && echo '7' || echo ''",
+    "format": "󰒄 {}",
+    "interval": 30,
+    "tooltip-format": "Proxy 7777"
+  },
+
+  "custom/proxy-8888": {
+    "exec": "systemctl --user is-active gost-8888.service >/dev/null 2>&1 && echo '8' || echo ''",
+    "format": "󰒄 {}",
+    "interval": 30,
+    "tooltip-format": "Proxy 8888"
+  },
+
+  "custom/notification": {
+    "tooltip": false,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "󰂚",
+      "none": "󰂜",
+      "dnd-notification": "󰂛",
+      "dnd-none": "󰪑",
+      "inhibited-notification": "󰂚",
+      "inhibited-none": "󰂜",
+      "dnd-inhibited-notification": "󰂛",
+      "dnd-inhibited-none": "󰪑"
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  }
+}
