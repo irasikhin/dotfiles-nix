@@ -12,7 +12,7 @@ set $mod Mod4
 set $alt Mod1
 
 # Define your preferred terminal emulator.
-set $terminal alacritty
+set $terminal foot
 
 # Define your application launcher. Rofi is a popular choice.
 set $launcher "rofi -show combi -sidebar-mode"
@@ -173,12 +173,9 @@ set $ws10 "10"
 set $ws_terminal "terminal"
 set $ws_web "web"
 set $ws_code "code"
-set $ws_clion "clion"
 set $ws_idea "idea"
 set $ws_obsidian "obsidian"
 set $ws_msg "msg"
-set $ws_discord "discord"
-set $ws_slack "slack"
 set $ws_thunderbird "thunderbird"
 set $ws_spotify "spotify"
 
@@ -198,12 +195,9 @@ bindsym $mod+0 workspace $ws10
 # Switch to named workspaces.
 bindsym $mod+u workspace $ws_web
 bindsym $mod+c workspace $ws_code
-bindsym $mod+y workspace $ws_clion
 bindsym $mod+i workspace $ws_idea
 bindsym $mod+o workspace $ws_obsidian
 bindsym $mod+m workspace $ws_msg
-bindsym $mod+d workspace $ws_discord
-bindsym $mod+n workspace $ws_slack
 bindsym $mod+t workspace $ws_thunderbird
 bindsym $mod+p workspace $ws_spotify
 
@@ -237,36 +231,28 @@ focus_on_window_activation focus
 # =============================================================================
 
 # Assign applications to workspaces and specify which monitor they should open on.
-assign [class=".*[A,a]lacritty.*"] $ws_terminal
+assign [class="(?i)^Alacritty$"] $ws_terminal
 workspace $ws_terminal output DP-1 eDP-1
 
-assign [class=".*[l,l]ibrewolf.*|.*[F,f]irefox.*|.*[C,c]hromium.*|.*[F,f]loorp.*"] $ws_web
+assign [class="(?i)^(LibreWolf|Firefox|Chromium|Floorp)$"] $ws_web
 workspace $ws_web output eDP-1 DP-1
 
-assign [class=".*[C,c]ode.*"] $ws_code
+assign [class="(?i)^Code$"] $ws_code
 workspace $ws_code output DP-1 eDP-1
 
-assign [class=".*[C,c]lion.*"] $ws_clion
-
-assign [class=".*[I,i]dea.*"] $ws_idea
+assign [class="(?i)^jetbrains-idea$"] $ws_idea
 workspace $ws_idea output DP-1 eDP-1
 
-assign [class=".*[O,o]bsidian.*"] $ws_obsidian
+assign [class="(?i)^obsidian$"] $ws_obsidian
 workspace $ws_obsidian output DP-1 eDP-1
 
-assign [class=".*telegram-desktop.*"] $ws_msg
+assign [class="(?i)^TelegramDesktop$"] $ws_msg
 workspace $ws_msg output eDP-1 DP-1
 
-assign [class=".*[D,d]iscord.*"] $ws_discord
-workspace $ws_discord output eDP-1 DP-1
-
-assign [class=".*[S,s]lack.*"] $ws_slack
-workspace $ws_slack output eDP-1 DP-1
-
-assign [class=".*[T,t]hunderbird.*"] $ws_thunderbird
+assign [class="(?i)^thunderbird$"] $ws_thunderbird
 workspace $ws_thunderbird output eDP-1 DP-1
 
-assign [class=".*[S,s]potify.*"] $ws_spotify
+assign [class="(?i)^spotify$"] $ws_spotify
 workspace $ws_spotify output eDP-1 DP-1
 
 
@@ -278,7 +264,7 @@ workspace $ws_spotify output eDP-1 DP-1
 
 bar {
     position top
-    font pango: FiraCode Nerd Font 16
+    font pango: FiraCode Nerd Font 12
     status_command i3status-rs ~/.config/i3/status.toml
     colors {
         separator #666666
@@ -333,11 +319,12 @@ bindsym XF86AudioPrev exec playerctl previous
 exec_always --no-startup-id nm-applet # Network Manager applet.
 
 # 'exec' runs only when i3 is first started.
-exec --no-startup-id i3-msg "workspace $ws_terminal; exec $terminal"
-exec --no-startup-id i3-msg "workspace $ws_web; exec floorp"
-exec --no-startup-id i3-msg "workspace $ws_idea; exec idea"
-exec --no-startup-id i3-msg "workspace $ws_msg; exec telegram-desktop"
-exec --no-startup-id i3-msg "workspace $ws_thunderbird; exec thunderbird"
+# Workspace placement is handled by the assign rules above.
+exec --no-startup-id $terminal
+exec --no-startup-id floorp
+exec --no-startup-id idea
+exec --no-startup-id telegram-desktop
+exec --no-startup-id thunderbird
 
 # --- Background and Wallpaper Script ---
 exec_always --no-startup-id $HOME/.config/scripts/update_background_image.sh

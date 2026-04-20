@@ -1,0 +1,186 @@
+* {
+  font-family: "FiraCode Nerd Font";
+  font-size: 18px;
+}
+
+/* ── Popup notifications ── */
+
+.floating-notifications {
+  background: transparent;
+}
+
+.blank-window {
+  background: transparent;
+}
+
+.notification {
+  background: #1d2021;
+  border: 1px solid #3c3836;
+  border-left: 3px solid #a9b665;
+  border-radius: 12px;
+  margin: 6px 10px;
+  padding: 0;
+  color: #d4be98;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.notification:hover {
+  background: #282828;
+  border-left-color: #d8a657;
+}
+
+.notification-content {
+  padding: 16px 18px;
+}
+
+.notification-row {
+  outline: none;
+}
+
+.close-button {
+  background: #3c3836;
+  color: #a89984;
+  border-radius: 50%;
+  margin: 8px;
+  padding: 2px;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.close-button:hover {
+  background: #ea6962;
+  color: #1d2021;
+}
+
+.notification-default-action,
+.notification-action {
+  border-radius: 8px;
+  margin: 4px 6px 8px;
+  padding: 8px 14px;
+  background: #282828;
+  color: #d4be98;
+  border: 1px solid #3c3836;
+}
+
+.notification-default-action:hover,
+.notification-action:hover {
+  background: #3c3836;
+  border-color: #504945;
+}
+
+.summary {
+  color: #d4be98;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.body {
+  color: #a89984;
+  font-size: 17px;
+  margin-top: 4px;
+}
+
+.time {
+  color: #665c54;
+  font-size: 14px;
+}
+
+.app-name {
+  color: #7daea3;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.image {
+  border-radius: 8px;
+  margin-right: 12px;
+}
+
+/* ── Control center panel ── */
+
+.control-center {
+  background: #0a0a0a;
+  border: 1px solid #3c3836;
+  border-radius: 14px;
+  color: #d4be98;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  padding: 8px 0;
+}
+
+.control-center .notification-row {
+  border-bottom: 1px solid #282828;
+  padding: 4px 0;
+}
+
+.control-center .notification-row:last-child {
+  border-bottom: none;
+}
+
+.control-center .notification {
+  background: #1d2021;
+  border: 1px solid #3c3836;
+  border-left: 3px solid #7daea3;
+  box-shadow: none;
+  margin: 4px 8px;
+}
+
+.control-center .notification:hover {
+  background: #282828;
+  border-left-color: #d8a657;
+}
+
+/* ── Widgets ── */
+
+.widget-title {
+  color: #d4be98;
+  font-weight: bold;
+  font-size: 18px;
+  margin: 12px 16px 8px;
+}
+
+.widget-title > button {
+  background: #ea6962;
+  color: #1d2021;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.widget-title > button:hover {
+  background: #d3869b;
+}
+
+.widget-dnd {
+  margin: 4px 16px 12px;
+  padding: 8px 12px;
+  color: #a89984;
+  background: #1d2021;
+  border-radius: 10px;
+}
+
+.widget-dnd > switch {
+  background: #3c3836;
+  border-radius: 14px;
+}
+
+.widget-dnd > switch:checked {
+  background: #ea6962;
+}
+
+.widget-dnd > switch slider {
+  background: #d4be98;
+  border-radius: 50%;
+}
+
+/* ── Priority colors ── */
+
+.critical .notification {
+  border-left-color: #ea6962;
+}
+
+.low .notification {
+  border-left-color: #665c54;
+}

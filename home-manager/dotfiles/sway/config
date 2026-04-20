@@ -1,0 +1,200 @@
+set $mod Mod4
+set $alt Mod1
+set $terminal foot
+set $launcher fuzzel
+set $window_switcher swaymsg -t get_tree | jq -r '.. | select(.type?) | select(.focused==false) | select(.name!=null) | "\(.app_id // .window_properties.class) — \(.name)"' | fuzzel --dmenu -p "window: "
+
+font pango:Fira Code 9
+floating_modifier $mod
+
+input "type:keyboard" {
+    xkb_layout "us,ru"
+    xkb_options "grp:shifts_toggle"
+}
+default_border none
+default_floating_border none
+titlebar_border_thickness 0
+titlebar_padding 4 2
+
+bindsym $mod+Return exec $terminal
+bindsym $alt+d exec $launcher
+bindsym $mod+Tab exec $window_switcher
+
+bindsym $alt+v exec cliphist list | fuzzel --dmenu -p "clipboard: " | cliphist decode | wl-copy
+bindsym $alt+p exec echo -e "lock\nlogout\nsuspend\nreboot\nshutdown" | fuzzel --dmenu -p "power: " | xargs -I {} sh -c 'case {} in lock) swaylock -f;; logout) swaymsg exit;; suspend) systemctl suspend;; reboot) systemctl reboot;; shutdown) systemctl poweroff;; esac'
+
+bindsym $mod+Shift+q kill
+bindsym $mod+Shift+a focus parent, kill
+
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+semicolon move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+bindsym $mod+h split h
+bindsym $mod+v split v
+
+bindsym $mod+f fullscreen toggle
+
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+
+bindsym $mod+a focus parent
+
+bindsym $mod+n exec swaync-client -t -sw
+bindsym $mod+Shift+n exec swaync-client -C
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r reload
+bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit Sway? This will end your session.' -B 'Yes, exit Sway' 'swaymsg exit'
+bindsym $mod+Shift+w exec swaylock -f --screenshots --clock --timestr "%H:%M:%S" --datestr "%A, %d %B" --indicator --indicator-radius 90 --indicator-thickness 8 --effect-blur 10x5 --effect-vignette 0.6:0.6 --ring-color 4c566aff --ring-ver-color 4c566aff --ring-wrong-color bf616aff --ring-clear-color ebcb8bff --key-hl-color ffffffff --bs-hl-color ff00ffff --line-color 00000000 --inside-color 000000cc --inside-ver-color 000000cc --inside-wrong-color 000000cc --inside-clear-color 000000cc --separator-color 00000000 --text-color eceff4ff --text-ver-color eceff4ff --text-wrong-color eceff4ff --text-clear-color eceff4ff --font "FiraCode Nerd Font" --font-size 24
+
+bindsym $mod+r mode "resize"
+
+mode "resize" {
+    bindsym j resize shrink width 10 px or 10 ppt
+    bindsym k resize grow height 10 px or 10 ppt
+    bindsym l resize shrink height 10 px or 10 ppt
+    bindsym semicolon resize grow width 10 px or 10 ppt
+
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
+}
+
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+set $ws_terminal "terminal"
+set $ws_web "web"
+set $ws_code "code"
+set $ws_idea "idea"
+set $ws_obsidian "obsidian"
+set $ws_msg "msg"
+set $ws_thunderbird "thunderbird"
+set $ws_spotify "spotify"
+
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+
+bindsym $mod+u workspace $ws_web
+bindsym $mod+c workspace $ws_code
+bindsym $mod+i workspace $ws_idea
+bindsym $mod+o workspace $ws_obsidian
+bindsym $mod+m workspace $ws_msg
+bindsym $mod+t workspace $ws_thunderbird
+bindsym $mod+p workspace $ws_spotify
+
+bindsym --release --no-repeat Super_L exec $HOME/.config/scripts/double_mod_switch.sh
+
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+workspace_auto_back_and_forth yes
+focus_on_window_activation focus
+
+assign [app_id="Alacritty"] $ws_terminal
+assign [class="(?i)^Alacritty$"] $ws_terminal
+workspace $ws_terminal output DP-1 eDP-1
+
+assign [app_id="floorp"] $ws_web
+assign [class="(?i)^(LibreWolf|Firefox|Chromium|Floorp|Google-chrome)$"] $ws_web
+workspace $ws_web output eDP-1 DP-1
+
+assign [app_id="code"] $ws_code
+assign [class="(?i)^Code$"] $ws_code
+workspace $ws_code output DP-1 eDP-1
+
+assign [app_id="jetbrains-idea"] $ws_idea
+assign [class="(?i)^jetbrains-idea"] $ws_idea
+workspace $ws_idea output DP-1 eDP-1
+
+assign [app_id="obsidian"] $ws_obsidian
+assign [class="(?i)^obsidian$"] $ws_obsidian
+workspace $ws_obsidian output DP-1 eDP-1
+
+assign [app_id="org.telegram.desktop"] $ws_msg
+assign [class="(?i)^TelegramDesktop$"] $ws_msg
+workspace $ws_msg output eDP-1 DP-1
+
+assign [app_id="thunderbird"] $ws_thunderbird
+assign [class="(?i)^thunderbird$"] $ws_thunderbird
+workspace $ws_thunderbird output eDP-1 DP-1
+
+assign [app_id="spotify"] $ws_spotify
+assign [class="(?i)^spotify$"] $ws_spotify
+workspace $ws_spotify output eDP-1 DP-1
+
+exec waybar
+exec wl-paste --type text --watch cliphist store
+
+bindsym XF86AudioRaiseVolume exec --no-startup-id pamixer -i 5
+bindsym XF86AudioLowerVolume exec --no-startup-id pamixer -d 5
+bindsym XF86AudioMute exec --no-startup-id pamixer -t
+
+bindsym XF86MonBrightnessUp exec --no-startup-id brillo -A 5
+bindsym XF86MonBrightnessDown exec --no-startup-id brillo -U 5
+
+bindsym XF86AudioPlay exec playerctl play
+bindsym XF86AudioPause exec playerctl pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+exec_always --no-startup-id dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway
+exec_always --no-startup-id systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
+exec_always --no-startup-id nm-applet --indicator
+exec_always --no-startup-id $HOME/.config/scripts/update_background_image.sh
+exec --no-startup-id swayidle -w timeout 900 'swaylock -f --screenshots --clock --timestr "%H:%M:%S" --datestr "%A, %d %B" --indicator --indicator-radius 90 --indicator-thickness 8 --effect-blur 10x5 --effect-vignette 0.6:0.6 --ring-color 4c566aff --ring-ver-color 4c566aff --ring-wrong-color bf616aff --ring-clear-color ebcb8bff --key-hl-color ffffffff --bs-hl-color ff00ffff --line-color 00000000 --inside-color 000000cc --inside-ver-color 000000cc --inside-wrong-color 000000cc --inside-clear-color 000000cc --separator-color 00000000 --text-color eceff4ff --text-ver-color eceff4ff --text-wrong-color eceff4ff --text-clear-color eceff4ff --font "FiraCode Nerd Font" --font-size 24'
+
+exec --no-startup-id $terminal
+exec --no-startup-id floorp
+exec --no-startup-id idea
+exec --no-startup-id telegram-desktop
+exec --no-startup-id thunderbird

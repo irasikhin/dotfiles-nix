@@ -87,5 +87,4 @@ short = " $icon $timestamp.datetime(f:%R) "
 
 [[block]]
 block = "keyboard_layout"
-driver = "setxkbmap"
-interval = 15
+driver = "sway"
