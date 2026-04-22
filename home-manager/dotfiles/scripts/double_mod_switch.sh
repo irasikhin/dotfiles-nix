@@ -18,10 +18,6 @@ run_workspace_command() {
     exec swaymsg "workspace $TARGET_WORKSPACE"
   fi
 
-  if command -v i3-msg >/dev/null 2>&1; then
-    exec i3-msg "workspace $TARGET_WORKSPACE"
-  fi
-
   exit 1
 }
 

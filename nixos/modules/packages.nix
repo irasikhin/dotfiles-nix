@@ -80,7 +80,6 @@ in
     zulu25
     net-tools
     claude-code
-    tmux
     bubblewrap
     shadowsocks-rust
     brave

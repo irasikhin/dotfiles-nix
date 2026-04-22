@@ -3,6 +3,7 @@ set $alt Mod1
 set $terminal foot
 set $launcher fuzzel
 set $window_switcher swaymsg -t get_tree | jq -r '.. | select(.type?) | select(.focused==false) | select(.name!=null) | "\(.app_id // .window_properties.class) — \(.name)"' | fuzzel --dmenu -p "window: "
+set $lock_cmd $HOME/dotfiles-nix/home-manager/dotfiles/scripts/lock_screen.sh
 
 font pango:Fira Code 9
 floating_modifier $mod
@@ -21,7 +22,7 @@ bindsym $alt+d exec $launcher
 bindsym $mod+Tab exec $window_switcher
 
 bindsym $alt+v exec cliphist list | fuzzel --dmenu -p "clipboard: " | cliphist decode | wl-copy
-bindsym $alt+p exec echo -e "lock\nlogout\nsuspend\nreboot\nshutdown" | fuzzel --dmenu -p "power: " | xargs -I {} sh -c 'case {} in lock) swaylock -f;; logout) swaymsg exit;; suspend) systemctl suspend;; reboot) systemctl reboot;; shutdown) systemctl poweroff;; esac'
+bindsym $alt+p exec echo -e "lock\nlogout\nsuspend\nreboot\nshutdown" | fuzzel --dmenu -p "power: " | xargs -I {} sh -c 'case {} in lock) $lock_cmd;; logout) swaymsg exit;; suspend) systemctl suspend;; reboot) systemctl reboot;; shutdown) systemctl poweroff;; esac'
 
 bindsym $mod+Shift+q kill
 bindsym $mod+Shift+a focus parent, kill
@@ -65,7 +66,7 @@ bindsym $mod+Shift+n exec swaync-client -C
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r reload
 bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit Sway? This will end your session.' -B 'Yes, exit Sway' 'swaymsg exit'
-bindsym $mod+Shift+w exec swaylock -f --screenshots --clock --timestr "%H:%M:%S" --datestr "%A, %d %B" --indicator --indicator-radius 90 --indicator-thickness 8 --effect-blur 10x5 --effect-vignette 0.6:0.6 --ring-color 4c566aff --ring-ver-color 4c566aff --ring-wrong-color bf616aff --ring-clear-color ebcb8bff --key-hl-color ffffffff --bs-hl-color ff00ffff --line-color 00000000 --inside-color 000000cc --inside-ver-color 000000cc --inside-wrong-color 000000cc --inside-clear-color 000000cc --separator-color 00000000 --text-color eceff4ff --text-ver-color eceff4ff --text-wrong-color eceff4ff --text-clear-color eceff4ff --font "FiraCode Nerd Font" --font-size 24
+bindsym $mod+Shift+w exec $lock_cmd
 
 bindsym $mod+r mode "resize"
 
@@ -104,6 +105,8 @@ set $ws_obsidian "obsidian"
 set $ws_msg "msg"
 set $ws_thunderbird "thunderbird"
 set $ws_spotify "spotify"
+set $ws_bruno "bruno"
+set $ws_dbeaver "dbeaver"
 
 bindsym $mod+1 workspace $ws1
 bindsym $mod+2 workspace $ws2
@@ -123,6 +126,8 @@ bindsym $mod+o workspace $ws_obsidian
 bindsym $mod+m workspace $ws_msg
 bindsym $mod+t workspace $ws_thunderbird
 bindsym $mod+p workspace $ws_spotify
+bindsym $mod+b workspace $ws_bruno
+bindsym $mod+d workspace $ws_dbeaver
 
 bindsym --release --no-repeat Super_L exec $HOME/.config/scripts/double_mod_switch.sh
 
@@ -172,6 +177,14 @@ assign [app_id="spotify"] $ws_spotify
 assign [class="(?i)^spotify$"] $ws_spotify
 workspace $ws_spotify output eDP-1 DP-1
 
+assign [app_id="bruno"] $ws_bruno
+assign [class="(?i)^Bruno$"] $ws_bruno
+workspace $ws_bruno output DP-1 eDP-1
+
+assign [app_id="dbeaver"] $ws_dbeaver
+assign [class="(?i)^DBeaver$"] $ws_dbeaver
+workspace $ws_dbeaver output DP-1 eDP-1
+
 exec waybar
 exec wl-paste --type text --watch cliphist store
 
@@ -191,7 +204,7 @@ exec_always --no-startup-id dbus-update-activation-environment --systemd DISPLAY
 exec_always --no-startup-id systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
 exec_always --no-startup-id nm-applet --indicator
 exec_always --no-startup-id $HOME/.config/scripts/update_background_image.sh
-exec --no-startup-id swayidle -w timeout 900 'swaylock -f --screenshots --clock --timestr "%H:%M:%S" --datestr "%A, %d %B" --indicator --indicator-radius 90 --indicator-thickness 8 --effect-blur 10x5 --effect-vignette 0.6:0.6 --ring-color 4c566aff --ring-ver-color 4c566aff --ring-wrong-color bf616aff --ring-clear-color ebcb8bff --key-hl-color ffffffff --bs-hl-color ff00ffff --line-color 00000000 --inside-color 000000cc --inside-ver-color 000000cc --inside-wrong-color 000000cc --inside-clear-color 000000cc --separator-color 00000000 --text-color eceff4ff --text-ver-color eceff4ff --text-wrong-color eceff4ff --text-clear-color eceff4ff --font "FiraCode Nerd Font" --font-size 24'
+exec_always --no-startup-id sh -c 'pkill -x swayidle; exec swayidle -w timeout 900 "$1" before-sleep "$1"' _ "$lock_cmd"
 
 exec --no-startup-id $terminal
 exec --no-startup-id floorp

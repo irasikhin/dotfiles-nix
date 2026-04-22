@@ -33,11 +33,6 @@ in
     source = ./dotfiles;
     recursive = true;
   };
-
-  programs.zellij = {
-    enable = false;
-  };
-
   programs.ghostty = {
     enable = false;
   };
