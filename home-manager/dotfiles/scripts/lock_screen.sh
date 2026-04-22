@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+
+exec swaylock -f \
+  --screenshots \
+  --clock \
+  --timestr "%Y.%m.%d" \
+  --datestr "%H:%M:%S" \
+  --indicator \
+  --indicator-radius 150 \
+  --indicator-thickness 8 \
+  --effect-blur 10x5 \
+  --effect-vignette 0.25:0.35 \
+  --ring-color 3c3836ff \
+  --ring-ver-color a9b665ff \
+  --ring-wrong-color ea6962ff \
+  --ring-clear-color d8a657ff \
+  --key-hl-color ea6962ff \
+  --bs-hl-color ea6962ff \
+  --line-color 00000000 \
+  --line-ver-color 00000000 \
+  --line-wrong-color 00000000 \
+  --line-clear-color 00000000 \
+  --inside-color 1d2021dd \
+  --inside-ver-color 1d2021dd \
+  --inside-wrong-color 1d2021dd \
+  --inside-clear-color 1d2021dd \
+  --separator-color 00000000 \
+  --text-color d4be98ff \
+  --text-ver-color d4be98ff \
+  --text-wrong-color d4be98ff \
+  --text-clear-color d4be98ff \
+  --font "FiraCode Nerd Font Bold" \
+  --font-size 22

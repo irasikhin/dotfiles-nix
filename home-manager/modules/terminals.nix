@@ -1,53 +1,31 @@
 { pkgs, ... }:
 
 {
-  programs.tmux = {
+  programs.zellij = {
     enable = true;
-    sensibleOnTop = false;
-    shortcut = "a";
-    baseIndex = 1;
-    newSession = true;
-    escapeTime = 0;
-    secureSocket = false;
-
-    plugins = with pkgs; [
-      tmuxPlugins.better-mouse-mode
-    ];
-
-    keyMode = "vi";
-
-    extraConfig = ''
-      set -g default-terminal "tmux-256color"
-      set -ga terminal-overrides ",*256col*:Tc"
-      set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
-      set-environment -g COLORTERM "truecolor"
-
-      set-option -g mouse on
-      bind | split-window -h -c "#{pane_current_path}"
-      bind - split-window -v -c "#{pane_current_path}"
-      bind c new-window -c "#{pane_current_path}"
-
-      # Dark theme (gruvbox hard)
-      set -g status-style "bg=#1d2021,fg=#a89984"
-      set -g status-left "#[bg=#98971a,fg=#1d2021,bold] #S #[bg=#1d2021,fg=#98971a] "
-      set -g status-right "#[fg=#32302f]#[bg=#32302f,fg=#a89984] %H:%M #[bg=#a89984,fg=#1d2021,bold] #h "
-      set -g status-left-length 30
-      set -g status-right-length 50
-      set -g window-status-format "#[fg=#665c54] #I:#W "
-      set -g window-status-current-format "#[bg=#282828,fg=#d8a657,bold] #I:#W "
-      set -g window-status-separator ""
-      set -g pane-border-style "fg=#3c3836"
-      set -g pane-active-border-style "fg=#98971a"
-      set -g message-style "bg=#1d2021,fg=#a89984"
-      set -g message-command-style "bg=#1d2021,fg=#a89984"
-
-      bind -n M-Left  select-window -p
-      bind -n M-Right select-window -n
-
-      bind -n M-h select-pane -L
-      bind -n M-j select-pane -D
-      bind -n M-k select-pane -U
-      bind -n M-l select-pane -R
+    enableZshIntegration = true;
+    attachExistingSession = true;
+    exitShellOnExit = true;
+    settings = {
+      theme = "gruvbox";
+      pane_frames = false;
+    };
+    themes.gruvbox = ''
+      themes {
+        gruvbox {
+          fg 212 190 152
+          bg 29 32 33
+          black 40 40 40
+          red 234 105 98
+          green 169 182 101
+          yellow 216 166 87
+          blue 125 174 163
+          magenta 211 134 155
+          orange 231 138 78
+          cyan 137 180 130
+          white 168 153 132
+        }
+      }
     '';
   };
 
@@ -56,9 +34,9 @@
     settings = {
       main = {
         font = "FiraCode Nerd Font:size=18";
-        shell = "tmux";
+        shell = "${pkgs.zsh}/bin/zsh";
       };
-      colors = {
+      colors-dark = {
         background = "1d2021";
         foreground = "d4be98";
         regular0 = "1d2021";

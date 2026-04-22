@@ -13,7 +13,6 @@ LOCK_FILE="${STATE_DIR}/lock"
 DEST_IMAGE="${HOME}/.background-image"
 DEST_BLUR="${HOME}/.background-image-blur"
 DISPLAY="${DISPLAY:-:0}"
-XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}"
 
 mkdir -p "$CACHE_DIR" "$STATE_DIR"
 
@@ -116,9 +115,6 @@ apply_wallpaper() {
     return
   fi
 
-  if [[ -n "$DISPLAY" && -f "$XAUTHORITY" ]]; then
-    feh --bg-fill "$DEST_IMAGE" >/dev/null 2>&1 || true
-  fi
 }
 
 generate_blur() {

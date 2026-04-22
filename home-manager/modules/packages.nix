@@ -33,7 +33,9 @@ in
     gnumake
     git
     lua
+    just
     lazygit
+    lazydocker
     bat
     fzf
     ripgrep
@@ -44,8 +46,8 @@ in
     ghostty
     curl
     kitty
+    chafa
     screen
-    tmux
     fd
     antigen
     docker
@@ -58,9 +60,6 @@ in
     xclip
     bc
     wl-clipboard
-    xorg.xev
-    xbindkeys
-    xorg.xmodmap
     networkmanagerapplet
     maven
     telegram-desktop
@@ -74,7 +73,6 @@ in
     gparted
     parted
     bash
-    feh
     swaybg
     swayidle
     swaylock-effects
@@ -89,11 +87,10 @@ in
     inetutils
     libreoffice
     cloc
+    delta
     vscode
     zoom-us
     sshpass
-    autorandr
-    xlayoutdisplay
     oath-toolkit
     yamllint
     postgresql
@@ -123,6 +120,7 @@ in
     nh
     p7zip
     xarchiver
+    watchexec
     yandex-disk
     jira-cli-go
     opentofu
@@ -139,8 +137,6 @@ in
     ytt
     redocly
     clang-tools
-    xorg.libX11
-    xorg.libXi
     boost
     meson
     inkscape
@@ -173,13 +169,27 @@ in
     vhs
     hurl
     clojure
+    difftastic
     ncdu
     dust
+    bottom
+    glow
     hwatch
+    hyperfine
+    lnav
     mktoc
     mkdocs
     soapui
     keepassxc
     nextcloud-client
+    yazi
+    ast-grep
+    procs
+    bandwhich
+    jless
+    stern
+    kubectx
+    uv
+    ruff
   ];
 }

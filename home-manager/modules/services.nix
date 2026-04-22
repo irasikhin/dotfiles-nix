@@ -1,9 +1,19 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   homeDir = "/home/ir";
   repoDir = "${homeDir}/dotfiles-nix";
   secretsDir = "${repoDir}/secrets";
+  wallpaperPath = lib.makeBinPath [
+    pkgs.coreutils
+    pkgs.findutils
+    pkgs.util-linux
+    pkgs.procps
+    pkgs.curl
+    pkgs.jq
+    pkgs.imagemagick
+    pkgs.swaybg
+  ];
 in
 {
   systemd.user.services.autossh-runner = {
@@ -37,7 +47,8 @@ in
 
     Service = {
       Type = "oneshot";
-      ExecStart = "${config.xdg.configHome}/scripts/update_background_image.sh";
+      Environment = [ "PATH=${wallpaperPath}" ];
+      ExecStart = "${pkgs.bash}/bin/bash ${config.xdg.configHome}/scripts/update_background_image.sh";
     };
   };
 

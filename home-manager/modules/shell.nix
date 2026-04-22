@@ -20,6 +20,43 @@ in
     l = "eza";
     ls = "eza";
     cat = "bat";
+    hs = "fc -rl 1 | fzf";
+    ld = "lazydocker";
+    psg = "procs";
+    bw = "bandwhich";
+    jv = "jless";
+    sgp = "ast-grep";
+  };
+
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+  };
+
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  programs.git = {
+    enable = true;
+    signing.format = null;
+    settings = {
+      merge.conflictStyle = "zdiff3";
+    };
+  };
+
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+    options = {
+      navigate = true;
+      line-numbers = true;
+      side-by-side = true;
+      hyperlinks = true;
+      syntax-theme = "gruvbox-dark";
+    };
   };
 
   programs.zoxide = {
@@ -71,6 +108,23 @@ in
 
     initContent = ''
       source ${homeDir}/jira.sh;
+
+      bindkey -v
+      export KEYTIMEOUT=1
+
+      bindkey -M viins '^A' beginning-of-line
+      bindkey -M viins '^E' end-of-line
+
+      yy() {
+        local tmp cwd
+        tmp="$(mktemp -t yazi-cwd.XXXXXX)"
+        yazi "$@" --cwd-file="$tmp"
+        cwd="$(cat "$tmp" 2>/dev/null)"
+        if [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+          cd "$cwd"
+        fi
+        rm -f "$tmp"
+      }
     '';
   };
 
@@ -80,8 +134,9 @@ in
       add_newline = false;
 
       character = {
-        success_symbol = "[➜](bold green)";
-        error_symbol = "[➜](bold red)";
+        success_symbol = "[❯](bold green)";
+        error_symbol = "[❯](bold red)";
+        vicmd_symbol = "[❯](bold green)";
       };
 
       package.disabled = true;
