@@ -1,0 +1,17 @@
+default = "main"
+
+[databases.main]
+database = "~/.keepass/keepass.kdbx"
+
+# `kpass get github` uses `main` because it is the default profile.
+# `kpass get @work github` uses the `work` profile below.
+#
+# If a profile password lives in another KeePass database, point at the
+# source profile and the entry whose `password` field stores that database
+# password.
+#
+# Example:
+# [databases.work]
+# database = "~/.keepass/work.kdbx"
+# password_database = "main"
+# password_entry = "db-passwords/work"

@@ -1,0 +1,116 @@
+" =============================================================================
+" IdeaVim config (managed by home-manager)
+" =============================================================================
+
+let mapleader=" "
+let maplocalleader=" "
+
+" --- Plugins (native IdeaVim) ------------------------------------------------
+set surround
+set commentary
+set NERDTree
+set easymotion          " requires AceJump IDE plugin
+set quickscope
+set which-key
+set argtextobj
+set exchange
+set highlightedyank
+set matchit
+set ReplaceWithRegister
+set textobj-entire
+set textobj-indent
+set vim-paragraph-motion
+
+" --- Options -----------------------------------------------------------------
+set scrolloff=8
+set sidescrolloff=8
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+set number
+set relativenumber
+set showmode
+set showcmd
+set timeoutlen=500
+
+" IDE integration
+set ideajoin
+set idearefactormode=keep
+set ideamarks
+set ideaput
+set ideastatusicon=gray
+
+set clipboard+=unnamed
+set clipboard+=unnamedplus
+
+" --- Handlers: give keys back to Vim ----------------------------------------
+sethandler <C-C> a:vim
+sethandler <C-A> a:vim
+sethandler <C-X> a:vim
+sethandler <C-W> a:vim
+sethandler <C-V> n-v:vim i:ide
+
+" --- Navigation --------------------------------------------------------------
+nnoremap <leader>ff :action GotoFile<CR>
+nnoremap <leader>fg :action FindInPath<CR>
+nnoremap <leader>fr :action RecentFiles<CR>
+nnoremap <leader>fs :action GotoSymbol<CR>
+nnoremap <leader>fc :action GotoClass<CR>
+nnoremap <leader>fb :action Switcher<CR>
+nnoremap <leader>p  :action ActivateProjectToolWindow<CR>
+
+" --- Code intelligence -------------------------------------------------------
+nnoremap gd  :action GotoDeclaration<CR>
+nnoremap gi  :action GotoImplementation<CR>
+nnoremap gy  :action GotoTypeDeclaration<CR>
+nnoremap gu  :action FindUsages<CR>
+nnoremap K   :action QuickJavaDoc<CR>
+nnoremap <leader>a  :action ShowIntentionActions<CR>
+nnoremap <leader>rn :action RenameElement<CR>
+nnoremap <leader>rf :action RenameFile<CR>
+nnoremap <leader>=  :action ReformatCode<CR>
+vnoremap <leader>=  :action ReformatCode<CR>
+nnoremap <leader>oi :action OptimizeImports<CR>
+
+" --- Diagnostics / method / git-hunk jumps ----------------------------------
+nnoremap ]e :action GotoNextError<CR>
+nnoremap [e :action GotoPreviousError<CR>
+nnoremap ]m :action MethodDown<CR>
+nnoremap [m :action MethodUp<CR>
+nnoremap ]c :action VcsShowNextChangeMarker<CR>
+nnoremap [c :action VcsShowPrevChangeMarker<CR>
+
+" --- Debug -------------------------------------------------------------------
+nnoremap <leader>db :action ToggleLineBreakpoint<CR>
+nnoremap <leader>dc :action Debug<CR>
+nnoremap <leader>dr :action Run<CR>
+nnoremap <leader>ds :action Stop<CR>
+nnoremap <leader>do :action StepOver<CR>
+nnoremap <leader>di :action StepInto<CR>
+
+" --- Git ---------------------------------------------------------------------
+nnoremap <leader>gs :action ActivateVersionControlToolWindow<CR>
+nnoremap <leader>gb :action Annotate<CR>
+nnoremap <leader>gh :action Vcs.ShowTabbedFileHistory<CR>
+nnoremap <leader>gc :action CheckinProject<CR>
+
+" --- Tabs / windows ----------------------------------------------------------
+nnoremap <leader>q  :action CloseContent<CR>
+nnoremap <leader>Q  :action ReopenClosedTab<CR>
+nnoremap <leader>tn :action NextTab<CR>
+nnoremap <leader>tp :action PreviousTab<CR>
+
+" --- Multi-cursor via IDE ----------------------------------------------------
+nnoremap <C-n> :action SelectNextOccurrence<CR>
+vnoremap <C-n> :action SelectNextOccurrence<CR>
+vnoremap <C-x> :action UnselectPreviousOccurrence<CR>
+nnoremap <leader>A :action SelectAllOccurrences<CR>
+
+" --- Misc --------------------------------------------------------------------
+nnoremap <leader>h :nohlsearch<CR>
+nnoremap <leader>e :NERDTreeToggle<CR>
+vnoremap < <gv
+vnoremap > >gv
+nnoremap n nzzzv
+nnoremap N Nzzzv

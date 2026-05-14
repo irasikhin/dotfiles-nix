@@ -28,11 +28,13 @@ in
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+  news.display = "silent";
 
   home.file."${config.xdg.configHome}" = {
     source = ./dotfiles;
     recursive = true;
   };
+  home.file.".ideavimrc".source = ./ideavimrc;
   programs.ghostty = {
     enable = false;
   };

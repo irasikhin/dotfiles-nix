@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  inputs,
+  system,
+  ...
+}:
 
 let
   myHelm = pkgs.wrapHelm pkgs.kubernetes-helm {
@@ -11,6 +16,29 @@ let
   myHelmfile = pkgs.helmfile.override {
     inherit (myHelm.passthru) pluginsDir;
   };
+  ideaPlugins = inputs.nix-jetbrains-plugins.plugins.${system}.idea."${pkgs.jetbrains.idea.version}";
+  ideaWithPlugins = pkgs.jetbrains.plugins.addPlugins pkgs.jetbrains.idea (
+    map (id: ideaPlugins.${id}) [
+      "IdeaVIM"
+      "org.jetbrains.IdeaVim-EasyMotion"
+      "com.joshestein.ideavim-quickscope"
+      "IdeaVimExtension"
+      "AceJump"
+      "eu.theblob42.idea.whichkey"
+      "org.yelog.ideavim.flash"
+      "com.github.dankinsoid.multicursor"
+      "com.github.eig114.darkburn"
+      "ru.adelf.idea.dotenv"
+      "com.github.lonre.gruvbox-intellij-theme"
+      "indent-rainbow.indent-rainbow"
+      "izhangzhihao.rainbow.brackets.lite"
+      "Lombook Plugin"
+      "org.mapstruct.intellij"
+      "nix-idea"
+      "com.andrey4623.rainbowcsv"
+      "com.github.smashedtoatoms.zenburn"
+    ]
+  );
 in
 {
   home.packages = with pkgs; [
@@ -64,7 +92,7 @@ in
     maven
     telegram-desktop
     font-awesome
-    jetbrains.idea
+    ideaWithPlugins
     acpi
     brightnessctl
     lshw
@@ -148,7 +176,6 @@ in
     aider-chat
     aichat
     opencode
-    ollama-rocm
     google-chrome
     jbang
     flameshot
@@ -191,5 +218,11 @@ in
     kubectx
     uv
     ruff
+    codex
+    ledger
+    ledger-live-desktop
+    ledger-udev-rules
+    feishin
+    outline
   ];
 }

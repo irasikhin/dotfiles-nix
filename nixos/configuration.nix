@@ -28,6 +28,21 @@
     experimental-features = nix-command flakes
   '';
 
+  # Limit build parallelism so `nh switch` does not freeze the laptop.
+  # 4 parallel derivations × 4 cores each, total CPU ~16 threads cap.
+  nix.settings = {
+    max-jobs = 4;
+    cores = 4;
+  };
+
+  # Throttle nix-daemon via cgroups: low CPU/IO priority, memory cap.
+  systemd.services.nix-daemon.serviceConfig = {
+    CPUWeight = 20;
+    IOWeight = 20;
+    MemoryHigh = "16G";
+    MemoryMax = "22G";
+  };
+
   # Disable printing support (CUPS)
   services.printing.enable = false;
 
