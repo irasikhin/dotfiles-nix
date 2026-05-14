@@ -109,11 +109,7 @@ in
     initContent = ''
       source ${homeDir}/jira.sh;
 
-      bindkey -v
-      export KEYTIMEOUT=1
-
-      bindkey -M viins '^A' beginning-of-line
-      bindkey -M viins '^E' end-of-line
+      bindkey -e
 
       yy() {
         local tmp cwd
@@ -136,7 +132,6 @@ in
       character = {
         success_symbol = "[❯](bold green)";
         error_symbol = "[❯](bold red)";
-        vicmd_symbol = "[❯](bold green)";
       };
 
       package.disabled = true;

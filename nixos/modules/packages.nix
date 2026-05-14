@@ -84,6 +84,8 @@ in
     shadowsocks-rust
     brave
     firejail
+    monero-cli
+    monero-gui
   ];
 
   # Enable Nix-ld (to run non-NixOS binaries)
