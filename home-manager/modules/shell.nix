@@ -124,6 +124,21 @@ in
     '';
   };
 
+  # nix-locate / `, foo` runs any nixpkgs binary without installing.
+  # Database comes prebuilt from nix-index-database flake input.
+  programs.nix-index.enable = true;
+  programs.nix-index-database.comma.enable = true;
+
+  # nh: friendlier `nixos-rebuild` / `home-manager` wrapper with diffs.
+  programs.nh = {
+    enable = true;
+    flake = "/home/ir/dotfiles-nix";
+    clean = {
+      enable = true;
+      extraArgs = "--keep-since 7d --keep 5";
+    };
+  };
+
   programs.starship = {
     enable = true;
     settings = {

@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 
@@ -19,6 +20,11 @@ in
   home.username = "ir";
   home.homeDirectory = homeDir;
   home.stateVersion = "22.11";
+
+  # Skip Neovim's OSC 11 terminal-background query (mis-proxied by zellij,
+  # causes slow startup and leaked "11;rgb:..." escapes). nvim reads
+  # COLORFGBG instead: light fg / dark bg.
+  home.sessionVariables.COLORFGBG = "15;0";
   nixpkgs = {
     config = {
       allowUnfree = true;
@@ -35,6 +41,20 @@ in
     recursive = true;
   };
   home.file.".ideavimrc".source = ./ideavimrc;
+
+  # Disable bundled Code With Me plugin (broken descriptor in nix-repacked IDEA).
+  # Appends to disabled_plugins.txt non-destructively for every installed IDEA
+  # version; IDE UI still manages the file. Version-agnostic.
+  home.activation.disableCodeWithMe = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    for d in "${config.xdg.configHome}/JetBrains"/IntelliJIdea*; do
+      [ -d "$d" ] || continue
+      f="$d/disabled_plugins.txt"
+      [ -e "$f" ] || touch "$f"
+      if ! grep -qxF "com.jetbrains.remoteDevelopment" "$f"; then
+        echo "com.jetbrains.remoteDevelopment" >> "$f"
+      fi
+    done
+  '';
   programs.ghostty = {
     enable = false;
   };

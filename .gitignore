@@ -1,3 +1,10 @@
 .idea/
 .aider*
-secrets/
+__pycache__/
+*.pyc
+
+# Ignore everything in secrets/ by default (plaintext creds live here),
+# allow only sops-encrypted files which are safe to commit.
+secrets/*
+!secrets/secrets.yaml
+keys.txt

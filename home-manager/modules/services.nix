@@ -1,9 +1,14 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   homeDir = "/home/ir";
-  repoDir = "${homeDir}/dotfiles-nix";
-  secretsDir = "${repoDir}/secrets";
+  # sops-nix decrypts secrets here at activation (NixOS module).
+  secretsDir = "/run/secrets";
   wallpaperPath = lib.makeBinPath [
     pkgs.coreutils
     pkgs.findutils
@@ -75,7 +80,7 @@ in
       After = [ "network-online.target" ];
     };
     Service = {
-      EnvironmentFile = "${secretsDir}/proxy-9999.env";
+      EnvironmentFile = "${secretsDir}/proxy_9999";
       ExecStart = pkgs.writeShellScript "gost-9999" ''
         exec ${pkgs.gost}/bin/gost -L :9999 -F "$PROXY_UPSTREAM"
       '';
@@ -93,7 +98,7 @@ in
       After = [ "network-online.target" ];
     };
     Service = {
-      EnvironmentFile = "${secretsDir}/proxy-7777.env";
+      EnvironmentFile = "${secretsDir}/proxy_7777";
       ExecStart = pkgs.writeShellScript "gost-7777" ''
         exec ${pkgs.gost}/bin/gost -L :7777 -F "$PROXY_UPSTREAM"
       '';
@@ -111,7 +116,7 @@ in
       After = [ "network-online.target" ];
     };
     Service = {
-      EnvironmentFile = "${secretsDir}/proxy-8888.env";
+      EnvironmentFile = "${secretsDir}/proxy_8888";
       ExecStart = pkgs.writeShellScript "gost-8888" ''
         exec ${pkgs.gost}/bin/gost -L :8888 -F "$PROXY_UPSTREAM"
       '';

@@ -32,11 +32,13 @@ set number
 set relativenumber
 set showmode
 set showcmd
-set timeoutlen=500
+set timeoutlen=2000
+let g:WhichKey_DefaultDelay=0
+let g:WhichKey_ShowVimActions="true"
 
 " IDE integration
 set ideajoin
-set idearefactormode=keep
+set idearefactormode=select
 set ideamarks
 set ideaput
 set ideastatusicon=gray
