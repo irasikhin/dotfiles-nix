@@ -38,10 +38,9 @@ random_entry_password() {
 }
 
 require_pykeepass() {
-  if ! python3 - <<'PY' >/dev/null 2>&1
+  if ! python3 - <<'PY' >/dev/null 2>&1; then
 import pykeepass
 PY
-  then
     echo "python3 with pykeepass is required. Rebuild Home Manager and try again." >&2
     exit 1
   fi
@@ -59,12 +58,12 @@ prompt_password_twice() {
     IFS= read -r -s second
     printf '\n'
 
-    if [[ -z "$first" ]]; then
+    if [[ -z $first ]]; then
       echo "Password cannot be empty." >&2
       continue
     fi
 
-    if [[ "$first" != "$second" ]]; then
+    if [[ $first != "$second" ]]; then
       echo "Passwords do not match." >&2
       continue
     fi
@@ -82,33 +81,33 @@ read_passwords_from_file() {
   local -a lines=()
   local line
 
-  if [[ ! -f "$password_file" ]]; then
+  if [[ ! -f $password_file ]]; then
     echo "Password file not found: ${password_file}" >&2
     exit 1
   fi
 
-  while IFS= read -r line || [[ -n "$line" ]]; do
-    [[ -n "$line" ]] || continue
-    [[ "$line" =~ ^[[:space:]]*# ]] && continue
+  while IFS= read -r line || [[ -n $line ]]; do
+    [[ -n $line ]] || continue
+    [[ $line =~ ^[[:space:]]*# ]] && continue
 
     case "$line" in
-      backup=*)
-        backup_password="${line#backup=}"
-        ;;
-      pass_kdbx=*)
-        pass_db_password="${line#pass_kdbx=}"
-        ;;
-      wkeys_kdbx=*)
-        wkeys_db_password="${line#wkeys_kdbx=}"
-        ;;
-      *)
-        lines+=("$line")
-        ;;
+    backup=*)
+      backup_password="${line#backup=}"
+      ;;
+    pass_kdbx=*)
+      pass_db_password="${line#pass_kdbx=}"
+      ;;
+    wkeys_kdbx=*)
+      wkeys_db_password="${line#wkeys_kdbx=}"
+      ;;
+    *)
+      lines+=("$line")
+      ;;
     esac
-  done < "$password_file"
+  done <"$password_file"
 
-  if [[ -z "$backup_password" && -z "$pass_db_password" && -z "$wkeys_db_password" ]]; then
-    if (( ${#lines[@]} < 3 )); then
+  if [[ -z $backup_password && -z $pass_db_password && -z $wkeys_db_password ]]; then
+    if ((${#lines[@]} < 3)); then
       echo "Password file must contain either named values or at least three non-empty lines." >&2
       exit 1
     fi
@@ -117,7 +116,7 @@ read_passwords_from_file() {
     wkeys_db_password="${lines[2]}"
   fi
 
-  if [[ -z "$backup_password" || -z "$pass_db_password" || -z "$wkeys_db_password" ]]; then
+  if [[ -z $backup_password || -z $pass_db_password || -z $wkeys_db_password ]]; then
     echo "Password file must define backup, pass_kdbx, and wkeys_kdbx passwords." >&2
     exit 1
   fi
@@ -129,7 +128,7 @@ confirm_overwrite() {
   local path="$1"
   local reply
 
-  if [[ ! -e "$path" ]]; then
+  if [[ ! -e $path ]]; then
     return 0
   fi
 
@@ -137,9 +136,9 @@ confirm_overwrite() {
     printf 'Overwrite %s? [y/N]: ' "$path" >&2
     IFS= read -r reply
     case "$reply" in
-      [yY] | [yY][eE][sS]) return 0 ;;
-      [nN] | [nN][oO] | "") return 1 ;;
-      *) echo "Enter y or n." >&2 ;;
+    [yY] | [yY][eE][sS]) return 0 ;;
+    [nN] | [nN][oO] | "") return 1 ;;
+    *) echo "Enter y or n." >&2 ;;
     esac
   done
 }
@@ -151,7 +150,7 @@ create_pass_backup() {
   local passphrase_file="$TEMP_DIR/pass-backup.passphrase"
 
   tar -C "$PASSWORD_STORE_DIR" -czf "$archive_file" .
-  printf '%s' "$backup_password" > "$passphrase_file"
+  printf '%s' "$backup_password" >"$passphrase_file"
 
   openssl enc \
     -aes-256-cbc \
@@ -171,7 +170,7 @@ create_pass_keepass_db() {
   local password_file="$TEMP_DIR/pass-kdbx.password"
 
   require_pykeepass
-  printf '%s' "$db_password" > "$password_file"
+  printf '%s' "$db_password" >"$password_file"
 
   env PASSWORD_STORE_DIR="$PASSWORD_STORE_DIR" \
     TARGET_DB="$temp_db" \
@@ -274,7 +273,7 @@ PY
 gpg_export_attachment() {
   local output_file="$1"
   shift
-  gpg --batch "$@" > "$output_file"
+  gpg --batch "$@" >"$output_file"
 }
 
 create_wkeys_keepass_db() {
@@ -285,7 +284,7 @@ create_wkeys_keepass_db() {
   local gnupg_archive="$TEMP_DIR/gnupg-backup.tar.gz"
 
   require_pykeepass
-  printf '%s' "$db_password" > "$password_file"
+  printf '%s' "$db_password" >"$password_file"
 
   if [[ -d "$HOME/.gnupg" ]]; then
     tar -C "$HOME" \
@@ -365,36 +364,36 @@ main() {
   local password_file=""
   local -a file_passwords=()
 
-  while (( $# > 0 )); do
+  while (($# > 0)); do
     case "$1" in
-      --password-file)
-        if (( $# < 2 )); then
-          echo "--password-file requires a path." >&2
-          exit 1
-        fi
-        password_file="$2"
-        shift 2
-        ;;
-      -h | --help)
-        usage
-        exit 0
-        ;;
-      *)
-        echo "Unknown argument: $1" >&2
-        usage >&2
+    --password-file)
+      if (($# < 2)); then
+        echo "--password-file requires a path." >&2
         exit 1
-        ;;
+      fi
+      password_file="$2"
+      shift 2
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown argument: $1" >&2
+      usage >&2
+      exit 1
+      ;;
     esac
   done
 
-  if [[ ! -d "$PASSWORD_STORE_DIR" ]]; then
+  if [[ ! -d $PASSWORD_STORE_DIR ]]; then
     echo "Password store not found: ${PASSWORD_STORE_DIR}" >&2
     exit 1
   fi
 
   mkdir -p "$NEXTCLOUD_KEEPASS_DIR" "$KEEPASS_DIR"
 
-  if [[ -n "$password_file" ]]; then
+  if [[ -n $password_file ]]; then
     mapfile -t file_passwords < <(read_passwords_from_file "$password_file")
     backup_password="${file_passwords[0]}"
     pass_db_password="${file_passwords[1]}"
@@ -405,7 +404,7 @@ main() {
     wkeys_db_password="$(prompt_password_twice "wkeys.kdbx password")"
   fi
 
-  if [[ "$backup_password" == "$pass_db_password" || "$backup_password" == "$wkeys_db_password" || "$pass_db_password" == "$wkeys_db_password" ]]; then
+  if [[ $backup_password == "$pass_db_password" || $backup_password == "$wkeys_db_password" || $pass_db_password == "$wkeys_db_password" ]]; then
     echo "All three passwords must be different." >&2
     exit 1
   fi

@@ -14,7 +14,7 @@ TARGET_WORKSPACE="terminal"
 mkdir -p "$STATE_DIR"
 
 run_workspace_command() {
-  if [[ -n "${SWAYSOCK:-}" ]] && command -v swaymsg >/dev/null 2>&1; then
+  if [[ -n ${SWAYSOCK:-} ]] && command -v swaymsg >/dev/null 2>&1; then
     exec swaymsg "workspace $TARGET_WORKSPACE"
   fi
 
@@ -27,19 +27,19 @@ flock -n 9 || exit 0
 
 current_time=$(date +%s%N)
 
-if [[ -f "$LAST_PRESS_FILE" ]]; then
-  read -r last_time < "$LAST_PRESS_FILE" || last_time=0
+if [[ -f $LAST_PRESS_FILE ]]; then
+  read -r last_time <"$LAST_PRESS_FILE" || last_time=0
 
-  if [[ "$last_time" =~ ^[0-9]+$ ]]; then
+  if [[ $last_time =~ ^[0-9]+$ ]]; then
     diff=$((current_time - last_time))
 
-    if (( diff > 0 && diff < DOUBLE_PRESS_NS )); then
+    if ((diff > 0 && diff < DOUBLE_PRESS_NS)); then
       rm -f "$LAST_PRESS_FILE"
       run_workspace_command
     fi
 
     # Ignore stale timestamps so an old file never affects later presses.
-    if (( diff > STALE_PRESS_NS )); then
+    if ((diff > STALE_PRESS_NS)); then
       rm -f "$LAST_PRESS_FILE"
     fi
   else
@@ -47,4 +47,4 @@ if [[ -f "$LAST_PRESS_FILE" ]]; then
   fi
 fi
 
-printf '%s\n' "$current_time" > "$LAST_PRESS_FILE"
+printf '%s\n' "$current_time" >"$LAST_PRESS_FILE"

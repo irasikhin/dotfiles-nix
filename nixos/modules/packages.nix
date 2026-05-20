@@ -83,6 +83,7 @@ in
     bubblewrap
     shadowsocks-rust
     brave
+    floorp-bin
     firejail
     monero-cli
     monero-gui

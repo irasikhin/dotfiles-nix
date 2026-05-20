@@ -145,7 +145,7 @@ in
     aria2
     proxychains
     speedtest-cli
-    nh
+    # nh managed declaratively via programs.nh in shell.nix
     p7zip
     xarchiver
     watchexec
@@ -161,7 +161,7 @@ in
     jdt-language-server
     mergiraf
     nil
-    floorp-bin
+    # floorp managed via NixOS programs.firejail wrapper (see security.nix)
     ytt
     redocly
     clang-tools

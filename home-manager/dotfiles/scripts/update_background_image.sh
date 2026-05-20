@@ -34,11 +34,11 @@ download_reddit_candidates() {
     | select(($post.over_18 // false) | not)
     | select($url | test("\\.(jpe?g|png|webp)(\\?.*)?$"; "i"))
     | "\($post.id)\t\($url)"
-  ' > "$reddit_candidates_file"; then
+  ' >"$reddit_candidates_file"; then
     return 1
   fi
 
-  [[ -s "$reddit_candidates_file" ]]
+  [[ -s $reddit_candidates_file ]]
 }
 
 download_to_cache() {
@@ -51,16 +51,16 @@ download_to_cache() {
   extension="${extension,,}"
 
   case "$extension" in
-    jpg | jpeg | png | webp) ;;
-    *)
-      return 0
-      ;;
+  jpg | jpeg | png | webp) ;;
+  *)
+    return 0
+    ;;
   esac
 
   filename="${post_id}.${extension}"
   destination="${CACHE_DIR}/${filename}"
 
-  if [[ -f "$destination" ]]; then
+  if [[ -f $destination ]]; then
     return 0
   fi
 
@@ -76,22 +76,22 @@ trim_cache() {
   local extra
 
   mapfile -t extra < <(
-    find "$CACHE_DIR" -maxdepth 1 -type f -printf '%T@ %p\n' \
-      | sort -nr \
-      | tail -n +"$((CACHE_LIMIT + 1))" \
-      | cut -d' ' -f2-
+    find "$CACHE_DIR" -maxdepth 1 -type f -printf '%T@ %p\n' |
+      sort -nr |
+      tail -n +"$((CACHE_LIMIT + 1))" |
+      cut -d' ' -f2-
   )
 
-  if (( ${#extra[@]} > 0 )); then
+  if ((${#extra[@]} > 0)); then
     rm -f "${extra[@]}"
   fi
 }
 
 build_fallback_candidates() {
-  if [[ -d "$LOCAL_FALLBACK_DIR" ]]; then
+  if [[ -d $LOCAL_FALLBACK_DIR ]]; then
     find "$LOCAL_FALLBACK_DIR" -type f \
       \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) \
-      > "$fallback_candidates_file"
+      >"$fallback_candidates_file"
   fi
 }
 
@@ -100,8 +100,8 @@ select_random_file() {
   local -n target_ref="$2"
   local candidates
 
-  mapfile -t candidates < "$source_file"
-  if (( ${#candidates[@]} == 0 )); then
+  mapfile -t candidates <"$source_file"
+  if ((${#candidates[@]} == 0)); then
     return 1
   fi
 
@@ -109,7 +109,7 @@ select_random_file() {
 }
 
 apply_wallpaper() {
-  if [[ -n "${SWAYSOCK:-}" ]] && command -v swaybg >/dev/null 2>&1; then
+  if [[ -n ${SWAYSOCK:-} ]] && command -v swaybg >/dev/null 2>&1; then
     pkill -x swaybg >/dev/null 2>&1 || true
     nohup swaybg -i "$DEST_IMAGE" -m fill >/dev/null 2>&1 &
     return
@@ -127,9 +127,9 @@ generate_blur() {
 
 if download_reddit_candidates; then
   while IFS=$'\t' read -r post_id image_url; do
-    [[ -n "$post_id" && -n "$image_url" ]] || continue
+    [[ -n $post_id && -n $image_url ]] || continue
     download_to_cache "$post_id" "$image_url"
-  done < "$reddit_candidates_file"
+  done <"$reddit_candidates_file"
 fi
 
 trim_cache
@@ -137,19 +137,19 @@ build_fallback_candidates
 
 selected_image=""
 
-if mapfile -t _cache_files < <(find "$CACHE_DIR" -maxdepth 1 -type f | sort) && (( ${#_cache_files[@]} > 0 )); then
-  printf '%s\n' "${_cache_files[@]}" > "$reddit_candidates_file"
+if mapfile -t _cache_files < <(find "$CACHE_DIR" -maxdepth 1 -type f | sort) && ((${#_cache_files[@]} > 0)); then
+  printf '%s\n' "${_cache_files[@]}" >"$reddit_candidates_file"
   select_random_file "$reddit_candidates_file" selected_image
-elif [[ -s "$fallback_candidates_file" ]]; then
+elif [[ -s $fallback_candidates_file ]]; then
   select_random_file "$fallback_candidates_file" selected_image
-elif [[ -f "$DEST_IMAGE" ]]; then
+elif [[ -f $DEST_IMAGE ]]; then
   selected_image="$DEST_IMAGE"
 else
   echo "No wallpapers available from Reddit cache or local fallback directory." >&2
   exit 1
 fi
 
-if [[ "$selected_image" != "$DEST_IMAGE" ]]; then
+if [[ $selected_image != "$DEST_IMAGE" ]]; then
   cp "$selected_image" "$DEST_IMAGE"
 fi
 

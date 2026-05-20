@@ -10,6 +10,16 @@ let
   keepassSyncDir = "${nextcloudRoot}/keepass";
 in
 {
+  # Full icon theme so blueman-manager (and other GTK apps) resolve device
+  # icons; hicolor alone lacks audio-headset/audio-headphones etc.
+  gtk = {
+    enable = true;
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+  };
+
   xdg.configFile."autostart/nextcloud.desktop".text = ''
     [Desktop Entry]
     Type=Application

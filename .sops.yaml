@@ -1,0 +1,12 @@
+keys:
+  # Dedicated key for this repo. Private key lives at
+  # ~/.config/sops/age/dotfiles-nix.txt (NOT in this repo).
+  - &admin_dotfiles age1p4q82eedqsh6tnvsd78myc934jdd47h9gh762uefsck5xgmzcf9qpggycc
+  # Host key derived from /etc/ssh/ssh_host_ed25519_key on irnixos.
+  - &host_irnixos age16gg0v0gjlphfc8snmvjlld2ls8unwxhul4l7y0s38lrmd7ahfdmqm4fyrt
+creation_rules:
+  - path_regex: secrets/[^/]+\.yaml$
+    key_groups:
+      - age:
+          - *admin_dotfiles
+          - *host_irnixos
