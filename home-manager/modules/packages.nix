@@ -224,5 +224,6 @@ in
     ledger-udev-rules
     feishin
     outline
+    inputs.kpass.packages.${system}.default
   ];
 }
