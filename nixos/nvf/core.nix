@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 # Core editor options, treesitter, base theme, leader key.
 {

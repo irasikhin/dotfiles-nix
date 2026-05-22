@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 # All <leader>-prefixed keybindings.
 {

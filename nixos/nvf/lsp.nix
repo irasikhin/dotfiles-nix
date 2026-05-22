@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 # LSP, completion, snippets.
 {

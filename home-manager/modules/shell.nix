@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 let
   homeDir = "/home/ir";
@@ -9,6 +9,7 @@ in
     _JAVA_AWT_WM_NONREPARENTING = "1";
     GDK_DPI_SCALE = "1.4";
     MOZ_ENABLE_WAYLAND = "1";
+    FLAKE = "${homeDir}/dotfiles-nix";
   };
 
   xresources.properties = {
@@ -74,6 +75,7 @@ in
     syntaxHighlighting.enable = true;
     shellAliases = {
       wdapp = "hwatch \"docker ps --format '{{.ID}} {{.Names}}' | grep application\"";
+      rebuild = "nh os switch && nh home switch";
     };
 
     oh-my-zsh = {

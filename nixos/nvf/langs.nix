@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 # Per-language enables + Java-specific tweaks (formatter, jdtls tuning).
 {
