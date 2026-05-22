@@ -36,7 +36,7 @@
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
-    kpass.url = "git+ssh://git@git.rgband.ru:2222/rgband/kpass.git?ref=refs/tags/v0.3.0";
+    kpass.url = "git+ssh://git@git.rgband.ru:2222/rgband/kpass.git";
   };
 
   outputs =
