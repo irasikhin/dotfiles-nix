@@ -8,3 +8,9 @@ __pycache__/
 secrets/*
 !secrets/secrets.yaml
 keys.txt
+
+# git-hooks.nix generates this on devShell entry
+.pre-commit-config.yaml
+
+# direnv local cache (nix-direnv profile links)
+.direnv/

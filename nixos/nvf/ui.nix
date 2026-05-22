@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 # UI plugins, file picker bindings, terminal, git, navigation helpers.
 {

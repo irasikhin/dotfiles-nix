@@ -64,7 +64,10 @@
             enable = true;
             package = treefmtEval.config.build.wrapper;
           };
-          deadnix.enable = true; # find unused nix bindings
+          deadnix = {
+            enable = true; # find unused nix bindings
+            excludes = [ "nixos/hardware-configuration\\.nix" ];
+          };
           statix.enable = true; # nix antipatterns
           # Avoid accidentally committing huge blobs (binaries, dumps).
           check-added-large-files.enable = true;

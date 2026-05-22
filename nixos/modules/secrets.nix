@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 {
   # sops-nix: decrypts secrets at activation using the host's age key,

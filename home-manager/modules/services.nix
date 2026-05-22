@@ -6,7 +6,6 @@
 }:
 
 let
-  homeDir = "/home/ir";
   # sops-nix decrypts secrets here at activation (NixOS module).
   secretsDir = "/run/secrets";
   wallpaperPath = lib.makeBinPath [
