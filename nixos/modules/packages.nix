@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 let
   homeDir = "/home/ir";
@@ -87,6 +87,7 @@ in
     firejail
     monero-cli
     monero-gui
+    inputs.burl.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   # Enable Nix-ld (to run non-NixOS binaries)

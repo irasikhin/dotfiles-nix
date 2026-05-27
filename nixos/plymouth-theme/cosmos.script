@@ -1,0 +1,28 @@
+Window.SetBackgroundTopColor(0, 0, 0);
+Window.SetBackgroundBottomColor(0, 0, 0);
+
+screen_w = Window.GetWidth();
+screen_h = Window.GetHeight();
+
+bg.image = Image("background.png");
+img_w = bg.image.GetWidth();
+img_h = bg.image.GetHeight();
+
+scale_w = screen_w / img_w;
+scale_h = screen_h / img_h;
+scale = scale_w > scale_h ? scale_w : scale_h;
+
+new_w = img_w * scale;
+new_h = img_h * scale;
+
+bg.sprite = Sprite(bg.image.Scale(new_w, new_h));
+bg.sprite.SetPosition((screen_w - new_w) / 2, (screen_h - new_h) / 2, 0);
+
+fun refresh_callback() { }
+Plymouth.SetRefreshFunction(refresh_callback);
+
+fun message_callback(text) { }
+Plymouth.SetMessageFunction(message_callback);
+
+fun password_callback(prompt, bullets) { }
+Plymouth.SetDisplayPasswordFunction(password_callback);

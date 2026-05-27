@@ -26,6 +26,7 @@ in
     bw = "bandwhich";
     jv = "jless";
     sgp = "ast-grep";
+    arthas = "jbang arthas@alibaba/arthas";
   };
 
   programs.direnv = {
@@ -35,6 +36,21 @@ in
   };
 
   programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  programs.gh = {
+    enable = true;
+    settings.git_protocol = "ssh";
+  };
+
+  programs.carapace = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  programs.broot = {
     enable = true;
     enableZshIntegration = true;
   };
@@ -111,6 +127,8 @@ in
       source ${homeDir}/jira.sh;
 
       bindkey -e
+
+      eval "$(navi widget zsh)"
 
       yy() {
         local tmp cwd

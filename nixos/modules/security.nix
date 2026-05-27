@@ -19,7 +19,22 @@
       };
       floorp = {
         executable = "${pkgs.floorp-bin}/bin/floorp";
-        profile = "${pkgs.firejail}/etc/firejail/firefox.profile";
+        profile = pkgs.writeText "floorp.profile" ''
+          ignore noinput
+          ignore private-dev
+          noblacklist ''${RUNUSER}/pipewire-0
+          noblacklist ''${RUNUSER}/pulse
+          whitelist ''${RUNUSER}/pipewire-0
+          whitelist ''${RUNUSER}/pulse
+          noblacklist /dev/snd
+          noblacklist ''${HOME}/.floorp
+          noblacklist ''${HOME}/.cache/floorp
+          mkdir ''${HOME}/.floorp
+          mkdir ''${HOME}/.cache/floorp
+          whitelist ''${HOME}/.floorp
+          whitelist ''${HOME}/.cache/floorp
+          include ${pkgs.firejail}/etc/firejail/firefox.profile
+        '';
       };
       brave = {
         executable = "${pkgs.brave}/bin/brave";

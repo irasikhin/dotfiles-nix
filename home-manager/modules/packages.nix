@@ -16,6 +16,10 @@ let
   myHelmfile = pkgs.helmfile.override {
     inherit (myHelm.passthru) pluginsDir;
   };
+  taskwarriorAsTw = pkgs.runCommand "taskwarrior-tw" { } ''
+    mkdir -p $out/bin
+    ln -s ${pkgs.taskwarrior3}/bin/task $out/bin/tw
+  '';
   ideaPlugins = inputs.nix-jetbrains-plugins.plugins.${system}.idea."${pkgs.jetbrains.idea.version}";
   ideaWithPlugins = pkgs.jetbrains.plugins.addPlugins pkgs.jetbrains.idea (
     map (id: ideaPlugins.${id}) [
@@ -219,6 +223,92 @@ in
     uv
     ruff
     codex
+    pre-commit
+    gitleaks
+    trufflehog
+    xh
+    sd
+    gum
+    mods
+    duckdb
+    harlequin
+    visidata
+    miller
+    websocat
+    grpcurl
+    posting
+    trivy
+    infracost
+    terraform-docs
+    checkov
+    kubeshark
+    ktop
+    jujutsu
+    gammastep
+    clipse
+    swww
+    wlogout
+    presenterm
+    lazysql
+    devenv
+    sesh
+    navi
+    trippy
+    gping
+    doggo
+    popeye
+    kubectl-tree
+    pgcli
+    onefetch
+    tokei
+    dua
+    lazyjj
+    frogmouth
+    typst
+    tinymist
+    systemctl-tui
+    lazyjournal
+    ouch
+    fclones
+    erdtree
+    so
+    tealdeer
+    glances
+    mitmproxy
+    mosh
+    asciinema
+    asciinema-agg
+    earthly
+    wtfutil
+    restic
+    rclone
+    croc
+    taskwarriorAsTw
+    timewarrior
+    helix
+    fabric-ai
+    llm
+    samply
+    sccache
+    buildah
+    ko
+    gpg-tui
+    entr
+    eww
+    yt-dlp
+    sniffnet
+    fastfetch
+    gitui
+    git-cliff
+    pixi
+    aerc
+    bluetuith
+    cava
+    hexyl
+    code2prompt
+    jnv
+    gron
+    fx
     ledger
     ledger-live-desktop
     ledger-udev-rules
