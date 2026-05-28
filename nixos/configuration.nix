@@ -15,11 +15,32 @@
     ./modules/packages.nix
     ./modules/secrets.nix
     ./modules/security.nix
+    ./modules/mesh.nix
   ];
 
   # Configure system bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # Pretty boot splash
+  boot.plymouth = {
+    enable = true;
+    themePackages = [ (pkgs.callPackage ./plymouth-theme { }) ];
+    theme = "cosmos";
+  };
+
+  # Silent kernel/userspace boot so Plymouth is not overdrawn by text
+  boot.consoleLogLevel = 0;
+  boot.initrd.verbose = false;
+  boot.kernelParams = [
+    "btusb.enable_autosuspend=0"
+    "quiet"
+    "splash"
+    "loglevel=3"
+    "rd.systemd.show_status=auto"
+    "rd.udev.log_level=3"
+    "vt.global_cursor_default=0"
+  ];
 
   # Set system state version (important for maintaining compatibility)
   system.stateVersion = "24.05";

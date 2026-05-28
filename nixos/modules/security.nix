@@ -9,7 +9,7 @@
   };
 
   # ---- Sandboxed browsers ---------------------------------------------------
-  # `firefox`, `brave`, `google-chrome-stable` in PATH go through firejail.
+  # `firefox`, `brave` in PATH go through firejail.
   programs.firejail = {
     enable = true;
     wrappedBinaries = {
@@ -17,17 +17,9 @@
         executable = "${pkgs.firefox}/bin/firefox";
         profile = "${pkgs.firejail}/etc/firejail/firefox.profile";
       };
-      floorp = {
-        executable = "${pkgs.floorp-bin}/bin/floorp";
-        profile = "${pkgs.firejail}/etc/firejail/firefox.profile";
-      };
       brave = {
         executable = "${pkgs.brave}/bin/brave";
         profile = "${pkgs.firejail}/etc/firejail/brave.profile";
-      };
-      google-chrome-stable = {
-        executable = "${pkgs.google-chrome}/bin/google-chrome-stable";
-        profile = "${pkgs.firejail}/etc/firejail/google-chrome.profile";
       };
     };
   };
