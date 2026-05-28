@@ -8,11 +8,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779744339,
-        "narHash": "sha256-Glex+ciHRLHdircznwfwTE5wWNqT8L+M8p8gzTTZl+k=",
+        "lastModified": 1779951107,
+        "narHash": "sha256-pX1hnUFhqFPS40VuxXbq2Td6qxZLXRs7oKuOlg4hcDw=",
         "ref": "refs/heads/main",
-        "rev": "c668fbc405af671cc8cd72e4c173cc87c863af96",
-        "revCount": 216,
+        "rev": "44877e274992ef5ed1d624ab90b42a4849168674",
+        "revCount": 243,
         "type": "git",
         "url": "ssh://git@git.rgband.ru:2222/rgband/burl.git"
       },
@@ -194,11 +194,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1779868266,
-        "narHash": "sha256-3s9n2YiSzCOcZ6DC8tliG9ekQQCpHzYy2xNI8bUDhx4=",
+        "lastModified": 1779873872,
+        "narHash": "sha256-XAxhaSYmhqMw71sNpJY6uk+sa5vUBMnz8qNwgnKwfQs=",
         "owner": "irasikhin",
         "repo": "kpass",
-        "rev": "23b6247527ed61571146f1e56b0c873b97e2dc0f",
+        "rev": "a2084c918e66291779b1f0b2284fe10a1262b74d",
         "type": "github"
       },
       "original": {

@@ -165,7 +165,6 @@ in
     jdt-language-server
     mergiraf
     nil
-    # floorp managed via NixOS programs.firejail wrapper (see security.nix)
     ytt
     redocly
     clang-tools

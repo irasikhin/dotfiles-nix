@@ -15,6 +15,7 @@
     ./modules/packages.nix
     ./modules/secrets.nix
     ./modules/security.nix
+    ./modules/mesh.nix
   ];
 
   # Configure system bootloader

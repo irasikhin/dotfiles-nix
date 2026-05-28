@@ -185,7 +185,7 @@ assign [app_id="dbeaver"] $ws_dbeaver
 assign [class="(?i)^DBeaver$"] $ws_dbeaver
 workspace $ws_dbeaver output DP-1 eDP-1
 
-exec_always waybar
+exec_always sh -c 'pkill -x .waybar-wrapped; sleep 0.3; waybar'
 exec wl-paste --type text --watch cliphist store
 
 bindsym XF86AudioRaiseVolume exec --no-startup-id pamixer -i 5
