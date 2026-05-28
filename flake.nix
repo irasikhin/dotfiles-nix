@@ -41,7 +41,10 @@
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
-    kpass.url = "git+ssh://git@git.rgband.ru:2222/rgband/kpass.git";
+    kpass.url = "github:irasikhin/kpass";
+
+    burl.url = "git+ssh://git@git.rgband.ru:2222/rgband/burl.git";
+    burl.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -75,7 +78,10 @@
           };
           statix.enable = true; # nix antipatterns
           # Avoid accidentally committing huge blobs (binaries, dumps).
-          check-added-large-files.enable = true;
+          check-added-large-files = {
+            enable = true;
+            excludes = [ "^nixos/plymouth-theme/.*\\.png$" ];
+          };
           # Block accidental plaintext secrets in commits.
           ripsecrets.enable = true;
           detect-private-keys.enable = true;

@@ -6,7 +6,7 @@
 
   services.resolved = {
     enable = false;
-    domains = [ "~." ];
+    settings.Resolve.Domains = [ "~." ];
   };
   networking.networkmanager = {
     enable = true;

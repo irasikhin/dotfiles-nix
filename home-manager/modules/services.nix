@@ -109,6 +109,9 @@ in
     };
   };
 
+  services.pueue.enable = true;
+  services.syncthing.enable = true;
+
   systemd.user.services.gost-8888 = {
     Unit = {
       Description = "GOST proxy forwarder on port 8888";
