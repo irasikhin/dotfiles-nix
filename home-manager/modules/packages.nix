@@ -318,7 +318,6 @@ in
     feishin
     outline
     inputs.kpass.packages.${system}.default
-    affine
     junction
   ];
 }
