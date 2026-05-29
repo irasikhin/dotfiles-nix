@@ -1,13 +1,10 @@
-{ appimageTools, fetchurl }:
+{ appimageTools, src }:
 
 let
   pname = "express-corporate";
-  version = "3.65.52";
-
-  src = fetchurl {
-    url = "https://updates.express.ms/desktop/corporate/eXpress_Corporate-${version}.AppImage";
-    hash = "sha256-2DLQ8d/qthQH6WaC2ltzUdfz2J3XvfZ3qeedoNf7A8Y=";
-  };
+  # Version follows whatever the express-appimage flake input resolves to;
+  # bump it with `nix flake update express-appimage`. The label is cosmetic.
+  version = "latest";
 
   appimageContents = appimageTools.extractType2 { inherit pname version src; };
 in

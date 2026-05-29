@@ -20,7 +20,9 @@ let
     mkdir -p $out/bin
     ln -s ${pkgs.taskwarrior3}/bin/task $out/bin/tw
   '';
-  express = pkgs.callPackage ../pkgs/express.nix { };
+  express = pkgs.callPackage ../pkgs/express.nix {
+    src = inputs.express-appimage;
+  };
   ideaPlugins = inputs.nix-jetbrains-plugins.plugins.${system}.idea."${pkgs.jetbrains.idea.version}";
   ideaWithPlugins = pkgs.jetbrains.plugins.addPlugins pkgs.jetbrains.idea (
     map (id: ideaPlugins.${id}) [

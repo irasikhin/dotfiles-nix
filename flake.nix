@@ -43,6 +43,14 @@
 
     kpass.url = "github:irasikhin/kpass";
 
+    # eXpress Corporate desktop AppImage. The URL is a redirect to the latest
+    # release, so `nix flake update express-appimage` (or a full update) bumps
+    # it. file+https keeps the raw AppImage instead of trying to unpack it.
+    express-appimage = {
+      url = "file+https://express.ms/download/appimage-corporate";
+      flake = false;
+    };
+
     burl.url = "git+ssh://git@git.rgband.ru:2222/rgband/burl.git";
     burl.inputs.nixpkgs.follows = "nixpkgs";
   };

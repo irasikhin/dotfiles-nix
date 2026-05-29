@@ -21,6 +21,18 @@
         "url": "ssh://git@git.rgband.ru:2222/rgband/burl.git"
       }
     },
+    "express-appimage": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-wJiOo7gLzgiae3GEwu3wJ/JJEyYFjmkSNzmt6YgWe10=",
+        "type": "file",
+        "url": "https://express.ms/download/appimage-corporate"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://express.ms/download/appimage-corporate"
+      }
+    },
     "flake-compat": {
       "locked": {
         "lastModified": 1761640442,
@@ -363,6 +375,7 @@
     "root": {
       "inputs": {
         "burl": "burl",
+        "express-appimage": "express-appimage",
         "flake-compat": "flake-compat",
         "git-hooks": "git-hooks",
         "home-manager": "home-manager",
