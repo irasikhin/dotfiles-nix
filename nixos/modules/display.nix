@@ -20,6 +20,13 @@
     error_bg = "0x002e3440";
   };
   services.displayManager.defaultSession = "sway"; # Use sway as default session
+
+  # gnome-keyring provides the Secret Service (org.freedesktop.secrets) that
+  # eXpress uses to store credentials. sway is not systemd-integrated here, so
+  # the keyring is started and unlocked by PAM at ly login (with the login
+  # password) rather than via a graphical-session systemd target.
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.ly.enableGnomeKeyring = true;
   programs.sway = {
     enable = true;
     xwayland.enable = true;

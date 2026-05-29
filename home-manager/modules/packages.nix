@@ -20,6 +20,7 @@ let
     mkdir -p $out/bin
     ln -s ${pkgs.taskwarrior3}/bin/task $out/bin/tw
   '';
+  express = pkgs.callPackage ../pkgs/express.nix { };
   ideaPlugins = inputs.nix-jetbrains-plugins.plugins.${system}.idea."${pkgs.jetbrains.idea.version}";
   ideaWithPlugins = pkgs.jetbrains.plugins.addPlugins pkgs.jetbrains.idea (
     map (id: ideaPlugins.${id}) [
@@ -95,6 +96,7 @@ in
     networkmanagerapplet
     maven
     telegram-desktop
+    express
     font-awesome
     ideaWithPlugins
     acpi
