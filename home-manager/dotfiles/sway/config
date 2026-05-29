@@ -107,6 +107,7 @@ set $ws_thunderbird "thunderbird"
 set $ws_spotify "spotify"
 set $ws_bruno "bruno"
 set $ws_dbeaver "dbeaver"
+set $ws_express "express"
 
 bindsym $mod+1 workspace $ws1
 bindsym $mod+2 workspace $ws2
@@ -128,6 +129,7 @@ bindsym $mod+t workspace $ws_thunderbird
 bindsym $mod+p workspace $ws_spotify
 bindsym $mod+b workspace $ws_bruno
 bindsym $mod+d workspace $ws_dbeaver
+bindsym $mod+x workspace $ws_express
 
 bindsym --release --no-repeat Super_L exec $HOME/.config/scripts/double_mod_switch.sh
 
@@ -183,6 +185,10 @@ workspace $ws_bruno output DP-1 eDP-1
 assign [app_id="dbeaver"] $ws_dbeaver
 assign [class="(?i)^DBeaver$"] $ws_dbeaver
 workspace $ws_dbeaver output DP-1 eDP-1
+
+assign [app_id="eXpress_Corporate"] $ws_express
+assign [class="(?i)^eXpress_Corporate$"] $ws_express
+workspace $ws_express output eDP-1 DP-1
 
 exec_always sh -c 'pkill -x .waybar-wrapped; sleep 0.3; waybar'
 exec wl-paste --type text --watch cliphist store
