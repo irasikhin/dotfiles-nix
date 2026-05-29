@@ -23,14 +23,11 @@ in
   # Custom URL scheme routing.
   # - http/https open through Junction so links launched by *other* apps
   #   (terminal, chat clients) pop an app picker instead of a hardcoded browser.
-  # - affine:// goes straight to the AFFiNE desktop app (single handler, no
-  #   need to pick). The app already ships affine.desktop with the MimeType.
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
       "x-scheme-handler/http" = "re.sonny.Junction.desktop";
       "x-scheme-handler/https" = "re.sonny.Junction.desktop";
-      "x-scheme-handler/affine" = "affine.desktop";
     };
   };
 

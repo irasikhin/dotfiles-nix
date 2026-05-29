@@ -101,7 +101,7 @@ set $ws_terminal "terminal"
 set $ws_web "web"
 set $ws_code "code"
 set $ws_idea "idea"
-set $ws_affine "affine"
+set $ws_obsidian "obsidian"
 set $ws_msg "msg"
 set $ws_thunderbird "thunderbird"
 set $ws_spotify "spotify"
@@ -123,7 +123,7 @@ bindsym $mod+0 workspace $ws10
 bindsym $mod+u workspace $ws_web
 bindsym $mod+c workspace $ws_code
 bindsym $mod+i workspace $ws_idea
-bindsym $mod+o workspace $ws_affine
+bindsym $mod+o workspace $ws_obsidian
 bindsym $mod+m workspace $ws_msg
 bindsym $mod+t workspace $ws_thunderbird
 bindsym $mod+p workspace $ws_spotify
@@ -163,8 +163,9 @@ assign [app_id="jetbrains-idea"] $ws_idea
 assign [class="(?i)^jetbrains-idea"] $ws_idea
 workspace $ws_idea output DP-1 eDP-1
 
-assign [app_id="affine"] $ws_affine
-workspace $ws_affine output DP-1 eDP-1
+assign [app_id="obsidian"] $ws_obsidian
+assign [class="(?i)^obsidian$"] $ws_obsidian
+workspace $ws_obsidian output DP-1 eDP-1
 
 assign [app_id="org.telegram.desktop"] $ws_msg
 assign [class="(?i)^TelegramDesktop$"] $ws_msg
