@@ -13,7 +13,7 @@ BACKUP_PREFIX="pass-store-backup"
 BACKUP_EXTENSION=".tar.gz.enc"
 
 TEMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/backup-pass-keepass.XXXXXX")"
-trap 'rm -rf "$TEMP_DIR"' EXIT
+trap 'rm -rf "$TEMP_DIR"' EXIT INT TERM HUP
 
 usage() {
   cat <<'EOF'
@@ -31,10 +31,6 @@ Password file formats:
        line 2 -> pass.kdbx password
        line 3 -> wkeys.kdbx password
 EOF
-}
-
-random_entry_password() {
-  head -c 24 /dev/urandom | base64 | tr -d '\n'
 }
 
 require_pykeepass() {
@@ -268,12 +264,6 @@ kp.save()
 PY
   mv "$temp_db" "$target_db"
   echo "Created KeePass export: ${target_db}"
-}
-
-gpg_export_attachment() {
-  local output_file="$1"
-  shift
-  gpg --batch "$@" >"$output_file"
 }
 
 create_wkeys_keepass_db() {
