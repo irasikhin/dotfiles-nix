@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""Inject keystrokes into the Proxmox VM console over RFB (no GUI lag).
+
+Opens its own headless RFB connection (own single-use token), authenticates with
+the Proxmox VNC ticket, then sends each argument as a typed line followed by
+Enter, pausing 2s between lines (enough for a `Password:` prompt to appear).
+
+Secrets come from <repo>/secrets/vnc.yaml via `sops -d` (same as vnc-console).
+Needs DES for VNC auth; re-execs under `uv --with pycryptodome` if not present.
+
+Usage: vnc-type 'root' 'the-password'      # login then password
+       vnc-type 'whoami'                   # single command
+Watch the result in a separate `vnc-console` window (the qemu console is shared).
+"""
+import os, re, sys, time, base64, struct, select, subprocess
+
+try:
+    from Crypto.Cipher import DES
+except ImportError:
+    os.execvp("uv", ["uv", "run", "--with", "pycryptodome", "python3", os.path.abspath(__file__), *sys.argv[1:]])
+
+REPO = os.environ.get("DOTFILES_NIX", os.path.expanduser("~/dotfiles-nix"))
+SECRETS = os.path.join(REPO, "secrets", "vnc.yaml")
+UA = "Mozilla/5.0 (X11; Linux x86_64; rv:151.0) Gecko/20100101 Firefox/151.0"
+KEYSYMS = {"\n": 0xff0d, "\t": 0xff09, "\b": 0xff08, " ": 0x20}
+
+
+def load_secrets():
+    out = subprocess.run(["sops", "-d", SECRETS], capture_output=True, text=True, check=True).stdout
+    s = {}
+    for line in out.splitlines():
+        m = re.match(r'^([a-z_]+):\s*"?(.*?)"?\s*$', line)
+        if m:
+            s[m.group(1)] = m.group(2)
+    return s
+
+
+def fetch(sec):
+    page = f"https://{sec['vnc_host']}/servers/{sec['vnc_server_id']}/vnc"
+    wsbase = f"wss://{sec['vnc_host']}/servers/{sec['vnc_server_id']}"
+    for _ in range(8):
+        h = subprocess.run(["curl", "-s", "--socks5-hostname", sec["vnc_socks"], page,
+                            "-H", "User-Agent: " + UA, "-H", "Cookie: " + sec["vnc_cookie"]],
+                           capture_output=True, text=True).stdout
+        if len(h) > 1000:
+            tok = re.search(r'/vncWS/[a-f0-9]{64}', h)
+            pwd = re.search(r'const password = "([^"]*)"', h)
+            if tok and pwd:
+                return wsbase + tok.group(0), base64.b64decode(pwd.group(1)).decode()
+        time.sleep(1.5)
+    sys.exit("could not scrape console page (cookie expired?)")
+
+
+def vnckey(pw):
+    k = (pw.encode() + b"\x00" * 8)[:8]
+    return bytes(int(f"{b:08b}"[::-1], 2) for b in k)  # VNC bit-reverses key bytes
+
+
+def main():
+    if len(sys.argv) < 2:
+        sys.exit("usage: vnc-type <line1> [line2 ...]  (each typed then Enter, 2s gap)")
+    lines = sys.argv[1:]
+    sec = load_secrets()
+    wsurl, vncpw = fetch(sec)
+    rd, wr = os.pipe()
+    p = subprocess.Popen(["websocat", "--binary", "--ping-interval", "3", "--socks5", sec["vnc_socks"],
+                          "-H=Origin: https://" + sec["vnc_host"], "-H=User-Agent: " + UA,
+                          "-H=Cookie: " + sec["vnc_cookie"], "-", wsurl],
+                         stdin=rd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    os.close(rd)
+    out = p.stdout
+
+    def rdn(n, t=6):
+        b = b""; end = time.time() + t
+        while len(b) < n and time.time() < end:
+            r, _, _ = select.select([out], [], [], max(0, end - time.time()))
+            if r:
+                c = out.read1(n - len(b))
+                if not c:
+                    break
+                b += c
+        return b
+
+    def snd(b):
+        os.write(wr, b)
+
+    rdn(12); snd(b"RFB 003.008\n")
+    nb = rdn(1); rdn(nb[0]); snd(bytes([2]))            # pick VncAuth
+    chal = rdn(16); snd(DES.new(vnckey(vncpw), DES.MODE_ECB).encrypt(chal))
+    if rdn(4) != b"\x00\x00\x00\x00":
+        sys.exit("VNC auth failed")
+    snd(bytes([1]))                                     # ClientInit (shared)
+    si = rdn(24); nl = struct.unpack(">I", si[20:24])[0]; name = rdn(nl)
+    w, h = struct.unpack(">HH", si[:4])
+    print(f"session up: {w}x{h} {name!r}")
+
+    def tap(sym):
+        snd(struct.pack(">BBHI", 4, 1, 0, sym)); time.sleep(0.012)
+        snd(struct.pack(">BBHI", 4, 0, 0, sym)); time.sleep(0.012)
+
+    time.sleep(0.5); tap(0xff0d); time.sleep(0.8)       # wake console
+    for i, ln in enumerate(lines):
+        print(f"line {i + 1}: {len(ln)} chars + Enter")
+        for ch in ln:
+            tap(KEYSYMS.get(ch, ord(ch)))
+        tap(0xff0d)
+        time.sleep(2.0)
+    time.sleep(0.5)
+    print("done — watch the vnc-console window")
+    os.close(wr); p.terminate()
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,155 @@
+#!/usr/bin/env python3
+"""One-shot migration: back up private key material + external proxy creds into
+a KeePass database (path from $KEEPASS_DB) as attachments / entries.
+
+Run it yourself (needs the kdbx master password, and GPG will prompt per key):
+
+    KEEPASS_DB=/path/to/your.kdbx \
+    AGE_KEY_FILES=/path/to/age-key.txt \
+    uv run --with pykeepass python3 ~/.config/scripts/keys-to-keepass
+
+Idempotent: skips entries that already exist. Nothing is written to disk in
+plaintext — GPG secret keys are exported straight into the kdbx in memory.
+
+Config (via environment, so no paths are baked into this file):
+  KEEPASS_DB      path to the target .kdbx (required)
+  AGE_KEY_FILES   colon-separated age key files to import (optional)
+  DOTFILES_NIX    repo root holding secrets/secrets.yaml (default ~/dotfiles-nix)
+
+Imports:
+  Keys/SSH    each ~/.ssh/<name> (+ .pub) as attachments, fingerprint in notes
+  Keys/age    each file in $AGE_KEY_FILES
+  Keys/GPG    each non-expired secret key (armored secret + public) as attachments
+  Proxies     external upstream proxies from secrets/secrets.yaml (user/pass/url)
+"""
+import os, re, sys, getpass, subprocess
+
+DB = os.path.expanduser(os.environ.get("KEEPASS_DB", ""))
+REPO = os.environ.get("DOTFILES_NIX", os.path.expanduser("~/dotfiles-nix"))
+
+try:
+    from pykeepass import PyKeePass
+except ImportError:
+    sys.exit("run me under uv:  uv run --with pykeepass python3 " + os.path.abspath(__file__))
+
+
+def grp(kp, parent, name):
+    g = kp.find_groups(name=name, group=parent, first=True)
+    return g or kp.add_group(parent, name)
+
+
+def has_entry(kp, group, title):
+    return kp.find_entries(title=title, group=group, first=True) is not None
+
+
+def attach(kp, entry, name, data):
+    bid = kp.add_binary(data)
+    entry.add_attachment(bid, name)
+
+
+def import_ssh(kp, root):
+    g = grp(kp, root, "SSH")
+    ssh = os.path.expanduser("~/.ssh")
+    for fn in sorted(os.listdir(ssh)):
+        if fn.endswith(".pub") or fn in ("known_hosts", "config", "authorized_keys"):
+            continue
+        priv = os.path.join(ssh, fn)
+        if not os.path.isfile(priv):
+            continue
+        if has_entry(kp, g, fn):
+            print("  skip SSH/" + fn + " (exists)"); continue
+        fp = subprocess.run(["ssh-keygen", "-lf", priv + ".pub"], capture_output=True, text=True).stdout.strip() \
+            if os.path.exists(priv + ".pub") else ""
+        e = kp.add_entry(g, fn, "", "", notes="ssh private key\n" + fp)
+        attach(kp, e, fn, open(priv, "rb").read())
+        if os.path.exists(priv + ".pub"):
+            attach(kp, e, fn + ".pub", open(priv + ".pub", "rb").read())
+        print("  + SSH/" + fn)
+
+
+def import_age(kp, root):
+    g = grp(kp, root, "age")
+    paths = [x for x in os.environ.get("AGE_KEY_FILES", "").split(":") if x]
+    if not paths:
+        print("  skip age (set AGE_KEY_FILES=path1:path2 to import)"); return
+    for path in paths:
+        p = os.path.expanduser(path); name = os.path.basename(p)
+        if not os.path.exists(p):
+            continue
+        if has_entry(kp, g, name):
+            print("  skip age/" + name + " (exists)"); continue
+        e = kp.add_entry(g, name, "", "", notes="age private key\n" + path)
+        attach(kp, e, name, open(p, "rb").read())
+        print("  + age/" + name)
+
+
+def import_gpg(kp, root):
+    g = grp(kp, root, "GPG")
+    colons = subprocess.run(["gpg", "--list-secret-keys", "--with-colons"], capture_output=True, text=True).stdout
+    keys = []  # (keyid, uid, expired)
+    cur = None
+    for line in colons.splitlines():
+        f = line.split(":")
+        if f[0] == "sec":
+            cur = {"id": f[4], "expired": f[1] == "e"}
+        elif f[0] == "uid" and cur is not None:
+            cur["uid"] = f[9]; keys.append(cur); cur = None
+    for k in keys:
+        if k["expired"]:
+            print("  skip GPG " + k["id"] + " (expired)"); continue
+        title = re.sub(r'[<>]', '', k.get("uid", k["id"]))[:60] + " " + k["id"][-8:]
+        if has_entry(kp, g, title):
+            print("  skip GPG/" + title + " (exists)"); continue
+        print("  GPG " + k["id"] + " — enter passphrase if prompted…")
+        sec = subprocess.run(["gpg", "--armor", "--export-secret-keys", k["id"]], capture_output=True).stdout
+        if not sec:
+            print("    (no secret exported, skipped)"); continue
+        pub = subprocess.run(["gpg", "--armor", "--export", k["id"]], capture_output=True).stdout
+        e = kp.add_entry(g, title, "", "", notes="gpg secret key " + k["id"] + "\n" + k.get("uid", ""))
+        attach(kp, e, k["id"] + "-secret.asc", sec)
+        if pub:
+            attach(kp, e, k["id"] + "-public.asc", pub)
+        print("  + GPG/" + title)
+
+
+def import_proxies(kp, root):
+    g = grp(kp, root, "Proxies")
+    sf = os.path.join(REPO, "secrets", "secrets.yaml")
+    out = subprocess.run(["sops", "-d", sf], capture_output=True, text=True).stdout
+    for line in out.splitlines():
+        m = re.match(r'^(proxy_\w+):\s*PROXY_UPSTREAM=(\S+)', line)
+        if not m:
+            continue
+        name, url = m.group(1), m.group(2)
+        pm = re.match(r'(\w+)://(?:([^:@]+):([^@]*)@)?([^:/]+):(\d+)', url)
+        if not pm:
+            print("  ?? cannot parse " + name); continue
+        proto, user, pw, host, port = pm.groups()
+        title = name + " (" + host + ")"
+        if has_entry(kp, g, title):
+            print("  skip Proxies/" + title + " (exists)"); continue
+        kp.add_entry(g, title, user or "", pw or "",
+                     url=f"{proto}://{host}:{port}",
+                     notes=f"external upstream proxy\nprotocol: {proto}\nhost: {host}\nport: {port}")
+        print("  + Proxies/" + title)
+
+
+def main():
+    if not DB:
+        sys.exit("set KEEPASS_DB to your kdbx path, e.g. KEEPASS_DB=~/.keepass/your.kdbx")
+    if not os.path.exists(DB):
+        sys.exit("kdbx not found: " + DB)
+    pw = getpass.getpass(f"master password for {DB}: ")
+    kp = PyKeePass(DB, password=pw)
+    root = grp(kp, kp.root_group, "Keys")
+    print("importing into", DB)
+    import_ssh(kp, root)
+    import_age(kp, root)
+    import_gpg(kp, root)
+    import_proxies(kp, kp.root_group)
+    kp.save()
+    print("saved. done.")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,119 @@
+#!/usr/bin/env python3
+"""Native VNC console for a Proxmox-backed VPS web panel.
+
+Secrets (host, server id, server ip, socks proxy, auth cookie) live encrypted in
+<repo>/secrets/vnc.yaml and are read at runtime via `sops -d` (age key on disk).
+
+The web panel proxies the VM's VNC over a WebSocket. Native VNC clients can't
+speak WebSocket, so this:
+  1. scrapes a fresh single-use token + Proxmox VNC ticket from the console page,
+  2. bridges TCP<->WS via websocat (stdio mode, --ping-interval keeps the server
+     from dropping us at ~9s), pumping bytes with immediate flush,
+  3. launches tigervnc `vncviewer` against the local bridge.
+
+Usage: vnc-console            # uses the only host in secrets
+       DOTFILES_NIX=/path vnc-console
+"""
+import os, re, sys, time, base64, socket, select, subprocess
+
+REPO = os.environ.get("DOTFILES_NIX", os.path.expanduser("~/dotfiles-nix"))
+SECRETS = os.path.join(REPO, "secrets", "vnc.yaml")
+PORT = int(os.environ.get("VNC_PORT", "5900"))
+UA = "Mozilla/5.0 (X11; Linux x86_64; rv:151.0) Gecko/20100101 Firefox/151.0"
+
+
+def load_secrets():
+    try:
+        out = subprocess.run(["sops", "-d", SECRETS], capture_output=True, text=True, check=True).stdout
+    except subprocess.CalledProcessError as e:
+        sys.exit(f"sops decrypt failed ({SECRETS}): {e.stderr.strip()}")
+    s = {}
+    for line in out.splitlines():
+        m = re.match(r'^([a-z_]+):\s*"?(.*?)"?\s*$', line)
+        if m:
+            s[m.group(1)] = m.group(2)
+    for k in ("vnc_host", "vnc_server_id", "vnc_server_ip", "vnc_socks", "vnc_cookie"):
+        if not s.get(k):
+            sys.exit(f"secret {k} missing in {SECRETS}")
+    return s
+
+
+def fetch(sec):
+    page = f"https://{sec['vnc_host']}/servers/{sec['vnc_server_id']}/vnc"
+    wsbase = f"wss://{sec['vnc_host']}/servers/{sec['vnc_server_id']}"
+    for _ in range(8):
+        h = subprocess.run(["curl", "-s", "--socks5-hostname", sec["vnc_socks"], page,
+                            "-H", "User-Agent: " + UA, "-H", "Cookie: " + sec["vnc_cookie"]],
+                           capture_output=True, text=True).stdout
+        if len(h) > 1000:
+            tok = re.search(r'/vncWS/[a-f0-9]{64}', h)
+            pwd = re.search(r'const password = "([^"]*)"', h)
+            if tok and pwd:
+                return wsbase + tok.group(0), base64.b64decode(pwd.group(1)).decode()
+        time.sleep(1.5)
+    sys.exit("could not scrape console page (cookie expired? refresh with: sops " + SECRETS + ")")
+
+
+def pump(conn, sec, wsurl):
+    p = subprocess.Popen(["websocat", "--binary", "--ping-interval", "3", "--socks5", sec["vnc_socks"],
+                          "-H=Origin: https://" + sec["vnc_host"], "-H=User-Agent: " + UA,
+                          "-H=Cookie: " + sec["vnc_cookie"], "-", wsurl],
+                         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, bufsize=0)
+    conn.setblocking(False)
+    cf, wo = conn.fileno(), p.stdout.fileno()
+    os.set_blocking(wo, False)
+    try:
+        while p.poll() is None:
+            r, _, _ = select.select([cf, wo], [], [], 1)
+            if cf in r:
+                try:
+                    d = conn.recv(65536)
+                except BlockingIOError:
+                    d = None
+                if d == b"":
+                    break
+                if d:
+                    p.stdin.write(d); p.stdin.flush()
+            if wo in r:
+                try:
+                    d = os.read(wo, 65536)
+                except BlockingIOError:
+                    d = None
+                if d == b"":
+                    break
+                if d:
+                    conn.sendall(d)
+    finally:
+        try: p.terminate()
+        except Exception: pass
+        conn.close()
+
+
+def main():
+    sec = load_secrets()
+    wsurl, pwd = fetch(sec)
+    print("console:", wsurl)
+    subprocess.run(["bash", "-c", "printf %s {} | vncpasswd -f > /tmp/vncpass".format(_q(pwd))])
+    ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    ls.bind(("127.0.0.1", PORT)); ls.listen(1)
+    print(f"bridge listening 127.0.0.1:{PORT}")
+    env = dict(os.environ); env.setdefault("DISPLAY", ":0")
+    subprocess.Popen(["vncviewer", "-PasswordFile=/tmp/vncpass", "-SecurityTypes=VncAuth,None",
+                      f"127.0.0.1:{PORT}"], env=env)
+    print("vncviewer launched — type the guest password in that window")
+    try:
+        while True:
+            conn, _ = ls.accept()
+            wsurl, pwd = fetch(sec)   # fresh single-use token per (re)connect
+            pump(conn, sec, wsurl)
+    except KeyboardInterrupt:
+        print("\nbye")
+
+
+def _q(s):
+    return "'" + s.replace("'", "'\\''") + "'"
+
+
+if __name__ == "__main__":
+    main()
