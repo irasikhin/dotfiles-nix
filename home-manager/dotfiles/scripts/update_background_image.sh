@@ -12,7 +12,6 @@ STATE_DIR="${XDG_RUNTIME_DIR:-/tmp}/wallpaper-rotator"
 LOCK_FILE="${STATE_DIR}/lock"
 DEST_IMAGE="${HOME}/.background-image"
 DEST_BLUR="${HOME}/.background-image-blur"
-DISPLAY="${DISPLAY:-:0}"
 
 mkdir -p "$CACHE_DIR" "$STATE_DIR"
 
@@ -120,8 +119,22 @@ apply_wallpaper() {
 generate_blur() {
   if command -v magick >/dev/null 2>&1; then
     magick "$DEST_IMAGE" -resize 25% -blur 0x8 -resize 400% "$DEST_BLUR"
-  else
+  elif command -v convert >/dev/null 2>&1; then
     convert "$DEST_IMAGE" -resize 25% -blur 0x8 -resize 400% "$DEST_BLUR"
+  else
+    echo "ImageMagick (magick/convert) not found; skipping blur generation." >&2
+    return 0
+  fi
+
+  # Mirror the blurred wallpaper to the greetd/regreet login background. The
+  # greeter user cannot read $HOME, so a world-readable copy lives in /var/lib
+  # (directory provisioned by systemd.tmpfiles in nixos/modules/display.nix).
+  # install sets mode 0644 regardless of umask; write to a temp name and
+  # rename so the greeter never reads a half-written file. Non-fatal, but log
+  # failures (missing dir, full disk) instead of swallowing them silently.
+  if ! { install -m 0644 "$DEST_BLUR" /var/lib/greeter-wallpaper/bg.jpg.tmp &&
+    mv -f /var/lib/greeter-wallpaper/bg.jpg.tmp /var/lib/greeter-wallpaper/bg.jpg; }; then
+    echo "warning: failed to mirror greeter wallpaper" >&2
   fi
 }
 
