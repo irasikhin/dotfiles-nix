@@ -16,6 +16,17 @@ let
   myHelmfile = pkgs.helmfile.override {
     inherit (myHelm.passthru) pluginsDir;
   };
+  # Build-time zsh completions for cobra-based tools that don't ship a
+  # _tool file in nixpkgs. Lands on $fpath via the profile, so compinit
+  # autoloads them lazily (no shell-startup cost) and fzf-tab wraps them.
+  extraCompletions = pkgs.runCommand "extra-zsh-completions" { } ''
+    export HOME=$TMPDIR
+    d=$out/share/zsh/site-functions
+    mkdir -p $d
+    ${pkgs.sesh}/bin/sesh completion zsh > $d/_sesh
+    # buildah eagerly loads container config; tolerate failure in the sandbox.
+    ${pkgs.buildah}/bin/buildah completion zsh > $d/_buildah 2>/dev/null || rm -f $d/_buildah
+  '';
   taskwarriorAsTw = pkgs.runCommand "taskwarrior-tw" { } ''
     mkdir -p $out/bin
     ln -s ${pkgs.taskwarrior3}/bin/task $out/bin/tw
@@ -319,5 +330,10 @@ in
     outline
     inputs.kpass.packages.${system}.default
     junction
+    tigervnc
+    remmina
+    virt-viewer
+    gost
+    extraCompletions
   ];
 }

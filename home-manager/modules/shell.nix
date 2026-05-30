@@ -45,11 +45,6 @@ in
     settings.git_protocol = "ssh";
   };
 
-  programs.carapace = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-
   programs.broot = {
     enable = true;
     enableZshIntegration = true;
@@ -101,6 +96,7 @@ in
         "fzf"
         "kubectl"
         "helm"
+        "mvn"
       ];
     };
 
@@ -117,6 +113,7 @@ in
       enable = true;
       plugins = [
         ''
+          Aloxaf/fzf-tab
           zsh-users/zsh-autosuggestions
           ohmyzsh/ohmyzsh path:lib/git.zsh
         ''
@@ -127,6 +124,22 @@ in
       source ${homeDir}/jira.sh;
 
       bindkey -e
+
+      # fzf-tab: render the zsh completion menu through fzf.
+      # `menu no` hands selection to fzf instead of zsh's builtin menu.
+      zstyle ':completion:*' menu no
+      # Accept current fzf candidate and keep completing (e.g. cd path segments).
+      zstyle ':fzf-tab:*' continuous-trigger '/'
+      zstyle ':fzf-tab:*' switch-group ',' '.'
+      # Directory listing preview when completing cd.
+      zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+
+      # terraform-style tools act as their own completer via the bash
+      # `complete -C` protocol; bashcompinit bridges them into compsys
+      # (so fzf-tab wraps them too).
+      autoload -Uz bashcompinit && bashcompinit
+      complete -o nospace -C tofu tofu
+      complete -o nospace -C terragrunt terragrunt
 
       eval "$(navi widget zsh)"
 
