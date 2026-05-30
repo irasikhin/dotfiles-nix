@@ -28,7 +28,7 @@ fmt:
 edit-ssh:
     sops secrets/ssh-hosts.yaml
     git add secrets/ssh-hosts.yaml
-    nh os switch .
+    git diff --quiet --cached secrets/ssh-hosts.yaml || nh os switch .
 
 # edit the shared encrypted secrets file (stage after)
 edit-secrets:
