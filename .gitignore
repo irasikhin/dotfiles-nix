@@ -7,6 +7,8 @@ __pycache__/
 # allow only sops-encrypted files which are safe to commit.
 secrets/*
 !secrets/secrets.yaml
+!secrets/vnc.yaml
+!secrets/ssh-hosts.yaml
 keys.txt
 
 # git-hooks.nix generates this on devShell entry

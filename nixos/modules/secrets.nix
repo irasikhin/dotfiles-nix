@@ -16,6 +16,18 @@ _:
       proxy_7777.owner = "ir";
       proxy_8888.owner = "ir";
       proxy_9999.owner = "ir";
+
+      # Encrypted SSH client config for the external VPN servers (koara1,
+      # guru1). Rendered to /run/secrets/ssh_managed_hosts (owner ir) and
+      # pulled in via `Include /run/secrets/ssh_managed_hosts` in ~/.ssh/config.
+      # Source of truth: secrets/ssh-hosts.yaml (key `config`). The matching
+      # private key (koara_guru_admin) is backed up in homelab-admin.kdbx.
+      ssh_managed_hosts = {
+        sopsFile = ../../secrets/ssh-hosts.yaml;
+        key = "config";
+        owner = "ir";
+        mode = "0400";
+      };
     };
   };
 }
