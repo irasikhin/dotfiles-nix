@@ -3,30 +3,37 @@
 {
   # Enable X server and configure display manager/window manager
   services.xserver.enable = true;
-  services.displayManager.ly.enable = true;
-  services.displayManager.ly.settings = {
-    animation = "colormix";
-    bigclock = "en";
-    blank_password = true;
-    load = false;
-    save = false;
-    full_color = true;
-    border_fg = "0x008fbcbb";
-    cmatrix_fg = "0x0081a1c1";
-    colormix_col1 = "0x002e3440";
-    colormix_col2 = "0x003b4252";
-    colormix_col3 = "0x0081a1c1";
-    error_fg = "0x01bf616a";
-    error_bg = "0x002e3440";
+
+  # regreet is a graphical (GTK/Wayland) greeter for greetd. Unlike the previous
+  # TUI greeter (ly), it can render an image background. programs.regreet.enable
+  # auto-enables services.greetd and hosts regreet inside cage.
+  programs.regreet = {
+    enable = true;
+    settings = {
+      background = {
+        # Mirrored here by the wallpaper-rotator user service (update_background_image.sh).
+        # The greeter runs as the `greeter` user, which cannot read /home/ir, so the
+        # blurred wallpaper is copied into a world-readable path (tmpfiles rule below).
+        path = "/var/lib/greeter-wallpaper/bg.jpg";
+        fit = "Cover";
+      };
+      GTK.application_prefer_dark_theme = true;
+    };
   };
-  services.displayManager.defaultSession = "sway"; # Use sway as default session
+
+  # World-readable directory for the greeter background. Owned by `ir` so the
+  # rotator (a user service running as ir) can write bg.jpg into it; 0755 + a
+  # 0644 file lets the `greeter` user read it.
+  systemd.tmpfiles.rules = [
+    "d /var/lib/greeter-wallpaper 0755 ir users - -"
+  ];
 
   # gnome-keyring provides the Secret Service (org.freedesktop.secrets) that
   # eXpress uses to store credentials. sway is not systemd-integrated here, so
-  # the keyring is started and unlocked by PAM at ly login (with the login
+  # the keyring is started and unlocked by PAM at greetd login (with the login
   # password) rather than via a graphical-session systemd target.
   services.gnome.gnome-keyring.enable = true;
-  security.pam.services.ly.enableGnomeKeyring = true;
+  security.pam.services.greetd.enableGnomeKeyring = true;
   programs.sway = {
     enable = true;
     xwayland.enable = true;
