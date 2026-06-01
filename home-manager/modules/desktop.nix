@@ -20,6 +20,9 @@ in
     };
   };
 
+  # Lightweight Wayland PDF viewer (vim keys).
+  programs.zathura.enable = true;
+
   # Custom URL scheme routing.
   # - http/https open through Junction so links launched by *other* apps
   #   (terminal, chat clients) pop an app picker instead of a hardcoded browser.
@@ -28,6 +31,10 @@ in
     defaultApplications = {
       "x-scheme-handler/http" = "re.sonny.Junction.desktop";
       "x-scheme-handler/https" = "re.sonny.Junction.desktop";
+      # Use the -pdf-mupdf entry: it declares MimeType=application/pdf, so it
+      # shows up in mimeinfo.cache (Telegram et al. build their "open with"
+      # list from that). The bare zathura.desktop has no MimeType line.
+      "application/pdf" = "org.pwmt.zathura-pdf-mupdf.desktop";
     };
   };
 
