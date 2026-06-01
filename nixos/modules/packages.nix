@@ -16,6 +16,9 @@ in
   # Enable OpenSSH daemon for remote access
   services.openssh.enable = true;
 
+  # udev rules for QMK/Vial keyboards (HID raw access without root)
+  hardware.keyboard.qmk.enable = true;
+
   # Enable Docker with Btrfs storage driver
   virtualisation.docker.enable = true;
   virtualisation.docker.storageDriver = "btrfs";
@@ -31,6 +34,7 @@ in
 
   # Install essential system packages
   environment.systemPackages = with pkgs; [
+    vial
     docker-compose
     freefilesync
     strongswan
