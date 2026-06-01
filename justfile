@@ -17,6 +17,9 @@ build:
 home:
     nh home switch .
 
+# build + activate both system and Home Manager
+all: switch home
+
 # update flake inputs, then rebuild system + Home Manager
 upgrade: update switch home
 
