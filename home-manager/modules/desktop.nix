@@ -8,6 +8,11 @@
 let
   nextcloudRoot = "${config.home.homeDirectory}/Nextcloud";
   keepassSyncDir = "${nextcloudRoot}/keepass";
+  # Active Floorp profile (see ~/.floorp/profiles.ini -> Default=1). Host-specific.
+  floorpProfile = ".floorp/vbsa7lco.default";
+  # UI/content zoom for Floorp. Newer Floorp on Wayland ignores GDK_DPI_SCALE
+  # (shell.nix), so scale the browser explicitly via layout.css.devPixelsPerPx.
+  floorpUiScale = "1.4";
 in
 {
   # Full icon theme so blueman-manager (and other GTK apps) resolve device
@@ -48,6 +53,43 @@ in
     Terminal=false
     StartupNotify=false
     X-GNOME-Autostart-enabled=true
+  '';
+
+  # Floorp: disable (not hide) the URL input field. The address bar stays
+  # visible and shows the current URL, but the editable string is inert -- a
+  # mouse click no longer focuses it. Appended idempotently (marker-guarded) so
+  # the user's own userChrome.css edits are preserved.
+  # NOTE: blocks pointer focus only. Keyboard shortcuts (Ctrl+L, Alt+D, F6,
+  # Ctrl+K) can still focus it -- that needs an autoconfig package override,
+  # which we can add if pointer-disable proves insufficient.
+  home.activation.floorpDisableUrlbar = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        profile="${config.home.homeDirectory}/${floorpProfile}"
+        [ -d "$profile" ] || exit 0
+        userjs="$profile/user.js"
+        css="$profile/chrome/userChrome.css"
+        $DRY_RUN_CMD mkdir -p "$profile/chrome"
+
+        if ! { [ -e "$userjs" ] && grep -q "legacyUserProfileCustomizations.stylesheets" "$userjs"; }; then
+          echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$userjs"
+        fi
+
+        # HM:ui-scale -- explicit zoom; strip any prior managed line then re-add so
+        # the value stays in sync with floorpUiScale across rebuilds.
+        if [ -e "$userjs" ]; then
+          $DRY_RUN_CMD sed -i '/HM:ui-scale/d' "$userjs"
+        fi
+        echo 'user_pref("layout.css.devPixelsPerPx", "${floorpUiScale}"); // HM:ui-scale' >> "$userjs"
+
+        if ! { [ -e "$css" ] && grep -q "HM:disable-urlbar" "$css"; }; then
+          cat >> "$css" <<'CSS'
+
+    /* HM:disable-urlbar -- inert URL input (visible, not click-focusable) */
+    @-moz-document url(chrome://browser/content/browser.xhtml) {
+      #urlbar-input-container { pointer-events: none !important; }
+      #urlbar-input { opacity: 0.7; }
+    }
+    CSS
+        fi
   '';
 
   home.activation.setupKeepassNextcloud = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
