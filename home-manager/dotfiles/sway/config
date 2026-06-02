@@ -12,6 +12,12 @@ input "type:keyboard" {
     xkb_layout "us,ru"
     xkb_options "grp:shifts_toggle"
 }
+
+# Clamshell: при закрытой крышке гасим внутреннюю панель, всё уезжает на внешний
+# выход; при открытии — включаем обратно. --locked: работает и на заблокированном
+# экране. --reload: применяет текущее состояние при reload.
+bindswitch --reload --locked lid:on output eDP-1 disable
+bindswitch --reload --locked lid:off output eDP-1 enable
 default_border none
 default_floating_border none
 titlebar_border_thickness 0
@@ -149,47 +155,36 @@ focus_on_window_activation focus
 
 assign [app_id="Alacritty"] $ws_terminal
 assign [class="(?i)^Alacritty$"] $ws_terminal
-workspace $ws_terminal output DP-1 eDP-1
 
 assign [app_id="floorp"] $ws_web
 assign [class="(?i)^(LibreWolf|Firefox|Chromium|Floorp|Google-chrome)$"] $ws_web
-workspace $ws_web output eDP-1 DP-1
 
 assign [app_id="code"] $ws_code
 assign [class="(?i)^Code$"] $ws_code
-workspace $ws_code output DP-1 eDP-1
 
 assign [app_id="jetbrains-idea"] $ws_idea
 assign [class="(?i)^jetbrains-idea"] $ws_idea
-workspace $ws_idea output DP-1 eDP-1
 
 assign [app_id="obsidian"] $ws_obsidian
 assign [class="(?i)^obsidian$"] $ws_obsidian
-workspace $ws_obsidian output DP-1 eDP-1
 
 assign [app_id="org.telegram.desktop"] $ws_msg
 assign [class="(?i)^TelegramDesktop$"] $ws_msg
-workspace $ws_msg output eDP-1 DP-1
 
 assign [app_id="thunderbird"] $ws_thunderbird
 assign [class="(?i)^thunderbird$"] $ws_thunderbird
-workspace $ws_thunderbird output eDP-1 DP-1
 
 assign [app_id="spotify"] $ws_spotify
 assign [class="(?i)^spotify$"] $ws_spotify
-workspace $ws_spotify output eDP-1 DP-1
 
 assign [app_id="bruno"] $ws_bruno
 assign [class="(?i)^Bruno$"] $ws_bruno
-workspace $ws_bruno output DP-1 eDP-1
 
 assign [app_id="dbeaver"] $ws_dbeaver
 assign [class="(?i)^DBeaver$"] $ws_dbeaver
-workspace $ws_dbeaver output DP-1 eDP-1
 
 assign [app_id="eXpress_Corporate"] $ws_express
 assign [class="(?i)^eXpress_Corporate$"] $ws_express
-workspace $ws_express output eDP-1 DP-1
 
 exec_always sh -c 'pkill -x .waybar-wrapped; sleep 0.3; waybar'
 exec wl-paste --type text --watch cliphist store
