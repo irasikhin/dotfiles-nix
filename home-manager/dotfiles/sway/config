@@ -15,7 +15,7 @@ input "type:keyboard" {
 # Kensington ORBIT trackball: too jerky, so flatten accel and slow it down.
 input "1149:32936:ORBIT_BT5.0_Mouse" {
     accel_profile flat
-    pointer_accel -0.74
+    pointer_accel -0.6
 }
 # Dedicated layout switch for the split (BCORNE): map a free key to F24 in Vial.
 # Avoids grp:ctrl_shift_toggle, which collided with terminal Ctrl+Shift+C/V.
