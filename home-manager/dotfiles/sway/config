@@ -12,12 +12,6 @@ input "type:keyboard" {
     xkb_layout "us,ru"
     xkb_options "grp:shifts_toggle"
 }
-
-# Clamshell: при закрытой крышке гасим внутреннюю панель, всё уезжает на внешний
-# выход; при открытии — включаем обратно. --locked: работает и на заблокированном
-# экране. --reload: применяет текущее состояние при reload.
-bindswitch --reload --locked lid:on output eDP-1 disable
-bindswitch --reload --locked lid:off output eDP-1 enable
 default_border none
 default_floating_border none
 titlebar_border_thickness 0
@@ -206,6 +200,10 @@ exec_always --no-startup-id systemctl --user import-environment DISPLAY WAYLAND_
 exec_always --no-startup-id nm-applet --indicator
 exec_always --no-startup-id $HOME/.config/scripts/update_background_image.sh
 exec_always --no-startup-id sh -c 'pkill -x swayidle; exec swayidle -w timeout 900 "$1" before-sleep "$1"' _ "$lock_cmd"
+
+# Single-display: внешний подключён -> внутренний eDP-1 выключен; внешнего нет ->
+# eDP-1 включён. Реагирует на hotplug, держит ровно один экран.
+exec_always --no-startup-id $HOME/.config/scripts/single_display.sh
 
 exec --no-startup-id $terminal
 exec --no-startup-id floorp
