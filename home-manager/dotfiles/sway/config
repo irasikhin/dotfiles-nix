@@ -12,6 +12,11 @@ input "type:keyboard" {
     xkb_layout "us,ru"
     xkb_options "grp:shifts_toggle"
 }
+# External monitor: global GDK_DPI_SCALE/Xft.dpi are tuned for the HiDPI laptop
+# panel, so the BenQ 1080p renders oversized. Scale it down. Keyed by the output
+# identifier (make/model/serial), so it applies over both HDMI and DP.
+output "BNQ ZOWIE XL LCD EBN3N01670SL0" scale 0.8
+
 default_border none
 default_floating_border none
 titlebar_border_thickness 0
