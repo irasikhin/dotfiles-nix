@@ -21,7 +21,7 @@ _:
   # Keyboard layouts
   services.xserver.xkb = {
     layout = "us,ru"; # Enable US and Russian keyboard layouts
-    options = "grp:shifts_toggle"; # Toggle layout using both shift keys
+    options = "grp:shifts_toggle"; # Toggle layout with both Shifts (ctrl_shift collided with terminal copy/paste). Split uses a dedicated F24 key bound in sway.
   };
 
   console.keyMap = "us"; # Set console keymap

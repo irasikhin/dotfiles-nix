@@ -109,6 +109,30 @@ in
     };
   };
 
+  systemd.user.services.kbd-lang-rgb = {
+    Unit = {
+      Description = "BCORNE RGB language indicator (en=cold white, ru=amber)";
+      After = [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      Environment = [
+        "PATH=${
+          lib.makeBinPath [
+            pkgs.sway
+            pkgs.coreutils
+          ]
+        }"
+      ];
+      ExecStart = "${pkgs.python3}/bin/python3 ${config.xdg.configHome}/scripts/kbd_lang_rgb.py";
+      Restart = "always";
+      RestartSec = 5;
+    };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+  };
+
   services.pueue.enable = true;
   services.syncthing.enable = true;
 

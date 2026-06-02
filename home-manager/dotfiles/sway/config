@@ -12,83 +12,91 @@ input "type:keyboard" {
     xkb_layout "us,ru"
     xkb_options "grp:shifts_toggle"
 }
+# Kensington ORBIT trackball: too jerky, so flatten accel and slow it down.
+input "1149:32936:ORBIT_BT5.0_Mouse" {
+    accel_profile flat
+    pointer_accel -0.74
+}
+# Dedicated layout switch for the split (BCORNE): map a free key to F24 in Vial.
+# Avoids grp:ctrl_shift_toggle, which collided with terminal Ctrl+Shift+C/V.
+bindsym --to-code F24 input "type:keyboard" xkb_switch_layout next
 # External monitor: global GDK_DPI_SCALE/Xft.dpi are tuned for the HiDPI laptop
 # panel, so the BenQ 1080p renders oversized. Scale it down. Keyed by the output
 # identifier (make/model/serial), so it applies over both HDMI and DP.
-output "BNQ ZOWIE XL LCD EBN3N01670SL0" scale 0.8
+output "BNQ ZOWIE XL LCD EBN3N01670SL0" scale 0.9
 
 default_border none
 default_floating_border none
 titlebar_border_thickness 0
 titlebar_padding 4 2
 
-bindsym $mod+Return exec $terminal
-bindsym $alt+d exec $launcher
-bindsym $mod+Tab exec $window_switcher
+bindsym --to-code $mod+Return exec $terminal
+bindsym --to-code $alt+d exec $launcher
+bindsym --to-code $mod+Tab exec $window_switcher
 
-bindsym $alt+v exec cliphist list | fuzzel --dmenu -p "clipboard: " | cliphist decode | wl-copy
-bindsym $alt+p exec echo -e "lock\nlogout\nsuspend\nreboot\nshutdown" | fuzzel --dmenu -p "power: " | xargs -I {} sh -c 'case {} in lock) $lock_cmd;; logout) swaymsg exit;; suspend) systemctl suspend;; reboot) systemctl reboot;; shutdown) systemctl poweroff;; esac'
+bindsym --to-code $alt+v exec cliphist list | fuzzel --dmenu -p "clipboard: " | cliphist decode | wl-copy
+bindsym --to-code $alt+p exec echo -e "lock\nlogout\nsuspend\nreboot\nshutdown" | fuzzel --dmenu -p "power: " | xargs -I {} sh -c 'case {} in lock) $lock_cmd;; logout) swaymsg exit;; suspend) systemctl suspend;; reboot) systemctl reboot;; shutdown) systemctl poweroff;; esac'
 
-bindsym $mod+Shift+q kill
-bindsym $mod+Shift+a focus parent, kill
+bindsym --to-code $mod+Shift+q kill
+bindsym --to-code $mod+Shift+a focus parent, kill
 
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
+bindsym --to-code $mod+j focus left
+bindsym --to-code $mod+k focus down
+bindsym --to-code $mod+l focus up
+bindsym --to-code $mod+semicolon focus right
 
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
+bindsym --to-code $mod+Left focus left
+bindsym --to-code $mod+Down focus down
+bindsym --to-code $mod+Up focus up
+bindsym --to-code $mod+Right focus right
 
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
+bindsym --to-code $mod+Shift+j move left
+bindsym --to-code $mod+Shift+k move down
+bindsym --to-code $mod+Shift+l move up
+bindsym --to-code $mod+Shift+semicolon move right
 
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
+bindsym --to-code $mod+Shift+Left move left
+bindsym --to-code $mod+Shift+Down move down
+bindsym --to-code $mod+Shift+Up move up
+bindsym --to-code $mod+Shift+Right move right
 
-bindsym $mod+h split h
-bindsym $mod+v split v
+bindsym --to-code $mod+h split h
+bindsym --to-code $mod+v split v
 
-bindsym $mod+f fullscreen toggle
+bindsym --to-code $mod+f fullscreen toggle
 
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
+bindsym --to-code $mod+s layout stacking
+bindsym --to-code $mod+w layout tabbed
+bindsym --to-code $mod+e layout toggle split
 
-bindsym $mod+Shift+space floating toggle
-bindsym $mod+space focus mode_toggle
+bindsym --to-code $mod+Shift+space floating toggle
+bindsym --to-code $mod+space focus mode_toggle
 
-bindsym $mod+a focus parent
+bindsym --to-code $mod+a focus parent
 
-bindsym $mod+n exec swaync-client -t -sw
-bindsym $mod+Shift+n exec swaync-client -C
-bindsym $mod+Shift+c reload
-bindsym $mod+Shift+r reload
-bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit Sway? This will end your session.' -B 'Yes, exit Sway' 'swaymsg exit'
-bindsym $mod+Shift+w exec $lock_cmd
+bindsym --to-code $mod+n exec swaync-client -t -sw
+bindsym --to-code $mod+Shift+n exec swaync-client -C
+bindsym --to-code $mod+Shift+c reload
+bindsym --to-code $mod+Shift+r reload
+bindsym --to-code $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit Sway? This will end your session.' -B 'Yes, exit Sway' 'swaymsg exit'
+bindsym --to-code $mod+Shift+w exec $lock_cmd
 
-bindsym $mod+r mode "resize"
+bindsym --to-code $mod+r mode "resize"
 
 mode "resize" {
-    bindsym j resize shrink width 10 px or 10 ppt
-    bindsym k resize grow height 10 px or 10 ppt
-    bindsym l resize shrink height 10 px or 10 ppt
-    bindsym semicolon resize grow width 10 px or 10 ppt
+    bindsym --to-code j resize shrink width 10 px or 10 ppt
+    bindsym --to-code k resize grow height 10 px or 10 ppt
+    bindsym --to-code l resize shrink height 10 px or 10 ppt
+    bindsym --to-code semicolon resize grow width 10 px or 10 ppt
 
-    bindsym Left resize shrink width 10 px or 10 ppt
-    bindsym Down resize grow height 10 px or 10 ppt
-    bindsym Up resize shrink height 10 px or 10 ppt
-    bindsym Right resize grow width 10 px or 10 ppt
+    bindsym --to-code Left resize shrink width 10 px or 10 ppt
+    bindsym --to-code Down resize grow height 10 px or 10 ppt
+    bindsym --to-code Up resize shrink height 10 px or 10 ppt
+    bindsym --to-code Right resize grow width 10 px or 10 ppt
 
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-    bindsym $mod+r mode "default"
+    bindsym --to-code Return mode "default"
+    bindsym --to-code Escape mode "default"
+    bindsym --to-code $mod+r mode "default"
 }
 
 set $ws1 "1"
@@ -114,40 +122,42 @@ set $ws_bruno "bruno"
 set $ws_dbeaver "dbeaver"
 set $ws_express "express"
 
-bindsym $mod+1 workspace $ws1
-bindsym $mod+2 workspace $ws2
-bindsym $mod+3 workspace $ws3
-bindsym $mod+4 workspace $ws4
-bindsym $mod+5 workspace $ws5
-bindsym $mod+6 workspace $ws6
-bindsym $mod+7 workspace $ws7
-bindsym $mod+8 workspace $ws8
-bindsym $mod+9 workspace $ws9
-bindsym $mod+0 workspace $ws10
+bindsym --to-code $mod+1 workspace $ws1
+bindsym --to-code $mod+2 workspace $ws2
+bindsym --to-code $mod+3 workspace $ws3
+bindsym --to-code $mod+4 workspace $ws4
+bindsym --to-code $mod+5 workspace $ws5
+bindsym --to-code $mod+6 workspace $ws6
+bindsym --to-code $mod+7 workspace $ws7
+bindsym --to-code $mod+8 workspace $ws8
+bindsym --to-code $mod+9 workspace $ws9
+bindsym --to-code $mod+0 workspace $ws10
 
-bindsym $mod+u workspace $ws_web
-bindsym $mod+c workspace $ws_code
-bindsym $mod+i workspace $ws_idea
-bindsym $mod+o workspace $ws_obsidian
-bindsym $mod+m workspace $ws_msg
-bindsym $mod+t workspace $ws_thunderbird
-bindsym $mod+p workspace $ws_spotify
-bindsym $mod+b workspace $ws_bruno
-bindsym $mod+d workspace $ws_dbeaver
-bindsym $mod+x workspace $ws_express
+bindsym --to-code $mod+u workspace $ws_web
+bindsym --to-code $mod+c workspace $ws_code
+bindsym --to-code $mod+i workspace $ws_idea
+bindsym --to-code $mod+o workspace $ws_obsidian
+bindsym --to-code $mod+m workspace $ws_msg
+bindsym --to-code $mod+t workspace $ws_thunderbird
+bindsym --to-code $mod+p workspace $ws_spotify
+bindsym --to-code $mod+b workspace $ws_bruno
+bindsym --to-code $mod+d workspace $ws_dbeaver
+bindsym --to-code $mod+x workspace $ws_express
 
-bindsym --release --no-repeat Super_L exec $HOME/.config/scripts/double_mod_switch.sh
+bindsym --to-code --release --no-repeat Super_L exec $HOME/.config/scripts/double_mod_switch.sh
+# Split (BCORNE) only has a right Super (RGui); bind it too so double-tap works there.
+bindsym --to-code --release --no-repeat Super_R exec $HOME/.config/scripts/double_mod_switch.sh
 
-bindsym $mod+Shift+1 move container to workspace $ws1
-bindsym $mod+Shift+2 move container to workspace $ws2
-bindsym $mod+Shift+3 move container to workspace $ws3
-bindsym $mod+Shift+4 move container to workspace $ws4
-bindsym $mod+Shift+5 move container to workspace $ws5
-bindsym $mod+Shift+6 move container to workspace $ws6
-bindsym $mod+Shift+7 move container to workspace $ws7
-bindsym $mod+Shift+8 move container to workspace $ws8
-bindsym $mod+Shift+9 move container to workspace $ws9
-bindsym $mod+Shift+0 move container to workspace $ws10
+bindsym --to-code $mod+Shift+1 move container to workspace $ws1
+bindsym --to-code $mod+Shift+2 move container to workspace $ws2
+bindsym --to-code $mod+Shift+3 move container to workspace $ws3
+bindsym --to-code $mod+Shift+4 move container to workspace $ws4
+bindsym --to-code $mod+Shift+5 move container to workspace $ws5
+bindsym --to-code $mod+Shift+6 move container to workspace $ws6
+bindsym --to-code $mod+Shift+7 move container to workspace $ws7
+bindsym --to-code $mod+Shift+8 move container to workspace $ws8
+bindsym --to-code $mod+Shift+9 move container to workspace $ws9
+bindsym --to-code $mod+Shift+0 move container to workspace $ws10
 
 workspace_auto_back_and_forth yes
 focus_on_window_activation focus
