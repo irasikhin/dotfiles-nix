@@ -335,5 +335,7 @@ in
     virt-viewer
     gost
     extraCompletions
+    vlc
+    kooha
   ];
 }
