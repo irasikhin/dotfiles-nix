@@ -53,6 +53,9 @@
 
     burl.url = "git+ssh://git@git.rgband.ru:2222/rgband/burl.git";
     burl.inputs.nixpkgs.follows = "nixpkgs";
+
+    sandboxer.url = "git+ssh://git@git.rgband.ru:2222/rgband/sandboxer.git";
+    sandboxer.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
