@@ -3,6 +3,10 @@
 __pycache__/
 *.pyc
 
+# Stray application log dumps — never belong in this repo.
+*.log
+logs.txt
+
 # Ignore everything in secrets/ by default (plaintext creds live here),
 # allow only sops-encrypted files which are safe to commit.
 secrets/*
