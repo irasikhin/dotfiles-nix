@@ -18,12 +18,9 @@ _:
     LC_TIME = "ru_RU.UTF-8";
   };
 
-  # Keyboard layouts
-  services.xserver.xkb = {
-    layout = "us,ru"; # Enable US and Russian keyboard layouts
-    options = "grp:shifts_toggle"; # Toggle layout with both Shifts (ctrl_shift collided with terminal copy/paste). Split uses a dedicated F24 key bound in sway.
-  };
-
+  # Keyboard layout (us,ru + both-Shift toggle) is configured natively in the
+  # sway input block (dotfiles/sway/config). No services.xserver.xkb needed under
+  # wayland; XWayland inherits the layout from the compositor.
   console.keyMap = "us"; # Set console keymap
 
   # Key remapping via keyd. Targets ONLY the built-in laptop keyboard

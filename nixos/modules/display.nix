@@ -1,9 +1,6 @@
 { pkgs, ... }:
 
 {
-  # Enable X server and configure display manager/window manager
-  services.xserver.enable = true;
-
   # regreet is a graphical (GTK/Wayland) greeter for greetd. Unlike the previous
   # TUI greeter (ly), it can render an image background. programs.regreet.enable
   # auto-enables services.greetd and hosts regreet inside cage.

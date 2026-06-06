@@ -103,7 +103,6 @@ in
     nerd-fonts.fira-code
     pass
     passExtensions.pass-import
-    xclip
     bc
     wl-clipboard
     networkmanagerapplet
@@ -196,8 +195,8 @@ in
     opencode
     google-chrome
     jbang
-    flameshot
-    peek
+    flameshot # screenshot+annotate (works on wayland via xdg-desktop-portal)
+    satty # wayland annotated-screenshot tool; bound to Print in sway (pipes grim+slurp)
     grim
     slurp
     fuzzel

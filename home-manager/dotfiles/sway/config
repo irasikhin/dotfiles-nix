@@ -37,6 +37,15 @@ bindsym --to-code $mod+Tab exec $window_switcher
 bindsym --to-code $alt+v exec cliphist list | fuzzel --dmenu -p "clipboard: " | cliphist decode | wl-copy
 bindsym --to-code $alt+p exec echo -e "lock\nlogout\nsuspend\nreboot\nshutdown" | fuzzel --dmenu -p "power: " | xargs -I {} sh -c 'case {} in lock) $lock_cmd;; logout) swaymsg exit;; suspend) systemctl suspend;; reboot) systemctl reboot;; shutdown) systemctl poweroff;; esac'
 
+# Screenshots (grim -> satty annotation editor; Ctrl+S in satty saves to ~/Pictures/Screenshots, Ctrl+C copies).
+# Print          -> select region, open editor
+# Shift+Print    -> whole focused output, open editor
+# Ctrl+Print     -> select region straight to clipboard, no editor
+set $satty satty -f - --copy-command wl-copy --output-filename "$HOME/Pictures/Screenshots/$(date +%Y%m%d-%H%M%S).png"
+bindsym Print exec grim -g "$(slurp -d)" - | $satty
+bindsym Shift+Print exec grim -o "$(swaymsg -t get_outputs | jq -r '.[] | select(.focused).name')" - | $satty
+bindsym Ctrl+Print exec grim -g "$(slurp -d)" - | wl-copy
+
 bindsym --to-code $mod+Shift+q kill
 bindsym --to-code $mod+Shift+a focus parent, kill
 
