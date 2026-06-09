@@ -1,7 +1,12 @@
-{ pkgs, inputs, ... }:
+{
+  pkgs,
+  inputs,
+  config,
+  ...
+}:
 
 let
-  homeDir = "/home/ir";
+  homeDir = config.users.users.ir.home;
 in
 {
   # Enable Firefox browser
@@ -30,7 +35,30 @@ in
         "size" = 24;
       }
     ];
+    # Public Docker Hub mirrors (fallback when registry-1.docker.io unreachable)
+    "registry-mirrors" = [
+      "https://mirror.gcr.io"
+      "https://dockerhub.timeweb.cloud"
+      "https://huecker.io"
+    ];
   };
+
+  # Podman: mirror docker.io through same public mirrors via registries.conf
+  virtualisation.containers.registries.search = [ "docker.io" ];
+  environment.etc."containers/registries.conf.d/00-mirrors.conf".text = ''
+    [[registry]]
+    prefix = "docker.io"
+    location = "registry-1.docker.io"
+
+    [[registry.mirror]]
+    location = "mirror.gcr.io"
+
+    [[registry.mirror]]
+    location = "dockerhub.timeweb.cloud"
+
+    [[registry.mirror]]
+    location = "huecker.io"
+  '';
 
   # Install essential system packages
   environment.systemPackages = with pkgs; [
