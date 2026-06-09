@@ -15,6 +15,10 @@ secrets/*
 !secrets/ssh-hosts.yaml
 keys.txt
 
+# nix build output symlinks (system/home closures) — never belong in this repo.
+result
+result-*
+
 # git-hooks.nix generates this on devShell entry
 .pre-commit-config.yaml
 
