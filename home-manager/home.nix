@@ -4,9 +4,6 @@
   ...
 }:
 
-let
-  homeDir = "/home/ir";
-in
 {
   imports = [
     ./modules/packages.nix
@@ -17,7 +14,7 @@ in
   ];
 
   home.username = "ir";
-  home.homeDirectory = homeDir;
+  home.homeDirectory = "/home/ir";
   home.stateVersion = "22.11";
 
   # Skip Neovim's OSC 11 terminal-background query (mis-proxied by zellij,
@@ -28,6 +25,11 @@ in
     config = {
       allowUnfree = true;
       allowUnfreePredicate = _: true;
+      # checkov pulls python ecdsa transitively; CVE-2024-23342 (Minerva
+      # timing side-channel) is irrelevant for a local IaC scanner.
+      permittedInsecurePackages = [
+        "python3.13-ecdsa-0.19.2"
+      ];
     };
   };
 

@@ -287,7 +287,6 @@ in
     so
     tealdeer
     glances
-    mitmproxy
     mosh
     asciinema
     asciinema-agg

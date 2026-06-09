@@ -88,7 +88,7 @@
     "express-appimage": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-wJiOo7gLzgiae3GEwu3wJ/JJEyYFjmkSNzmt6YgWe10=",
+        "narHash": "sha256-Dx+aOgV+w9p+5599vXxVPSkz8j7+HT2MSPR5e7sCYmY=",
         "type": "file",
         "url": "https://express.ms/download/appimage-corporate"
       },
@@ -291,11 +291,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780593650,
-        "narHash": "sha256-CHo7k65YTL3HY+WQVedDTupji+LMgNlKCdrtRHZFAK4=",
+        "lastModified": 1781009359,
+        "narHash": "sha256-w/mZkRscTatf8NWyUstli8ROzM/eopxZzi0WRjoeYkU=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "447fd9ff62501dae7206dfe180ee89f8de27b7d5",
+        "rev": "c58ead12efcac436afffa93a22099a5595eb4157",
         "type": "github"
       },
       "original": {
@@ -310,11 +310,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1779881952,
-        "narHash": "sha256-0F6oz6eLYx2cIajNmQY9tLGmRsaDU8BPMe2LFT6J6aA=",
+        "lastModified": 1781011514,
+        "narHash": "sha256-V4kh4lq0v1+oOMtheUPqp1kWL5ALrMdWCysPBfgQx9g=",
         "owner": "irasikhin",
         "repo": "kpass",
-        "rev": "c9d85d5c3b38c2d075f9fe2d1d1711ff3dcbae6c",
+        "rev": "70d0b9cd0faf6b842e2784c2d5096757a586a777",
         "type": "github"
       },
       "original": {
@@ -393,11 +393,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780210899,
-        "narHash": "sha256-4axz3OBPTKa6LIkXV8n0lc63MQU+et2CB5DGobEAi6k=",
+        "lastModified": 1780816331,
+        "narHash": "sha256-0BYqs8yKWkOz2Q7+SP18N5E5gmDKSo6LSxIVIa0wWes=",
         "owner": "nix-community",
         "repo": "nix-index-database",
-        "rev": "97df9dc0b7c924344b793a15c1e8e4522ebb854e",
+        "rev": "1a2ea89c917781e88508d9fd2b507f2d2a0e173c",
         "type": "github"
       },
       "original": {
@@ -415,11 +415,11 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1780402472,
-        "narHash": "sha256-Ati/lQxPlwLBCItWTLEJAsTnRllShvBKqU7bXWjLYcI=",
+        "lastModified": 1780734324,
+        "narHash": "sha256-Z+6tqhROBuYKzdqi6uQuWtV8vqee34tRJh/naF77ZnE=",
         "owner": "nix-community",
         "repo": "nix-jetbrains-plugins",
-        "rev": "1e25ae7afce0f3b80aa44c5f0b7fda0311a5f8d6",
+        "rev": "967f904b44eba5aca8645db009b54fbdb657c7b6",
         "type": "github"
       },
       "original": {
@@ -477,11 +477,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1780365719,
-        "narHash": "sha256-QfWfccTN+70ZQ4m2qlU9PiKfz2Yppq94058iJyARNwc=",
+        "lastModified": 1780930886,
+        "narHash": "sha256-rppURzHviaQN131F+nLiLdGfcb0uCd9gGP0E5+iw9MI=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "ffa10e26ae11d676b2db836259889f1f571cb14f",
+        "rev": "8c3cede7ddc26bd659d2d383b5610efbd2c7a16e",
         "type": "github"
       },
       "original": {
@@ -545,11 +545,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780664457,
-        "narHash": "sha256-pr3ZKX29YZ5TxtbGkrqXYC4rssn3qDJ5ErRCteUpM2I=",
+        "lastModified": 1781012679,
+        "narHash": "sha256-3F1/VXw5rZScMq/debxNdMP4LJfZX6E084iGZmOjn/w=",
         "ref": "refs/heads/main",
-        "rev": "44a7f669018a63cd8961178b9d83057d8e1a69ac",
-        "revCount": 62,
+        "rev": "d09b44ea0c2685c271a57adeb015d948db5a3cdb",
+        "revCount": 75,
         "type": "git",
         "url": "ssh://git@git.rgband.ru:2222/rgband/sandboxer.git"
       },
