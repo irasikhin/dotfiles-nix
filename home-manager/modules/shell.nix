@@ -1,7 +1,12 @@
-_:
+{
+  pkgs,
+  config,
+  flakeDir,
+  ...
+}:
 
 let
-  homeDir = "/home/ir";
+  homeDir = config.home.homeDirectory;
 in
 {
   home.sessionVariables = {
@@ -113,7 +118,6 @@ in
       enable = true;
       plugins = [
         ''
-          Aloxaf/fzf-tab
           zsh-users/zsh-autosuggestions
           ohmyzsh/ohmyzsh path:lib/git.zsh
         ''
@@ -125,6 +129,13 @@ in
 
       bindkey -e
 
+      # Load fzf-tab HERE, not via antidote: it must be sourced after compinit
+      # (run by oh-my-zsh above) and after `fzf --zsh` (which binds TAB to its
+      # own widget). Sourcing last lets fzf-tab claim TAB on a fully-initialised
+      # completion system. Must still precede zsh-syntax-highlighting (loaded
+      # after initContent), which is the case.
+      source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
+
       # fzf-tab: render the zsh completion menu through fzf.
       # `menu no` hands selection to fzf instead of zsh's builtin menu.
       zstyle ':completion:*' menu no
@@ -133,6 +144,39 @@ in
       zstyle ':fzf-tab:*' switch-group ',' '.'
       # Directory listing preview when completing cd.
       zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+
+      # Maven module completion via fzf-tab.
+      # omz `mvn` plugin uses old-style compctl (fzf-tab can't wrap it) and
+      # only offers module *paths*. This compsys wrapper overrides it: reuses
+      # omz's goal list, and after -rf/-pl offers `:artifactId` candidates so
+      # `mvn ... -rf :<tab>` fuzzy-picks a module to resume from.
+      __mvn_artifact_ids() {
+        local pom
+        for pom in **/pom.xml(N); do
+          [[ $pom == *target/* ]] && continue
+          # strip <parent>..</parent>, then take this module's own artifactId
+          sed -e ':a' -e 'N' -e '$!ba' -e 's#<parent>.*</parent>##' "$pom" \
+            | sed -n 's:.*<artifactId>[[:space:]]*\([^<]*\).*:\1:p' | head -1
+        done
+      }
+      _mvn() {
+        local prev=$words[CURRENT-1]
+        local -a ids dirs reply
+        case $prev in
+          -rf|--resume-from)
+            ids=(''${(f)"$(__mvn_artifact_ids)"})
+            compadd -- ''${ids/#/:}
+            return ;;
+          -pl|--projects)
+            ids=(''${(f)"$(__mvn_artifact_ids)"})
+            dirs=(''${(f)"$(print -l **/pom.xml(-.N:h))"})
+            compadd -- ''${ids/#/:} $dirs
+            return ;;
+        esac
+        listMavenCompletions   # omz: fills $reply with goals/flags/modules
+        compadd -a reply
+      }
+      compdef _mvn mvn mvnw mvn-color mvn-or-mvnw
 
       # terraform-style tools act as their own completer via the bash
       # `complete -C` protocol; bashcompinit bridges them into compsys
@@ -164,7 +208,7 @@ in
   # nh: friendlier `nixos-rebuild` / `home-manager` wrapper with diffs.
   programs.nh = {
     enable = true;
-    flake = "/home/ir/dotfiles-nix";
+    flake = flakeDir;
     clean = {
       enable = true;
       extraArgs = "--keep-since 7d --keep 5";
