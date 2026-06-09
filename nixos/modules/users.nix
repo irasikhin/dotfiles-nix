@@ -1,8 +1,5 @@
 { pkgs, ... }:
 
-let
-  homeDir = "/home/ir";
-in
 {
   # Configure user accounts
   users.users.irasikhin = {
@@ -35,7 +32,7 @@ in
       "irasikhin"
       "users"
     ];
-    home = homeDir;
+    home = "/home/ir";
 
     packages = with pkgs; [ ];
     shell = pkgs.zsh; # Set default shell to Zsh

@@ -73,6 +73,9 @@
     }@inputs:
     let
       system = "x86_64-linux";
+      # Absolute path to this checkout. Single source of truth for tools that
+      # need to re-find the flake at runtime (nh).
+      flakeDir = "/home/ir/dotfiles-nix";
       pkgs = nixpkgs.legacyPackages.${system};
       treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
 
@@ -104,7 +107,7 @@
       # Available through 'nixos-rebuild --flake .#irnixos'
       nixosConfigurations = {
         irnixos = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs; };
+          specialArgs = { inherit inputs flakeDir; };
           modules = [
             nvf.nixosModules.default
             sops-nix.nixosModules.sops
@@ -120,7 +123,7 @@
         "ir@irnixos" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.${system}; # Home-manager requires 'pkgs' instance
           extraSpecialArgs = {
-            inherit inputs system;
+            inherit inputs system flakeDir;
           }; # Pass flake inputs to our config
           # > Our main home-manager configuration file <
           modules = [
