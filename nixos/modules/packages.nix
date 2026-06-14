@@ -111,7 +111,6 @@ in
     google-java-format
     zulu25
     net-tools
-    claude-code
     bubblewrap
     shadowsocks-rust
     brave

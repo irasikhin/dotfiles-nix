@@ -141,6 +141,7 @@ in
     yamllint
     postgresql
     obsidian
+    ticktick
     yq-go
     pnpm
     insomnia
@@ -192,7 +193,6 @@ in
     allure
     aider-chat
     aichat
-    opencode
     google-chrome
     jbang
     flameshot # screenshot+annotate (works on wayland via xdg-desktop-portal)
@@ -235,7 +235,6 @@ in
     kubectx
     uv
     ruff
-    codex
     pre-commit
     gitleaks
     trufflehog
@@ -327,6 +326,8 @@ in
     feishin
     outline
     inputs.kpass.packages.${system}.default
+    # claude/codex/opencode/pi wrappers; replace bare nixpkgs agent CLIs.
+    inputs.llm-agents-wrappers.packages.${system}.default
     junction
     tigervnc
     remmina

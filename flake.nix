@@ -54,8 +54,14 @@
     burl.url = "git+ssh://git@git.rgband.ru:2222/rgband/burl.git";
     burl.inputs.nixpkgs.follows = "nixpkgs";
 
-    sandboxer.url = "git+ssh://git@git.rgband.ru:2222/rgband/sandboxer.git";
+    sandboxer.url = "github:irasikhin/sandboxer";
     sandboxer.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Proxy-aware wrappers for LLM coding agents (claude/codex/opencode/pi).
+    # Runner is `auto` -> agents run via `nix run llm-agents.nix#...`, so no
+    # local agent CLIs needed; proxy is set via LLM_WRAPPERS_PROXY_* env vars.
+    llm-agents-wrappers.url = "github:irasikhin/llm-agents-wrappers";
+    llm-agents-wrappers.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =

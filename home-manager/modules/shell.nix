@@ -14,6 +14,9 @@ in
     _JAVA_AWT_WM_NONREPARENTING = "1";
     GDK_DPI_SCALE = "1.4";
     MOZ_ENABLE_WAYLAND = "1";
+    # Route llm-agents-wrappers (claude/codex/opencode/pi) through local proxy.
+    LLM_WRAPPERS_PROXY_HOST = "127.0.0.1";
+    LLM_WRAPPERS_PROXY_PORT = "9999";
   };
 
   xresources.properties = {
