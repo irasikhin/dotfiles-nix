@@ -41,10 +41,12 @@
           # LOCK/PREFIX/NORMAL chip re-injected as the left segment
           # (segment bg is #665c54; reset to it after each colored state).
           set -g @tmux-gruvbox-left-status-a "#{?#{==:#{client_key_table},off},#[bg=#fb4934,fg=#1d2021,bold] LOCKED #[bg=#665c54,fg=#bdae93,nobold],#{?client_prefix,#[bg=#fabd2f,fg=#1d2021,bold] PREFIX #[bg=#665c54,fg=#bdae93,nobold],#[bg=#b8bb26,fg=#1d2021,bold] NORMAL #[bg=#665c54,fg=#bdae93,nobold]}}"
-          # Right side: session · clock · host
-          set -g @tmux-gruvbox-right-status-x '#S'
-          set -g @tmux-gruvbox-right-status-y '%H:%M'
-          set -g @tmux-gruvbox-right-status-z '#h'
+          # Right side: cpu·ram · load · session·clock. Metrics via #() with
+          # bc-less commands (top us+sy, free, /proc/loadavg). egel keeps the
+          # gruvbox colours; we only fill its three slots.
+          set -g @tmux-gruvbox-right-status-x " #(top -bn1 | awk '/^%?Cpu/{printf \"%.0f%%\",$2+$4;exit}')  󰍛 #(free | awk '/^Mem/{printf \"%.0f%%\",$3/$2*100}')"
+          set -g @tmux-gruvbox-right-status-y "󰊚 #(cut -d' ' -f1 /proc/loadavg)"
+          set -g @tmux-gruvbox-right-status-z "#S  %H:%M"
         '';
       }
 
