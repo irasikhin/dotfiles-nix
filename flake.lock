@@ -356,11 +356,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781438614,
-        "narHash": "sha256-zvTkAsbsyrjK2IfFTitNrOmt3xtki2w6UI5Vw/E/o+E=",
+        "lastModified": 1781537111,
+        "narHash": "sha256-wv6hRyrsTmTUyUC92xFgW7sx7n+Uu9tlyDIAJYQo2xU=",
         "owner": "irasikhin",
         "repo": "llm-agents-wrappers",
-        "rev": "96a4d0da21f556c27d2410dfb4dc2fd79a6ece70",
+        "rev": "3308429f4fcf9738082f1eeac48ad55225a66a5e",
         "type": "github"
       },
       "original": {

@@ -128,6 +128,13 @@ in
     };
 
     initContent = ''
+      # Auto-attach/-create tmux on interactive shells.
+      # Guard: interactive only, and not already inside tmux (panes set $TMUX).
+      # exec replaces the shell, so quitting tmux closes the terminal.
+      if [[ $- == *i* && -z "$TMUX" ]]; then
+        exec tmux new-session -A -s main
+      fi
+
       source ${homeDir}/jira.sh;
 
       bindkey -e
@@ -199,6 +206,20 @@ in
           cd "$cwd"
         fi
         rm -f "$tmp"
+      }
+
+      # Restore terminal after an abnormal ssh disconnect. A remote app (vim,
+      # tmux, less) puts the terminal into application cursor-key /
+      # keypad mode; a clean exit resets it, but a dropped connection leaves it
+      # stuck, so local arrow keys / combos then emit garbage until a new pane
+      # resets the modes. Reset DECCKM (\e[?1l), numeric keypad (\e>) and
+      # bracketed paste (\e[?2004l), then restore sane line settings.
+      ssh() {
+        command ssh "$@"
+        local ret=$?
+        printf '\e[?1l\e>\e[?2004l'
+        stty sane 2>/dev/null
+        return $ret
       }
     '';
   };
