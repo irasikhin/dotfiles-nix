@@ -130,6 +130,7 @@ set $ws_spotify "spotify"
 set $ws_bruno "bruno"
 set $ws_dbeaver "dbeaver"
 set $ws_express "express"
+set $ws_sysinfo "sysinfo"
 
 bindsym --to-code $mod+1 workspace $ws1
 bindsym --to-code $mod+2 workspace $ws2
@@ -152,6 +153,7 @@ bindsym --to-code $mod+p workspace $ws_spotify
 bindsym --to-code $mod+b workspace $ws_bruno
 bindsym --to-code $mod+d workspace $ws_dbeaver
 bindsym --to-code $mod+x workspace $ws_express
+bindsym --to-code $mod+F12 workspace $ws_sysinfo
 
 bindsym --to-code --release --no-repeat Super_L exec $HOME/.config/scripts/double_mod_switch.sh
 # Split (BCORNE) only has a right Super (RGui); bind it too so double-tap works there.
@@ -171,6 +173,7 @@ bindsym --to-code $mod+Shift+0 move container to workspace $ws10
 workspace_auto_back_and_forth yes
 focus_on_window_activation focus
 
+assign [app_id="foot"] $ws_terminal
 assign [app_id="Alacritty"] $ws_terminal
 assign [class="(?i)^Alacritty$"] $ws_terminal
 
@@ -204,6 +207,8 @@ assign [class="(?i)^DBeaver$"] $ws_dbeaver
 assign [app_id="eXpress_Corporate"] $ws_express
 assign [class="(?i)^eXpress_Corporate$"] $ws_express
 
+assign [app_id="sysinfo"] $ws_sysinfo
+
 exec_always sh -c 'pkill -x .waybar-wrapped; sleep 0.3; waybar'
 exec wl-paste --type text --watch cliphist store
 
@@ -225,8 +230,8 @@ exec_always --no-startup-id nm-applet --indicator
 exec_always --no-startup-id $HOME/.config/scripts/update_background_image.sh
 exec_always --no-startup-id sh -c 'pkill -x swayidle; exec swayidle -w timeout 900 "$1" before-sleep "$1"' _ "$lock_cmd"
 
-# Single-display: внешний подключён -> внутренний eDP-1 выключен; внешнего нет ->
-# eDP-1 включён. Реагирует на hotplug, держит ровно один экран.
+# Single-display: external connected -> internal eDP-1 off; no external ->
+# eDP-1 on. Reacts to hotplug, keeps exactly one screen.
 exec_always --no-startup-id $HOME/.config/scripts/single_display.sh
 
 exec --no-startup-id $terminal
@@ -234,3 +239,9 @@ exec --no-startup-id floorp
 exec --no-startup-id idea
 exec --no-startup-id telegram-desktop
 exec --no-startup-id thunderbird
+
+# System info screen on its own workspace (live-refreshing fastfetch)
+exec --no-startup-id foot --app-id=sysinfo -e watch -ctn 2 fastfetch
+
+# Don't leave empty workspace 1 on startup — focus terminal
+exec --no-startup-id swaymsg workspace $ws_terminal

@@ -111,6 +111,7 @@ in
     google-java-format
     zulu25
     net-tools
+    fastfetch
     bubblewrap
     shadowsocks-rust
     brave
