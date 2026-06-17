@@ -24,6 +24,7 @@
 
   systemd.services.yggdrasil = {
     description = "Yggdrasil mesh";
+    wantedBy = [ "multi-user.target" ];
     after = [
       "network-pre.target"
       "sops-install-secrets.service"

@@ -5,7 +5,7 @@
   networking.hostName = "irnixos";
 
   services.resolved = {
-    enable = false;
+    enable = true;
     settings.Resolve.Domains = [ "~." ];
   };
   networking.networkmanager = {
