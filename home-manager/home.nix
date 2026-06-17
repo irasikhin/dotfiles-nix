@@ -17,8 +17,8 @@
   home.homeDirectory = "/home/ir";
   home.stateVersion = "22.11";
 
-  # Skip Neovim's OSC 11 terminal-background query (mis-proxied by zellij,
-  # causes slow startup and leaked "11;rgb:..." escapes). nvim reads
+  # Skip Neovim's OSC 11 terminal-background query (mis-proxied by some
+  # multiplexers, causes slow startup and leaked "11;rgb:..." escapes). nvim reads
   # COLORFGBG instead: light fg / dark bg.
   home.sessionVariables.COLORFGBG = "15;0";
   nixpkgs = {

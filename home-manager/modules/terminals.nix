@@ -119,16 +119,13 @@
       set -ga terminal-features ",foot*:usstyle"
       set -ga terminal-overrides ",foot*:Tc"
 
-      # ---- Modified-key handling: extended keys (CSI-u) ON ----
-      # Lets apps (claude/nvim/...) tell Ctrl+Backspace, Alt+<key>, Ctrl+Enter
-      # etc. apart instead of collapsing them onto legacy codes. `extkeys` tells
-      # tmux foot supports the mode, so tmux negotiates CSI-u properly and still
-      # matches the M-arrow bindings below (a bare `extended-keys on` without
-      # extkeys is what previously broke Alt+arrow pane nav). The leak this used
-      # to cause on agent crash is fixed upstream in llm-agents-wrappers, which
-      # resets modifyOtherKeys/kitty on exit.
-      set -ga terminal-features ",foot*:extkeys"
-      set -s extended-keys on
+      # ---- Modified-key handling: extended keys (CSI-u) OFF ----
+      # extended-keys lets apps tell Ctrl+Backspace / Shift+Enter / Ctrl+Enter
+      # apart, but on tmux 3.6a it makes foot send Alt+arrow in the extended
+      # form, which the plain `M-Left` bindings below do NOT match -> pane nav
+      # dies. We don't use those modified keys, so keep it off and keep reliable
+      # Alt+arrow nav (the proven pre-ee45209 state). Only re-enable alongside
+      # explicit user-keys byte-bindings for Alt+arrow; see ee45209 oscillation.
 
       # ---- QoL ----
       set -g focus-events on
@@ -151,11 +148,14 @@
       set -g pane-border-style "fg=#3c3836"
       set -g pane-active-border-style "#{?client_prefix,fg=#d8a657,#{?#{==:#{client_key_table},off},fg=#ea6962,fg=#89b482}}"
 
-      # ---- Alt+arrow pane navigation (root table, no prefix) ----
-      bind -n M-Left  select-pane -L
-      bind -n M-Down  select-pane -D
+      # ---- Alt+arrow nav (root table, no prefix) ----
+      # Up/Down move panes. Left/Right move panes too, but when already at the
+      # leftmost/rightmost pane they flow to the previous/next window instead
+      # (#{pane_at_left/right} = pure tmux, no helper script).
+      bind -n M-Left  if -F '#{pane_at_left}'  'previous-window' 'select-pane -L'
+      bind -n M-Right if -F '#{pane_at_right}' 'next-window'     'select-pane -R'
       bind -n M-Up    select-pane -U
-      bind -n M-Right select-pane -R
+      bind -n M-Down  select-pane -D
 
       # ---- Splits / new window open in current dir ----
       bind '"' split-window -v -c "#{pane_current_path}"
