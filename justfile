@@ -51,6 +51,18 @@ rekey:
 update input="":
     nix flake update {{input}}
 
+# update only the kpass input
+update-kpass: (update "kpass")
+
+# update only the sandboxer input
+update-sandboxer: (update "sandboxer")
+
+# update the kpass input, then rebuild system + Home Manager
+upgrade-kpass: update-kpass switch home
+
+# update the sandboxer input, then rebuild system + Home Manager
+upgrade-sandboxer: update-sandboxer switch home
+
 # remove old generations + collect garbage
 clean:
     nh clean all
