@@ -51,19 +51,39 @@ in
 
     Service = {
       Type = "oneshot";
-      Environment = [ "PATH=${wallpaperPath}" ];
+      Environment = [
+        "PATH=${wallpaperPath}"
+        # Themed rotation: one subreddit picked at random per run, grouped by
+        # theme. Nature + cyberpunk/game subs read well as wallpapers; band subs
+        # are hit-or-miss — drop hand-picked band art into ~/.config/wallpaper
+        # for guaranteed inclusion (local fallback).
+        # wallhaven.cc search themes, comma-separated. NO spaces in the value
+        # (systemd Environment= splits on whitespace) — multi-word themes use '+'
+        # which the rotator converts back to a space before URL-encoding.
+        (
+          "WALLPAPER_QUERIES="
+          # nature / landscapes / space
+          + "nature,landscape,forest,mountains,space,"
+          # cyberpunk / synthwave / games
+          + "cyberpunk,synthwave,blade+runner,the+witcher,elden+ring,fallout,doom,resident+evil,"
+          # bands (nu-metal / rock, genre-matched to SOAD/LP/Korn/Limp Bizkit)
+          + "system+of+a+down,linkin+park,korn,limp+bizkit,slipknot,deftones,rammstein,metallica,tool+band"
+        )
+      ];
       ExecStart = "${pkgs.bash}/bin/bash ${config.xdg.configHome}/scripts/update_background_image.sh";
     };
   };
 
   systemd.user.timers.wallpaper-rotator = {
     Unit = {
-      Description = "Rotate wallpapers every hour";
+      Description = "Fetch + rotate wallpapers daily";
     };
 
     Timer = {
-      OnStartupSec = "1h";
-      OnUnitActiveSec = "1h";
+      # Populate the wallpaper shortly after login, then fetch a fresh batch and
+      # rotate daily. Persistent catches up a missed run if the machine was off.
+      OnStartupSec = "1m";
+      OnUnitActiveSec = "1d";
       Persistent = true;
       Unit = "wallpaper-rotator.service";
     };
