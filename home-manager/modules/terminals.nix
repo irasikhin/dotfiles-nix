@@ -167,8 +167,9 @@
       bind -T copy-mode-vi C-v send -X rectangle-toggle
       bind -T copy-mode-vi y send -X copy-pipe-and-cancel 'wl-copy'
       bind -T copy-mode-vi Escape send -X cancel
-      # copy on mouse drag-release (no-clear keeps selection visible after)
-      bind -T copy-mode-vi MouseDragEnd1Pane send -X copy-pipe-no-clear 'wl-copy'
+      # copy on mouse drag-release, then exit copy-mode (no sticky highlight /
+      # stuck copy-mode state). Use Shift+drag for foot's native selection.
+      bind -T copy-mode-vi MouseDragEnd1Pane send -X copy-pipe-and-cancel 'wl-copy'
 
       # ---- Reload config ----
       bind r source-file ~/.config/tmux/tmux.conf \; display "tmux.conf reloaded"
@@ -205,6 +206,10 @@
       colors-dark = {
         background = "1d2021";
         foreground = "d4be98";
+        # explicit selection (default inverts fg/bg → unreadable on gruvbox);
+        # solid cream block w/ dark text, visible across local + ssh'd tmux panes
+        selection-foreground = "1d2021";
+        selection-background = "d4be98";
         regular0 = "1d2021";
         regular1 = "ea6962";
         regular2 = "a9b665";
