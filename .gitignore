@@ -25,3 +25,6 @@ result-*
 # direnv local cache (nix-direnv profile links)
 .direnv/
 .claude/
+
+# local MCP server config — may hold tokens, never commit
+.mcp.json
