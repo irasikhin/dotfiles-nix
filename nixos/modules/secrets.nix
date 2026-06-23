@@ -28,6 +28,14 @@ _:
         owner = "ir";
         mode = "0400";
       };
+
+      kpass_config = {
+        sopsFile = ../../secrets/kpass.yaml;
+        key = "config";
+        owner = "ir";
+        mode = "0400";
+        path = "/home/ir/.config/kpass/config.toml";
+      };
     };
   };
 }

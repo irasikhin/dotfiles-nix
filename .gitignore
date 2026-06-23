@@ -13,6 +13,7 @@ secrets/*
 !secrets/secrets.yaml
 !secrets/vnc.yaml
 !secrets/ssh-hosts.yaml
+!secrets/kpass.yaml
 keys.txt
 
 # nix build output symlinks (system/home closures) — never belong in this repo.
