@@ -121,6 +121,7 @@ in
     monero-gui
     inputs.burl.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.sandboxer.packages.${pkgs.stdenv.hostPlatform.system}.default
+    mtr
   ];
 
   # Enable Nix-ld (to run non-NixOS binaries)

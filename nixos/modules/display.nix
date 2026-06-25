@@ -19,16 +19,19 @@ let
       # the theme's own cyan (#00F0FF) so the cyberpunk vibe stays but nothing is
       # red. Warning kept alerting via amber. A couple of contrast fixes
       # (DropdownText / HighlightText) since their backgrounds changed.
-      # Field / button / dropdown backgrounds (were #FF003C):
+      # Field / dropdown backgrounds (were #FF003C):
       LoginFieldBackgroundColor = "#2A2A3A";
       PasswordFieldBackgroundColor = "#2A2A3A";
-      LoginButtonBackgroundColor = "#2A2A3A";
       DropdownBackgroundColor = "#2A2A3A";
+      # Login button: gruvbox-style — neutral orange fill, dark text.
+      LoginButtonBackgroundColor = "#d65d0e";
+      LoginButtonTextColor = "#282828";
       # Text / icons (were #FF003C):
       DateTextColor = "#00F0FF";
-      SystemButtonsIconsColor = "#00F0FF";
-      SessionButtonTextColor = "#00F0FF";
-      VirtualKeyboardButtonTextColor = "#00F0FF";
+      # Button icons/text: gruvbox bright orange.
+      SystemButtonsIconsColor = "#fe8019";
+      SessionButtonTextColor = "#fe8019";
+      VirtualKeyboardButtonTextColor = "#fe8019";
       WarningColor = "#FFB000";
       # Accents / hovers (were #ca0174 magenta):
       HeaderTextColor = "#00F0FF";
@@ -39,9 +42,10 @@ let
       HighlightTextColor = "#21222C";
       HoverUserIconColor = "#00F0FF";
       HoverPasswordIconColor = "#00F0FF";
-      HoverSystemButtonsIconsColor = "#00F0FF";
-      HoverSessionButtonTextColor = "#00F0FF";
-      HoverVirtualKeyboardButtonTextColor = "#00F0FF";
+      # Button hovers: gruvbox bright yellow.
+      HoverSystemButtonsIconsColor = "#fabd2f";
+      HoverSessionButtonTextColor = "#fabd2f";
+      HoverVirtualKeyboardButtonTextColor = "#fabd2f";
       # Contrast fix: dropdown list bg is now dark, needs light text.
       DropdownTextColor = "#F8F8F2";
     };

@@ -126,7 +126,7 @@ set $ws_idea "idea"
 set $ws_obsidian "obsidian"
 set $ws_msg "msg"
 set $ws_thunderbird "thunderbird"
-set $ws_spotify "spotify"
+set $ws_music "music"
 set $ws_bruno "bruno"
 set $ws_dbeaver "dbeaver"
 set $ws_express "express"
@@ -149,7 +149,7 @@ bindsym --to-code $mod+i workspace $ws_idea
 bindsym --to-code $mod+o workspace $ws_obsidian
 bindsym --to-code $mod+m workspace $ws_msg
 bindsym --to-code $mod+t workspace $ws_thunderbird
-bindsym --to-code $mod+p workspace $ws_spotify
+bindsym --to-code $mod+p workspace $ws_music
 bindsym --to-code $mod+b workspace $ws_bruno
 bindsym --to-code $mod+d workspace $ws_dbeaver
 bindsym --to-code $mod+x workspace $ws_express
@@ -195,8 +195,10 @@ assign [class="(?i)^TelegramDesktop$"] $ws_msg
 assign [app_id="thunderbird"] $ws_thunderbird
 assign [class="(?i)^thunderbird$"] $ws_thunderbird
 
-assign [app_id="spotify"] $ws_spotify
-assign [class="(?i)^spotify$"] $ws_spotify
+# Supersonic (Fyne) exposes no Wayland app_id; pin it by window title (always ends "Supersonic").
+for_window [title=".*[Ss]upersonic$"] move --no-auto-back-and-forth container to workspace $ws_music
+assign [app_id="spotify"] $ws_music
+assign [class="(?i)^spotify$"] $ws_music
 
 assign [app_id="bruno"] $ws_bruno
 assign [class="(?i)^Bruno$"] $ws_bruno
@@ -239,6 +241,7 @@ exec --no-startup-id floorp
 exec --no-startup-id idea
 exec --no-startup-id telegram-desktop
 exec --no-startup-id thunderbird
+exec --no-startup-id supersonic-wayland
 
 # System info screen on its own workspace (live-refreshing fastfetch)
 exec --no-startup-id foot --app-id=sysinfo -e watch -ctn 2 fastfetch

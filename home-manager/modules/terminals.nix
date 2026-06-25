@@ -168,8 +168,15 @@
       bind -T copy-mode-vi y send -X copy-pipe-and-cancel 'wl-copy'
       bind -T copy-mode-vi Escape send -X cancel
       # copy on mouse drag-release, then exit copy-mode (no sticky highlight /
-      # stuck copy-mode state). Use Shift+drag for foot's native selection.
+      # stuck copy-mode state).
       bind -T copy-mode-vi MouseDragEnd1Pane send -X copy-pipe-and-cancel 'wl-copy'
+      # NOTE on mouse selection: `mouse on` (above) is kept for wheel-scroll into
+      # tmux history + pane mouse ops, so tmux grabs ALL mouse events. Plain
+      # double/triple click therefore uses tmux's built-in word/line select
+      # (copies to clipboard via copy-pipe-and-cancel, no lingering highlight)
+      # and is inherently racy with click/drag disambiguation. For RELIABLE,
+      # instant, *visible* selection hold Shift -> foot grabs the mouse and does
+      # native selection (Shift+dblclick = word, Shift+drag = range).
 
       # ---- Reload config ----
       bind r source-file ~/.config/tmux/tmux.conf \; display "tmux.conf reloaded"

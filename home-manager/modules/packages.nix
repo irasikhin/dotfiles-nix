@@ -323,7 +323,7 @@ in
     ledger
     ledger-live-desktop
     ledger-udev-rules
-    feishin
+    supersonic-wayland # native Wayland Navidrome/Subsonic client (Go/Fyne+MPV); main music app
     outline
     inputs.kpass.packages.${system}.default
     # claude/codex/opencode/pi wrappers; replace bare nixpkgs agent CLIs.
