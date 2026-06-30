@@ -10,9 +10,12 @@ let
   keepassSyncDir = "${nextcloudRoot}/keepass";
   # Active Floorp profile (see ~/.floorp/profiles.ini -> Default=1). Host-specific.
   floorpProfile = ".floorp/vbsa7lco.default";
-  # UI/content zoom for Floorp. Newer Floorp on Wayland ignores GDK_DPI_SCALE
-  # (shell.nix), so scale the browser explicitly via layout.css.devPixelsPerPx.
-  floorpUiScale = "1.4";
+  # Floorp UI/content scale via layout.css.devPixelsPerPx — an ABSOLUTE
+  # devicePixelRatio override (ignores GDK_DPI_SCALE, no double-scaling). Set to
+  # 1.0 to match google-chrome, which renders at the sway output scale (1.0). To
+  # make both browsers bigger-but-equal, raise this AND add a matching chrome
+  # --force-device-scale-factor.
+  floorpUiScale = "1.0";
 in
 {
   # Full icon theme so blueman-manager (and other GTK apps) resolve device
@@ -29,18 +32,44 @@ in
   programs.zathura.enable = true;
 
   # Custom URL scheme routing.
-  # - http/https open through Junction so links launched by *other* apps
-  #   (terminal, chat clients) pop an app picker instead of a hardcoded browser.
+  # - http/https open through Browsers (software.Browsers) so links launched by
+  #   *other* apps (terminal, chat clients) hit a configurable default browser
+  #   with per-URL rules, falling back to an app-picker to override per link.
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
-      "x-scheme-handler/http" = "re.sonny.Junction.desktop";
-      "x-scheme-handler/https" = "re.sonny.Junction.desktop";
+      "x-scheme-handler/http" = "software.Browsers.desktop";
+      "x-scheme-handler/https" = "software.Browsers.desktop";
       # Use the -pdf-mupdf entry: it declares MimeType=application/pdf, so it
       # shows up in mimeinfo.cache (Telegram et al. build their "open with"
       # list from that). The bare zathura.desktop has no MimeType line.
       "application/pdf" = "org.pwmt.zathura-pdf-mupdf.desktop";
     };
+  };
+
+  # Shadow the packaged software.Browsers.desktop to enlarge the picker. eDP-1 is
+  # 2560x1600 at sway output scale 1, so the chooser is tiny. On native WAYLAND
+  # GDK_SCALE does NOT enlarge (the compositor compensates via buffer_scale), so
+  # force the X11 backend (XWayland), where GDK_SCALE=2 actually doubles the
+  # window + icons. GDK_DPI_SCALE then enlarges the text so the window grows
+  # WIDER to fit its content (don't force a fixed sway width — that left empty
+  # side margins and clipped the settings panel; the window must auto-size).
+  xdg.desktopEntries."software.Browsers" = {
+    type = "Application";
+    name = "Browsers";
+    comment = "Open the right browser at the right time";
+    icon = "software.Browsers";
+    exec = "${pkgs.coreutils}/bin/env GDK_BACKEND=x11 GDK_SCALE=2 GDK_DPI_SCALE=1.3 ${pkgs.browsers}/bin/browsers %u";
+    terminal = false;
+    startupNotify = true;
+    categories = [
+      "Network"
+      "WebBrowser"
+    ];
+    mimeType = [
+      "x-scheme-handler/http"
+      "x-scheme-handler/https"
+    ];
   };
 
   xdg.configFile."autostart/nextcloud.desktop".text = ''

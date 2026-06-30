@@ -326,9 +326,8 @@ in
     supersonic-wayland # native Wayland Navidrome/Subsonic client (Go/Fyne+MPV); main music app
     outline
     inputs.kpass.packages.${system}.default
-    # claude/codex/opencode/pi wrappers; replace bare nixpkgs agent CLIs.
     inputs.llm-agents-wrappers.packages.${system}.default
-    junction
+    browsers # link/app chooser: default browser + per-URL rules + override picker
     tigervnc
     remmina
     virt-viewer
