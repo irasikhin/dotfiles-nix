@@ -12,8 +12,10 @@ logs.txt
 secrets/*
 !secrets/secrets.yaml
 !secrets/vnc.yaml
-!secrets/ssh-hosts.yaml
 !secrets/kpass.yaml
+# ssh host configs split by context (re-include the subdir, then its files)
+!secrets/ssh/
+!secrets/ssh/*.yaml
 keys.txt
 
 # nix build output symlinks (system/home closures) — never belong in this repo.

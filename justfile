@@ -27,11 +27,12 @@ upgrade: update switch home
 fmt:
     treefmt
 
-# edit the encrypted ssh host config, then re-render + apply
-edit-ssh:
-    sops secrets/ssh-hosts.yaml
-    git add secrets/ssh-hosts.yaml
-    git diff --quiet --cached secrets/ssh-hosts.yaml || nh os switch .
+# edit an encrypted ssh host file by context, then re-render + apply
+# usage: just edit-ssh home   |   just edit-ssh work
+edit-ssh ctx:
+    sops secrets/ssh/{{ctx}}.yaml
+    git add secrets/ssh/{{ctx}}.yaml
+    git diff --quiet --cached secrets/ssh/{{ctx}}.yaml || nh os switch .
 
 # edit the shared encrypted secrets file (stage after)
 edit-secrets:
@@ -45,7 +46,7 @@ edit-vnc:
 
 # re-encrypt all secrets to current .sops.yaml recipients (after adding a host/key)
 rekey:
-    sops updatekeys -y secrets/secrets.yaml secrets/ssh-hosts.yaml secrets/vnc.yaml
+    sops updatekeys -y secrets/secrets.yaml secrets/ssh/home.yaml secrets/ssh/work.yaml secrets/vnc.yaml
 
 # update all flake inputs (or `just update <input>`)
 update input="":

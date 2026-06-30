@@ -5,6 +5,13 @@ keys:
   # Host key derived from /etc/ssh/ssh_host_ed25519_key on irnixos.
   - &host_irnixos age16gg0v0gjlphfc8snmvjlld2ls8unwxhul4l7y0s38lrmd7ahfdmqm4fyrt
 creation_rules:
+  # SSH host configs split by context (secrets/ssh/{home,work}.yaml). The
+  # rule below ([^/]+) only matches top-level secrets/, not this subdir.
+  - path_regex: secrets/ssh/[^/]+\.yaml$
+    key_groups:
+      - age:
+          - *admin_dotfiles
+          - *host_irnixos
   - path_regex: secrets/[^/]+\.yaml$
     key_groups:
       - age:
