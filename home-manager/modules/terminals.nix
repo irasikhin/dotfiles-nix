@@ -177,6 +177,14 @@
       # and is inherently racy with click/drag disambiguation. For RELIABLE,
       # instant, *visible* selection hold Shift -> foot grabs the mouse and does
       # native selection (Shift+dblclick = word, Shift+drag = range).
+      # REMOTE (ssh'd) tmux: Shift+drag is THE copy gesture. Nested
+      # foot->tmux(local)->ssh->tmux(remote) means a plain drag is forwarded to
+      # the remote copy-mode -> one ssh round-trip *per mouse move* = laggy,
+      # jittery, drops the selection. Shift+drag bypasses both tmuxes: foot
+      # selects the rendered glyphs locally -> instant, visible cream block,
+      # copies to the LOCAL clipboard (needs foot selection-target=both, set in
+      # programs.foot below). Remote mouse stays on, so wheel-scroll / pane mouse
+      # ops on the remote keep working.
 
       # ---- Reload config ----
       bind r source-file ~/.config/tmux/tmux.conf \; display "tmux.conf reloaded"
@@ -209,6 +217,12 @@
       main = {
         font = "FiraCode Nerd Font:size=18";
         shell = "${pkgs.zsh}/bin/zsh";
+        # copy-on-select into clipboard AND primary: Shift+drag (incl. inside an
+        # ssh'd tmux) and plain drag outside tmux land the selection in the
+        # clipboard immediately. The highlight stays = visual "what got copied";
+        # clear it with a single left click. Default is `primary` (clipboard
+        # apps / Ctrl+Shift+V saw nothing → felt uncopyable).
+        selection-target = "both";
       };
       colors-dark = {
         background = "1d2021";
