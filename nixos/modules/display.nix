@@ -91,10 +91,10 @@ in
   # connectors, independent of sway, so detection is reliable. Also covers the
   # login screen (greetd/regreet), where sway isn't running yet and logind
   # handles the lid.
-  services.logind = {
-    lidSwitch = "suspend";
-    lidSwitchDocked = "ignore";
-    lidSwitchExternalPower = "ignore";
+  services.logind.settings.Login = {
+    HandleLidSwitch = "suspend";
+    HandleLidSwitchDocked = "ignore";
+    HandleLidSwitchExternalPower = "ignore";
   };
 
   # Wake-on-USB for the clamshell "closed first, plugged in later" scenario:

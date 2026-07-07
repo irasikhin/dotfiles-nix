@@ -90,6 +90,7 @@ in
     clang
     clang-tools
     python312Packages.psycopg2
+    postgresql_18
     home-manager
     git
     ntfs3g

@@ -195,8 +195,8 @@ assign [class="(?i)^TelegramDesktop$"] $ws_msg
 assign [app_id="thunderbird"] $ws_thunderbird
 assign [class="(?i)^thunderbird$"] $ws_thunderbird
 
-# Supersonic (Fyne) exposes no Wayland app_id; pin it by window title (always ends "Supersonic").
-for_window [title=".*[Ss]upersonic$"] move --no-auto-back-and-forth container to workspace $ws_music
+assign [app_id="feishin"] $ws_music
+assign [class="(?i)^feishin$"] $ws_music
 assign [app_id="spotify"] $ws_music
 assign [class="(?i)^spotify$"] $ws_music
 
@@ -241,7 +241,7 @@ exec --no-startup-id floorp
 exec --no-startup-id idea
 exec --no-startup-id telegram-desktop
 exec --no-startup-id thunderbird
-exec --no-startup-id supersonic-wayland
+exec --no-startup-id feishin
 
 # System info screen on its own workspace (live-refreshing fastfetch)
 exec --no-startup-id foot --app-id=sysinfo -e watch -ctn 2 fastfetch

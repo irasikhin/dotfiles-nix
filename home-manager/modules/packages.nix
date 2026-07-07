@@ -6,8 +6,9 @@
 }:
 
 let
-  myHelm = pkgs.wrapHelm pkgs.kubernetes-helm {
-    plugins = with pkgs.kubernetes-helmPlugins; [
+  pkgsHelm3 = import inputs.nixpkgs-helm3 { inherit system; };
+  myHelm = pkgsHelm3.wrapHelm pkgsHelm3.kubernetes-helm {
+    plugins = with pkgsHelm3.kubernetes-helmPlugins; [
       helm-diff
       helm-secrets
       helm-s3
@@ -30,6 +31,14 @@ let
   taskwarriorAsTw = pkgs.runCommand "taskwarrior-tw" { } ''
     mkdir -p $out/bin
     ln -s ${pkgs.taskwarrior3}/bin/task $out/bin/tw
+  '';
+  postgresqlClient = pkgs.runCommand "postgresql-client-${pkgs.postgresql.version}" { } ''
+    mkdir -p $out/bin
+    for b in psql pg_dump pg_dumpall pg_restore pg_isready \
+             createdb dropdb createuser dropuser \
+             clusterdb reindexdb vacuumdb pgbench; do
+      ln -s ${pkgs.postgresql}/bin/$b $out/bin/$b
+    done
   '';
   express = pkgs.callPackage ../pkgs/express.nix {
     src = inputs.express-appimage;
@@ -139,7 +148,7 @@ in
     sshpass
     oath-toolkit
     yamllint
-    postgresql
+    postgresqlClient
     obsidian
     ticktick
     yq-go
@@ -174,7 +183,7 @@ in
     terranix
     terragrunt
     tflint
-    nixfmt-rfc-style
+    nixfmt
     npins
     treefmt
     jdt-language-server
@@ -258,7 +267,7 @@ in
     jujutsu
     gammastep
     clipse
-    swww
+    awww
     wlogout
     presenterm
     lazysql
@@ -270,6 +279,15 @@ in
     doggo
     popeye
     kubectl-tree
+    kubectl-neat
+    kubectl-view-secret
+    kubectl-images # list images per pod/container
+    kubectl-klock # live-updating `get` (better watch)
+    kubectl-df-pv # disk usage per PersistentVolume
+    kubectl-node-shell # root shell on a node
+    kubectl-explore # fuzzy API-schema explorer
+    kubectl-doctor # cluster health/diagnostics scan
+    kubecolor # colorized kubectl output
     pgcli
     onefetch
     tokei
@@ -323,7 +341,7 @@ in
     ledger
     ledger-live-desktop
     ledger-udev-rules
-    supersonic-wayland # native Wayland Navidrome/Subsonic client (Go/Fyne+MPV); main music app
+    feishin
     outline
     inputs.kpass.packages.${system}.default
     inputs.llm-agents-wrappers.packages.${system}.default

@@ -42,6 +42,8 @@
     "vt.global_cursor_default=0"
   ];
 
+  boot.kernel.sysctl."fs.inotify.max_queued_events" = 1048576;
+
   # Set system state version (important for maintaining compatibility)
   system.stateVersion = "24.05";
 
