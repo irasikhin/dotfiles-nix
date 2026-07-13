@@ -248,6 +248,11 @@ in
         error_symbol = "[❯](bold red)";
       };
 
+      directory = {
+        truncation_length = 0;
+        truncate_to_repo = false;
+      };
+
       package.disabled = true;
     };
   };
