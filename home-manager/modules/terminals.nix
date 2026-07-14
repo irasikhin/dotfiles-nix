@@ -1,6 +1,83 @@
 { pkgs, lib, ... }:
 
+let
+  multiplexer = "zellij";
+in
 {
+  programs.zellij = {
+    enable = multiplexer == "zellij";
+
+    settings = {
+      theme = "gruvbox";
+      default_shell = "${pkgs.zsh}/bin/zsh";
+      pane_frames = false;
+      mouse_mode = true;
+      show_startup_tips = false;
+
+      copy_command = "wl-copy";
+      copy_clipboard = "system";
+      copy_on_select = true;
+
+      support_kitty_keyboard_protocol = false;
+
+      session_serialization = true;
+      pane_viewport_serialization = true;
+      scrollback_lines_to_serialize = 10000;
+    };
+
+    layouts.default = ''
+      layout {
+        pane
+        pane size=1 borderless=true {
+          plugin location="zellij:compact-bar" {
+            tooltip "F1"
+          }
+        }
+      }
+    '';
+
+    themes.gruvbox = ''
+      themes {
+        gruvbox {
+          fg 212 190 152
+          bg 29 32 33
+          black 40 40 40
+          red 234 105 98
+          green 169 182 101
+          yellow 216 166 87
+          blue 125 174 163
+          magenta 211 134 155
+          orange 231 138 78
+          cyan 137 180 130
+          white 168 153 132
+        }
+      }
+    '';
+
+    extraConfig = ''
+      keybinds {
+        shared_except "locked" {
+          bind "Alt g" { Run "lazygit" { floating true; close_on_exit true; }; }
+        }
+      }
+    '';
+  };
+
+  programs.zsh.initContent = lib.mkOrder 200 (
+    if multiplexer == "tmux" then
+      ''
+        if [[ $- == *i* && -z "$TMUX" && -z "$ZELLIJ" ]]; then
+          exec tmux new-session -A -s main
+        fi
+      ''
+    else
+      ''
+        if [[ $- == *i* && -z "$ZELLIJ" && -z "$TMUX" ]]; then
+          exec zellij attach --create main
+        fi
+      ''
+  );
+
   # tmux-which-key ships only config.example.yaml in the read-only nix store;
   # its runtime copy lands read-only (cp keeps the store's 0444), so autobuild
   # can't overwrite init.tmux and the plugin aborts (set -e -> returns 1, menu

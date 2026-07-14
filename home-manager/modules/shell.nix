@@ -127,13 +127,6 @@ in
     };
 
     initContent = ''
-      # Auto-attach/-create tmux on interactive shells.
-      # Guard: interactive only, and not already inside tmux (panes set $TMUX).
-      # exec replaces the shell, so quitting tmux closes the terminal.
-      if [[ $- == *i* && -z "$TMUX" ]]; then
-        exec tmux new-session -A -s main
-      fi
-
       source ${homeDir}/jira.sh;
 
       bindkey -e
