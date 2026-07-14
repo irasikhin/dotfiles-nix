@@ -125,11 +125,24 @@ in
       swaynotificationcenter
     ];
   };
+  nixpkgs.overlays = [
+    (_final: prev: {
+      xdg-desktop-portal-wlr = prev.xdg-desktop-portal-wlr.overrideAttrs (old: {
+        postPatch = (old.postPatch or "") + ''
+          substituteInPlace include/pipewire_screencast.h \
+            --replace-fail "#define XDPW_PWR_BUFFERS 2" "#define XDPW_PWR_BUFFERS 4" \
+            --replace-fail "#define XDPW_PWR_BUFFERS_MIN 2" "#define XDPW_PWR_BUFFERS_MIN 4"
+        '';
+      });
+    })
+  ];
+
   xdg.portal = {
     enable = true;
     xdgOpenUsePortal = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
     ];
+    wlr.settings.screencast.chooser_type = "none";
   };
 }
