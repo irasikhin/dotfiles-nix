@@ -31,8 +31,7 @@ stdenv.mkDerivation (finalAttrs: {
     runHook preInstall
 
     mkdir -p $out/libexec/smolvm
-    cp -r lib agent-rootfs storage-template.ext4 overlay-template.ext4 smolvm-bin \
-      $out/libexec/smolvm/
+    cp -r lib agent-rootfs smolvm-bin $out/libexec/smolvm/
     chmod +x $out/libexec/smolvm/smolvm-bin
 
     makeWrapper $out/libexec/smolvm/smolvm-bin $out/bin/smolvm \
