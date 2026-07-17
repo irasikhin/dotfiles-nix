@@ -32,6 +32,7 @@ let
   express = pkgs.callPackage ../pkgs/express.nix {
     src = inputs.express-appimage;
   };
+  yaamp = pkgs.callPackage ../pkgs/yaamp.nix { };
   ideaPlugins = inputs.nix-jetbrains-plugins.plugins.${system}.idea."${pkgs.jetbrains.idea.version}";
   ideaWithPlugins = pkgs.jetbrains.plugins.addPlugins pkgs.jetbrains.idea (
     map (id: ideaPlugins.${id}) [
@@ -107,6 +108,7 @@ in
     maven
     telegram-desktop
     express
+    yaamp
     font-awesome
     ideaWithPlugins
     acpi
