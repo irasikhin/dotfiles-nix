@@ -38,17 +38,105 @@
     themes.gruvbox = ''
       themes {
         gruvbox {
-          fg 212 190 152
-          bg 29 32 33
-          black 40 40 40
-          red 234 105 98
-          green 169 182 101
-          yellow 216 166 87
-          blue 125 174 163
-          magenta 211 134 155
-          orange 231 138 78
-          cyan 137 180 130
-          white 168 153 132
+          text_unselected {
+            base 168 153 132
+            background 40 40 40
+            emphasis_0 231 138 78
+            emphasis_1 137 180 130
+            emphasis_2 169 182 101
+            emphasis_3 211 134 155
+          }
+          text_selected {
+            base 29 32 33
+            background 212 190 152
+            emphasis_0 231 138 78
+            emphasis_1 137 180 130
+            emphasis_2 169 182 101
+            emphasis_3 211 134 155
+          }
+          ribbon_unselected {
+            base 40 40 40
+            background 212 190 152
+            emphasis_0 234 105 98
+            emphasis_1 168 153 132
+            emphasis_2 125 174 163
+            emphasis_3 211 134 155
+          }
+          ribbon_selected {
+            base 40 40 40
+            background 169 182 101
+            emphasis_0 234 105 98
+            emphasis_1 231 138 78
+            emphasis_2 211 134 155
+            emphasis_3 125 174 163
+          }
+          table_title {
+            base 169 182 101
+            emphasis_0 231 138 78
+            emphasis_1 137 180 130
+            emphasis_2 169 182 101
+            emphasis_3 211 134 155
+          }
+          table_cell_unselected {
+            base 168 153 132
+            background 40 40 40
+            emphasis_0 231 138 78
+            emphasis_1 137 180 130
+            emphasis_2 169 182 101
+            emphasis_3 211 134 155
+          }
+          table_cell_selected {
+            base 168 153 132
+            background 29 32 33
+            emphasis_0 231 138 78
+            emphasis_1 137 180 130
+            emphasis_2 169 182 101
+            emphasis_3 211 134 155
+          }
+          list_unselected {
+            base 168 153 132
+            background 40 40 40
+            emphasis_0 231 138 78
+            emphasis_1 137 180 130
+            emphasis_2 169 182 101
+            emphasis_3 211 134 155
+          }
+          list_selected {
+            base 168 153 132
+            background 29 32 33
+            emphasis_0 231 138 78
+            emphasis_1 137 180 130
+            emphasis_2 169 182 101
+            emphasis_3 211 134 155
+          }
+          frame_selected {
+            base 169 182 101
+            emphasis_0 231 138 78
+            emphasis_1 137 180 130
+            emphasis_2 211 134 155
+            emphasis_3 0
+          }
+          frame_highlight {
+            base 231 138 78
+            emphasis_0 211 134 155
+            emphasis_1 0
+            emphasis_2 231 138 78
+            emphasis_3 231 138 78
+          }
+          exit_code_success {
+            base 169 182 101
+            emphasis_0 137 180 130
+            emphasis_1 40 40 40
+            emphasis_2 211 134 155
+            emphasis_3 125 174 163
+          }
+          exit_code_error {
+            base 234 105 98
+            emphasis_0 216 166 87
+            emphasis_1 0
+            emphasis_2 0
+            emphasis_3 0
+          }
         }
       }
     '';
