@@ -252,7 +252,7 @@ in
     trivy
     infracost
     terraform-docs
-    checkov
+    # checkov  # broken: pins aiohttp<3.14.0, nixpkgs ships 3.14.1
     kubeshark
     ktop
     jujutsu

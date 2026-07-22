@@ -25,11 +25,6 @@
     config = {
       allowUnfree = true;
       allowUnfreePredicate = _: true;
-      # checkov pulls python ecdsa transitively; CVE-2024-23342 (Minerva
-      # timing side-channel) is irrelevant for a local IaC scanner.
-      permittedInsecurePackages = [
-        "python3.13-ecdsa-0.19.2"
-      ];
     };
   };
 
