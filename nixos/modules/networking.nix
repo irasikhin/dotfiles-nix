@@ -35,7 +35,7 @@
     https_proxy = "http://127.0.0.1:9999";
     http_proxy = "http://127.0.0.1:9999";
     all_proxy = "http://127.0.0.1:9999";
-    no_proxy = "mirror.sjtu.edu.cn,mirrors.ustc.edu.cn,mirrors.cernet.edu.cn";
+    no_proxy = "mirror.sjtu.edu.cn,mirrors.ustc.edu.cn,mirrors.cernet.edu.cn,download-cdn.jetbrains.com";
   };
 
   # Tailscale
