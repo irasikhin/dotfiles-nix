@@ -26,7 +26,7 @@ in
   home.shellAliases = {
     l = "eza";
     ls = "eza";
-    cat = "bat";
+    cat = "bat --style=plain";
     hs = "fc -rl 1 | fzf";
     ld = "lazydocker";
     psg = "procs";
