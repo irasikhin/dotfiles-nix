@@ -28,9 +28,12 @@
 
     layouts.default = ''
       layout {
+        pane size=1 borderless=true {
+          plugin location="zellij:tab-bar"
+        }
         pane
         pane size=1 borderless=true {
-          plugin location="zellij:compact-bar"
+          plugin location="zellij:status-bar"
         }
       }
     '';
