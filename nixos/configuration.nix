@@ -58,6 +58,12 @@
   nix.settings = {
     max-jobs = 4;
     cores = 4;
+    connect-timeout = 5;
+    substituters = [
+      "https://mirror.sjtu.edu.cn/nix-channels/store?priority=10"
+      "https://mirrors.ustc.edu.cn/nix-channels/store?priority=11"
+      "https://mirrors.cernet.edu.cn/nix-channels/store?priority=12"
+    ];
   };
 
   # Throttle nix-daemon via cgroups: low CPU/IO priority, memory cap.
