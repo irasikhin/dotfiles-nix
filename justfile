@@ -52,17 +52,35 @@ rekey:
 update input="":
     nix flake update {{input}}
 
+# update only the burl input
+update-burl: (update "burl")
+
+# update only the express-appimage input
+update-express: (update "express-appimage")
+
 # update only the kpass input
 update-kpass: (update "kpass")
+
+# update only the llm-agents-wrappers input
+update-llm-agents: (update "llm-agents-wrappers")
 
 # update only the sandboxer input
 update-sandboxer: (update "sandboxer")
 
+# update the burl input, then rebuild the system
+upgrade-burl: update-burl switch
+
+# update the express-appimage input, then rebuild Home Manager
+upgrade-express: update-express home
+
 # update the kpass input, then rebuild system + Home Manager
 upgrade-kpass: update-kpass switch home
 
-# update the sandboxer input, then rebuild system + Home Manager
-upgrade-sandboxer: update-sandboxer switch home
+# update the llm-agents-wrappers input, then rebuild Home Manager
+upgrade-llm-agents: update-llm-agents home
+
+# update the sandboxer input, then rebuild the system
+upgrade-sandboxer: update-sandboxer switch
 
 # remove old generations + collect garbage
 clean:
