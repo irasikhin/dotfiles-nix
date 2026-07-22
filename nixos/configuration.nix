@@ -62,8 +62,8 @@
 
   # Throttle nix-daemon via cgroups: low CPU/IO priority, memory cap.
   systemd.services.nix-daemon.serviceConfig = {
-    CPUWeight = 20;
-    IOWeight = 20;
+    CPUWeight = 50;
+    IOWeight = 50;
     MemoryHigh = "16G";
     MemoryMax = "22G";
   };
