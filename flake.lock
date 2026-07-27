@@ -515,11 +515,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1784639517,
-        "narHash": "sha256-RU+CLiapHmVCo1obKEv+vdLOcdQL3CLMg09NhlYuU9Y=",
+        "lastModified": 1785094664,
+        "narHash": "sha256-IxjlHEZd1waxG9Mpb0ek0e81m7AunV7Z5/M/hdI0GbE=",
         "owner": "irasikhin",
         "repo": "sandboxer",
-        "rev": "fb881f3bfea3dc6efa8710e845c4b1217502a0e2",
+        "rev": "816a1bcc58ddc41a90430ec61b49648595ed5aae",
         "type": "github"
       },
       "original": {
