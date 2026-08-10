@@ -243,7 +243,6 @@ in
     gum
     mods
     duckdb
-    harlequin
     visidata
     miller
     websocat

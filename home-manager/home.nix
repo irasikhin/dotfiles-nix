@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   ...
 }:
 
@@ -38,19 +37,6 @@
   };
   home.file.".ideavimrc".source = ./ideavimrc;
 
-  # Disable bundled Code With Me plugin (broken descriptor in nix-repacked IDEA).
-  # Appends to disabled_plugins.txt non-destructively for every installed IDEA
-  # version; IDE UI still manages the file. Version-agnostic.
-  home.activation.disableCodeWithMe = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for d in "${config.xdg.configHome}/JetBrains"/IntelliJIdea*; do
-      [ -d "$d" ] || continue
-      f="$d/disabled_plugins.txt"
-      [ -e "$f" ] || touch "$f"
-      if ! grep -qxF "com.jetbrains.remoteDevelopment" "$f"; then
-        echo "com.jetbrains.remoteDevelopment" >> "$f"
-      fi
-    done
-  '';
   programs.ghostty = {
     enable = false;
   };
