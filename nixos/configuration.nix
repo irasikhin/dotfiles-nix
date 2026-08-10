@@ -46,7 +46,7 @@
   boot.kernel.sysctl = {
     "fs.inotify.max_queued_events" = 1048576;
     "kernel.perf_event_paranoid" = 1;
-    "kernel.kptr_restrict" = 0;
+    "kernel.kptr_restrict" = 1;
   };
 
   # Set system state version (important for maintaining compatibility)
