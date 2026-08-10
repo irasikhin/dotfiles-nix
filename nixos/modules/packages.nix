@@ -122,8 +122,7 @@ in
     monero-gui
     inputs.burl.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.sandboxer.packages.${pkgs.stdenv.hostPlatform.system}.default
-    inputs.sandboxer.packages.${pkgs.stdenv.hostPlatform.system}.smolvm
-    (pkgs.callPackage ../pkgs/microsandbox.nix { })
+    inputs.sandboxer.packages.${pkgs.stdenv.hostPlatform.system}.microsandbox
     mtr
   ];
 
