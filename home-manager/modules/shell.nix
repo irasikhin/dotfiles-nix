@@ -32,6 +32,8 @@ in
     psg = "procs";
     bw = "bandwhich";
     jv = "jless";
+    ljj = "lazyjj";
+    jjf = "jj-fzf";
     sgp = "ast-grep";
     arthas = "jbang arthas@alibaba/arthas";
   };
@@ -77,6 +79,52 @@ in
     };
   };
 
+  programs.jujutsu = {
+    enable = true;
+    settings = {
+      user = {
+        name = "Ivan Rasikhin";
+        email = "i.rasikhin@gmail.com";
+      };
+
+      ui = {
+        default-command = [ "log" ];
+        diff-formatter = ":git";
+        pager = "delta";
+        merge-editor = "mergiraf";
+      };
+
+      aliases = {
+        l = [ "log" ];
+        la = [
+          "log"
+          "-r"
+          "all()"
+        ];
+        dt = [
+          "diff"
+          "--tool"
+          "difft"
+        ];
+        tug = [
+          "bookmark"
+          "advance"
+          "--to"
+          "@-"
+        ];
+        push = [
+          "git"
+          "push"
+        ];
+        fetch = [
+          "git"
+          "fetch"
+          "--all-remotes"
+        ];
+      };
+    };
+  };
+
   programs.zoxide = {
     enable = true;
     enableZshIntegration = true;
@@ -99,6 +147,7 @@ in
       enable = true;
       plugins = [
         "git"
+        "jj"
         "docker"
         "fzf"
         "kubectl"
@@ -247,6 +296,21 @@ in
       };
 
       package.disabled = true;
+
+      format = "$username$hostname$localip$shlvl$singularity$kubernetes$directory\${custom.jj}$all";
+
+      custom.jj = {
+        description = "jj working-copy change";
+        shell = [
+          "${pkgs.bash}/bin/bash"
+          "--noprofile"
+          "--norc"
+        ];
+        when = ''d=$PWD; while [ -n "$d" ]; do [ -d "$d/.jj" ] && exit 0; d=''${d%/*}; done; exit 1'';
+        command = ''jj --ignore-working-copy log --no-graph --color never -r @ -T 'separate(" ", change_id.shortest(4), bookmarks, if(conflict, "conflict"), if(divergent, "divergent"), if(empty, "(empty)"), description.first_line())' '';
+        format = "on [$output]($style) ";
+        style = "bold purple";
+      };
     };
   };
 }

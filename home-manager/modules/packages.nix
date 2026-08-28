@@ -255,6 +255,8 @@ in
     kubeshark
     ktop
     jujutsu
+    jjui
+    jj-fzf
     gammastep
     clipse
     awww
