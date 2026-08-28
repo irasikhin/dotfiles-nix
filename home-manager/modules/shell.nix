@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   config,
   flakeDir,
   ...
@@ -82,11 +83,6 @@ in
   programs.jujutsu = {
     enable = true;
     settings = {
-      user = {
-        name = "Ivan Rasikhin";
-        email = "i.rasikhin@gmail.com";
-      };
-
       ui = {
         default-command = [ "log" ];
         diff-formatter = ":git";
@@ -124,6 +120,26 @@ in
       };
     };
   };
+
+  home.activation.jujutsuIdentity = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    jjConfD="${config.xdg.configHome}/jj/conf.d"
+    jjIdentity="$jjConfD/00-identity.toml"
+    jjName=$(${lib.getExe pkgs.git} config --global --get user.name || true)
+    jjEmail=$(${lib.getExe pkgs.git} config --global --get user.email || true)
+
+    if [[ -n $jjName && -n $jjEmail ]]; then
+      jjName=''${jjName//\\/\\\\}
+      jjName=''${jjName//\"/\\\"}
+      jjEmail=''${jjEmail//\\/\\\\}
+      jjEmail=''${jjEmail//\"/\\\"}
+      run mkdir -p "$jjConfD"
+      if [[ ! -v DRY_RUN ]]; then
+        printf '[user]\nname = "%s"\nemail = "%s"\n' "$jjName" "$jjEmail" > "$jjIdentity"
+      fi
+    else
+      run rm -f "$jjIdentity"
+    fi
+  '';
 
   programs.zoxide = {
     enable = true;
