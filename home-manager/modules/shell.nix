@@ -243,7 +243,7 @@ in
         listMavenCompletions   # omz: fills $reply with goals/flags/modules
         compadd -a reply
       }
-      compdef _mvn mvn mvnw mvn-color mvn-or-mvnw
+      compdef _mvn mvn mvn4 mvnw mvn-color mvn-or-mvnw
 
       # terraform-style tools act as their own completer via the bash
       # `complete -C` protocol; bashcompinit bridges them into compsys

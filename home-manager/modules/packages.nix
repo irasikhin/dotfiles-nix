@@ -29,6 +29,19 @@ let
       ln -s ${pkgs.postgresql}/bin/$b $out/bin/$b
     done
   '';
+  maven4AsMvn4 =
+    pkgs.runCommand "maven4-mvn4-${pkgs.maven_4.version}"
+      {
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+      }
+      ''
+        mkdir -p $out/bin
+        ln -s ${pkgs.maven_4}/bin/mvn $out/bin/mvn4
+        ln -s ${pkgs.maven_4}/bin/mvnDebug $out/bin/mvnDebug4
+        makeWrapper ${pkgs.maven_4}/bin/mvn $out/bin/mvnup --add-flags --up
+        makeWrapper ${pkgs.maven_4}/bin/mvn $out/bin/mvnenc --add-flags --enc
+        makeWrapper ${pkgs.maven_4}/bin/mvn $out/bin/mvnsh --add-flags --shell
+      '';
   express = pkgs.callPackage ../pkgs/express.nix {
     src = inputs.express-appimage;
   };
@@ -106,6 +119,7 @@ in
     wl-clipboard
     networkmanagerapplet
     maven
+    maven4AsMvn4
     telegram-desktop
     express
     yaamp
