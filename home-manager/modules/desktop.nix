@@ -32,14 +32,14 @@ in
   programs.zathura.enable = true;
 
   # Custom URL scheme routing.
-  # - http/https open through Browsers (software.Browsers) so links launched by
-  #   *other* apps (terminal, chat clients) hit a configurable default browser
-  #   with per-URL rules, falling back to an app-picker to override per link.
+  # - http/https open Floorp directly (the default browser).
+  # - The `browsers` picker (software.Browsers) is still installed and can be
+  #   invoked on demand via a sway keybinding to choose a browser per link.
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
-      "x-scheme-handler/http" = "software.Browsers.desktop";
-      "x-scheme-handler/https" = "software.Browsers.desktop";
+      "x-scheme-handler/http" = "floorp.desktop";
+      "x-scheme-handler/https" = "floorp.desktop";
       # Use the -pdf-mupdf entry: it declares MimeType=application/pdf, so it
       # shows up in mimeinfo.cache (Telegram et al. build their "open with"
       # list from that). The bare zathura.desktop has no MimeType line.
