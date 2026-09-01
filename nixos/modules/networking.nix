@@ -30,12 +30,15 @@
   services.v2raya.enable = true;
   services.v2raya.cliPackage = pkgs.xray;
 
-  # Route nix-daemon fetches through v2raya (JetBrains/GitHub release CDNs geo-blocked in RU)
+  # Route nix-daemon fetches through v2raya by default. GitHub source tarballs
+  # and the NixOS binary cache + mirrors are reachable directly and bypass the
+  # proxy. JetBrains is deliberately NOT bypassed: its CDN is geo-blocked in RU,
+  # so IntelliJ IDEA must download through the proxy.
   systemd.services.nix-daemon.environment = {
     https_proxy = "http://127.0.0.1:9999";
     http_proxy = "http://127.0.0.1:9999";
     all_proxy = "http://127.0.0.1:9999";
-    no_proxy = "mirror.sjtu.edu.cn,mirrors.ustc.edu.cn,mirrors.cernet.edu.cn,download-cdn.jetbrains.com";
+    no_proxy = "github.com,githubusercontent.com,github.io,nixos.org,cache.nixos.org,mirror.sjtu.edu.cn,mirrors.ustc.edu.cn,mirrors.cernet.edu.cn";
   };
 
   # Tailscale
