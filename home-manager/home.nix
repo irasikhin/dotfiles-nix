@@ -10,6 +10,7 @@
     ./modules/terminals.nix
     ./modules/services.nix
     ./modules/desktop.nix
+    ./modules/pi.nix
   ];
 
   home.username = "ir";

@@ -61,6 +61,17 @@
 
     llm-agents-wrappers.url = "github:irasikhin/llm-agents-wrappers";
     llm-agents-wrappers.inputs.nixpkgs.follows = "nixpkgs";
+
+    # pi (AI coding agent) + dsh (deepseek-harness) + the rest of the agent
+    # catalog. Renamed from llm-agents.nix to avoid clashing with the
+    # llm-agents-wrappers input above.
+    llm-agents.url = "github:numtide/llm-agents.nix";
+    llm-agents.inputs.nixpkgs.follows = "nixpkgs";
+
+    # pi-pack: skills/extensions/prompts/themes for pi (home-manager module).
+    pi-pack.url = "github:fosskar/pi-pack";
+    pi-pack.inputs.nixpkgs.follows = "nixpkgs";
+    pi-pack.inputs.llm-agents.follows = "llm-agents";
   };
 
   outputs =
@@ -134,6 +145,7 @@
           modules = [
             ./home-manager/home.nix
             nix-index-database.homeModules.nix-index
+            inputs.pi-pack.homeModules.default
           ];
         };
       };

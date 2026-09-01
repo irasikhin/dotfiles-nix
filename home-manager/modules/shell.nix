@@ -63,10 +63,19 @@ in
   programs.git = {
     enable = true;
     signing.format = null;
+    # Contributed ignore rules. `.sediment/` is appended by the pi-pack
+    # sediment-memory extension (programs.pi-pack), so keep this file declarative
+    # to avoid home-manager clobbering a hand-edited copy.
+    ignores = [ "**/.claude/settings.local.json" ];
     settings = {
       merge.conflictStyle = "zdiff3";
     };
   };
+
+  # Take over the pre-existing hand-written ~/.config/git/ignore (its content
+  # is now in programs.git.ignores above) so home-manager can manage the file
+  # together with the pi-pack contribution.
+  xdg.configFile."git/ignore".force = true;
 
   programs.delta = {
     enable = true;
