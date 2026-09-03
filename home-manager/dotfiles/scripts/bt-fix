@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+# bt-fix — reset a stuck Bluetooth stack (rfkill, BlueZ, USB dongle, PipeWire).
+#
+# Fixes: no sound from a connected headset, Bluetooth soft-blocked by rfkill,
+# a stuck controller/dongle, or a sticky WirePlumber profile ("off").
+#
+# Usage:
+#   bt-fix               # reset + reconnect the connected audio device
+#   bt-fix <MAC>         # reset + reconnect a specific device
+#   bt-fix none          # reset only, skip reconnect
+#   bt-fix --usb         # also power-cycle the USB Bluetooth dongle
+#   bt-fix --usb <MAC>   # combine flags
+#
+# Requires sudo for `systemctl restart bluetooth` (and `--usb`).
+
+set -euo pipefail
+
+state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/wireplumber"
+
+# ---- parse arguments ----
+do_usb=0
+dev=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --usb|--full) do_usb=1 ;;
+    none) dev="none" ;;
+    *) dev="$1" ;;
+  esac
+  shift
+done
+
+# ---- detect device(s) to reconnect ----
+declare -a devs=()
+if [[ "$dev" == "none" ]]; then
+  : # skip reconnect
+elif [[ -n "$dev" ]]; then
+  devs+=("$dev")
+else
+  # Auto-detect: audio-class devices connected right now (the stuck ones).
+  # Filter by the BlueZ Icon property ("audio-headset", "audio-card", ...).
+  while read -r mac; do
+    icon=$(bluetoothctl info "$mac" 2>/dev/null | awk -F': ' '/Icon:/{print $2; exit}')
+    case "$icon" in
+      audio-*) devs+=("$mac") ;;
+    esac
+  done < <(bluetoothctl devices Connected 2>/dev/null | awk '{print $2}')
+  if [[ ${#devs[@]} -eq 0 ]]; then
+    echo "bt-fix: no connected audio device found; pass a MAC (bt-fix <MAC>) or 'none'" >&2
+  fi
+fi
+
+# ---- 1. unblock rfkill (soft-block after updates/suspend) ----
+echo "== rfkill unblock bluetooth =="
+rfkill unblock bluetooth 2>/dev/null || sudo rfkill unblock bluetooth 2>/dev/null || true
+
+# ---- 2. stop the audio stack ----
+echo "== stopping audio stack =="
+systemctl --user stop wireplumber pipewire pipewire-pulse 2>/dev/null || true
+
+# ---- 3. (optional) power-cycle the USB dongle ----
+if [[ $do_usb -eq 1 ]]; then
+  echo "== resetting USB Bluetooth dongle =="
+  for hci in /sys/class/bluetooth/hci*; do
+    [[ "$hci" =~ /hci[0-9]+$ ]] || continue
+    iface=$(readlink -f "$hci/device" 2>/dev/null) || continue
+    # Only USB adapters: the device node is the interface's parent dir.
+    [[ "$iface" == */usb* ]] || continue
+    usb_dev=$(dirname "$iface")
+    if [[ -f "$usb_dev/authorized" ]]; then
+      echo "   resetting $usb_dev"
+      echo 0 | sudo tee "$usb_dev/authorized" >/dev/null
+      sleep 1
+      echo 1 | sudo tee "$usb_dev/authorized" >/dev/null
+      sleep 2
+    fi
+  done
+fi
+
+# ---- 4. restart BlueZ ----
+echo "== restarting BlueZ (sudo) =="
+sudo systemctl restart bluetooth
+sleep 2
+
+# ---- 5. power on the controller ----
+echo "== powering on controller =="
+bluetoothctl power on 2>/dev/null || true
+
+# ---- 6. clear sticky WirePlumber state ----
+echo "== clearing sticky WirePlumber state =="
+rm -f \
+  "$state_dir/default-profile" \
+  "$state_dir/bluetooth-autoswitch" \
+  "$state_dir/default-routes" \
+  "$state_dir/stream-properties"
+
+# ---- 7. start the audio stack ----
+echo "== starting audio stack =="
+systemctl --user start pipewire pipewire-pulse wireplumber
+sleep 6
+
+# ---- 8. reconnect ----
+if [[ ${#devs[@]} -gt 0 ]]; then
+  for mac in "${devs[@]}"; do
+    echo "== reconnecting $mac =="
+    bluetoothctl connect "$mac" || true
+  done
+else
+  echo "== skipping reconnect =="
+fi
+
+echo "== done: check with 'wpctl status' =="
