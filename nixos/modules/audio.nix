@@ -15,8 +15,6 @@
         "bluez5.enable-msbc" = true;
         "bluez5.enable-hw-volume" = true;
         "bluez5.roles" = [
-          "hsp_hs"
-          "hsp_ag"
           "hfp_hf"
           "hfp_ag"
           "a2dp_sink"
@@ -27,7 +25,7 @@
           "sbc_xq"
           "aac"
           "ldac"
-          "lc3plus_h3"
+          "msbc"
         ];
         "bluez5.hfphsp-backend" = "native";
         "bluez5.autoswitch-profile" = true;
