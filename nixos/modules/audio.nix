@@ -49,8 +49,8 @@
   };
   services.blueman.enable = true;
 
-  # Disable built-in MediaTek BT adapter (Foxconn/Hon Hai 0489:e0cd);
-  # external UGREEN BT6.0 (33fa:0012) is used instead.
+  # Disable built-in MediaTek BT adapter (0489:e0cd); use the external
+  # Realtek RTL8761BU BT 6.0 dongle (0bda:a760) instead.
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0489", ATTR{idProduct}=="e0cd", ATTR{authorized}="0"
   '';
