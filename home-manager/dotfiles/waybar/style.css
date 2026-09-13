@@ -148,9 +148,7 @@ window#waybar {
   padding: 0 8px;
 }
 
-#custom-proxy-9999,
-#custom-proxy-7777,
-#custom-proxy-8888 {
+#custom-proxy-9999 {
   color: #b8bb26;
   padding: 0 8px;
 }

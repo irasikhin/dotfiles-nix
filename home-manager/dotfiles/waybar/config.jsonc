@@ -4,7 +4,7 @@
   "height": 42,
   "modules-left": ["sway/workspaces", "sway/mode", "sway/window"],
   "modules-center": [],
-  "modules-right": ["custom/proxy-9999", "custom/proxy-7777", "custom/proxy-8888", "sway/language", "idle_inhibitor", "pulseaudio", "backlight", "bluetooth", "network", "cpu", "temperature", "memory", "disk#root", "disk#home", "battery", "clock", "custom/notification", "tray"],
+  "modules-right": ["custom/proxy-9999", "sway/language", "idle_inhibitor", "pulseaudio", "backlight", "bluetooth", "network", "cpu", "temperature", "memory", "disk#root", "disk#home", "battery", "clock", "custom/notification", "tray"],
 
   "sway/workspaces": {
     "disable-scroll": true,
@@ -124,20 +124,6 @@
     "format": "󰒄 {}",
     "interval": 30,
     "tooltip-format": "Proxy 9999"
-  },
-
-  "custom/proxy-7777": {
-    "exec": "systemctl --user is-active gost-7777.service >/dev/null 2>&1 && echo '7' || echo ''",
-    "format": "󰒄 {}",
-    "interval": 30,
-    "tooltip-format": "Proxy 7777"
-  },
-
-  "custom/proxy-8888": {
-    "exec": "systemctl --user is-active gost-8888.service >/dev/null 2>&1 && echo '8' || echo ''",
-    "format": "󰒄 {}",
-    "interval": 30,
-    "tooltip-format": "Proxy 8888"
   },
 
   "custom/notification": {

@@ -111,24 +111,6 @@ in
     };
   };
 
-  systemd.user.services.gost-7777 = {
-    Unit = {
-      Description = "GOST proxy forwarder on port 7777";
-      After = [ "network-online.target" ];
-    };
-    Service = {
-      EnvironmentFile = "${secretsDir}/proxy_7777";
-      ExecStart = pkgs.writeShellScript "gost-7777" ''
-        exec ${pkgs.gost}/bin/gost -L :7777 -F "$PROXY_UPSTREAM"
-      '';
-      Restart = "always";
-      RestartSec = 5;
-    };
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
-  };
-
   systemd.user.services.kbd-lang-rgb = {
     Unit = {
       Description = "BCORNE RGB language indicator (en=cold white, ru=amber)";
@@ -155,22 +137,4 @@ in
 
   services.pueue.enable = true;
   services.syncthing.enable = true;
-
-  systemd.user.services.gost-8888 = {
-    Unit = {
-      Description = "GOST proxy forwarder on port 8888";
-      After = [ "network-online.target" ];
-    };
-    Service = {
-      EnvironmentFile = "${secretsDir}/proxy_8888";
-      ExecStart = pkgs.writeShellScript "gost-8888" ''
-        exec ${pkgs.gost}/bin/gost -L :8888 -F "$PROXY_UPSTREAM"
-      '';
-      Restart = "always";
-      RestartSec = 5;
-    };
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
-  };
 }

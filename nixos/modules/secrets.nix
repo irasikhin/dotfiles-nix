@@ -11,10 +11,8 @@ _:
     secrets = {
       example_secret = { };
 
-      # gost upstream proxies — value is the full `PROXY_UPSTREAM=...` line
+      # gost upstream proxy — value is the full `PROXY_UPSTREAM=...` line
       # so systemd EnvironmentFile can read it directly.
-      proxy_7777.owner = "ir";
-      proxy_8888.owner = "ir";
       proxy_9999.owner = "ir";
 
       # Encrypted SSH client config, split by context. Each file's `config`
