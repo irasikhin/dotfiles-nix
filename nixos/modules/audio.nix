@@ -30,6 +30,16 @@
         "bluez5.hfphsp-backend" = "native";
         "bluez5.autoswitch-profile" = true;
       };
+
+      # WirePlumber remembers "headset mode" (HFP) and restores it whenever the
+      # device connects. When that happens while the A2DP profile is no longer
+      # in the card, it deadlocks — "Could not find valid non-headset profile,
+      # not switching" — and the headset stays connected but silent until it is
+      # reconnected. The headset profile is still entered on demand while
+      # recording (bluetooth.autoswitch-to-headset-profile).
+      "wireplumber.settings" = {
+        "bluetooth.use-persistent-storage" = false;
+      };
     };
   };
 
@@ -47,10 +57,19 @@
   };
   services.blueman.enable = true;
 
-  # Disable built-in MediaTek BT adapter (0489:e0cd); use the external
-  # Realtek RTL8761BU BT 6.0 dongle (0bda:a760) instead.
+  # Prefer the built-in MediaTek MT7961 BT adapter (0489:e0cd) over the external
+  # Realtek RTL8761BU dongle (0bda:a760). The dongle is a flaky clone: it wedges
+  # under load, emits truncated HCI events ("unexpected cc 0x0c2d length: 3 < 4"),
+  # fails profile connects with "Function not implemented (38)" and never
+  # persists link keys, so headsets have to re-pair on every reconnect.
+  # Swap which adapter is disabled here to go back to the dongle.
   services.udev.extraRules = ''
-    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0489", ATTR{idProduct}=="e0cd", ATTR{authorized}="0"
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{idProduct}=="a760", ATTR{authorized}="0"
+
+    # A newly appearing Bluetooth rfkill (ideapad EC state on boot, or a fresh
+    # HCI device) comes up soft-blocked, and a soft-blocked adapter cannot be
+    # powered on by BlueZ. Unblock it as soon as it shows up.
+    ACTION=="add", SUBSYSTEM=="rfkill", ATTR{type}=="bluetooth", RUN+="${pkgs.util-linux}/bin/rfkill unblock bluetooth"
   '';
 
   # Updates can leave Bluetooth rfkill soft-blocked; unblock at boot before

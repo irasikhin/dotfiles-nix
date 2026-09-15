@@ -1,55 +1,118 @@
 #!/usr/bin/env bash
-# bt-fix — reset a stuck Bluetooth stack (rfkill, BlueZ, USB dongle, PipeWire).
+# bt-fix — recover a stuck Bluetooth stack (rfkill, BlueZ, USB dongle, PipeWire).
 #
-# Fixes: no sound from a connected headset, Bluetooth soft-blocked by rfkill,
-# a stuck controller/dongle, or a sticky WirePlumber profile ("off").
+# Handles the failure modes of the Realtek RTL8761BU dongle (0bda:a760):
+#   * adapter comes up soft-blocked ("Powered: no / PowerState: off-blocked")
+#   * hung controller that refuses to power on — dmesg shows
+#       "Bluetooth: hci0: Opcode 0x0c03 failed: -110" (HCI_Reset times out)
+#     Restarting bluetoothd does not help, only a USB power-cycle does.
+#   * sticky WirePlumber profile ("off") that swallows the audio
+#
+# BlueZ is only restarted when the dongle was power-cycled or bluetoothd is
+# wedged, because a restart drops in-memory pairings (the OnePlus Buds Pro 3
+# never persist their link key, so they have to pair again afterwards).
 #
 # Usage:
-#   bt-fix               # reset + reconnect the connected audio device
-#   bt-fix <MAC>         # reset + reconnect a specific device
-#   bt-fix none          # reset only, skip reconnect
-#   bt-fix --usb         # also power-cycle the USB Bluetooth dongle
-#   bt-fix --usb <MAC>   # combine flags
+#   bt-fix               # repair + reconnect the audio devices it knows about
+#   bt-fix <MAC>         # repair + reconnect one device
+#   bt-fix none          # repair only, skip reconnect
+#   bt-fix --usb         # force the USB power-cycle even if the controller is up
+#   bt-fix --no-usb      # never touch USB
+#   bt-fix --help
 #
-# Requires sudo for `systemctl restart bluetooth` (and `--usb`).
+# Requires sudo for the USB power-cycle and `systemctl restart bluetooth`.
 
-set -euo pipefail
+set -uo pipefail
 
 state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/wireplumber"
 
 # ---- parse arguments ----
-do_usb=0
+usb_mode=auto # auto | force | never
 dev=""
-while [[ $# -gt 0 ]]; do
+while (($# > 0)); do
   case "$1" in
-    --usb|--full) do_usb=1 ;;
-    none) dev="none" ;;
-    *) dev="$1" ;;
+  --usb | --full) usb_mode=force ;;
+  --no-usb) usb_mode=never ;;
+  none) dev=none ;;
+  -h | --help)
+    sed -n '/^# Usage:/,/^$/p' "$0"
+    exit 0
+    ;;
+  *) dev="$1" ;;
   esac
   shift
 done
 
-# ---- detect device(s) to reconnect ----
+# ---- helpers ----
+controller_present() {
+  bluetoothctl show 2>/dev/null | grep -q '^Controller'
+}
+
+controller_powered() {
+  bluetoothctl show 2>/dev/null | grep -q 'Powered: yes'
+}
+
+# Audio-class device. The Icon/Class properties are missing on some headsets
+# (e.g. OnePlus Buds Pro 3), so fall back to the Bluetooth service UUIDs:
+# 110b = Audio Sink, 1108 = Headset, 111e = Handsfree.
+is_audio_device() {
+  bluetoothctl info "$1" 2>/dev/null |
+    grep -Eq 'Icon: audio-|\(0000110b\)|\(00001108\)|\(0000111e\)'
+}
+
+is_trusted_device() {
+  bluetoothctl info "$1" 2>/dev/null | grep -q 'Trusted: yes'
+}
+
+device_macs() {
+  bluetoothctl devices "${@}" 2>/dev/null | awk '{print $2}'
+}
+
+# Power-cycle every enabled USB Bluetooth radio we can find (class/subclass/
+# protocol 0xe0/0x01/0x01). Works whether or not an hci device is registered,
+# and skips the deliberately disabled internal adapter.
+reset_usb_dongles() {
+  local usb_dev found=0
+  for usb_dev in /sys/bus/usb/devices/[0-9]*-[0-9]*; do
+    [[ -f "$usb_dev/bDeviceClass" && -f "$usb_dev/authorized" ]] || continue
+    [[ "$(cat "$usb_dev/bDeviceClass")" == "e0" ]] || continue
+    [[ "$(cat "$usb_dev/bDeviceSubClass")" == "01" ]] || continue
+    [[ "$(cat "$usb_dev/authorized")" == "1" ]] || continue
+    found=1
+    echo "   power-cycling $usb_dev ($(cat "$usb_dev/product" 2>/dev/null))"
+    echo 0 | sudo tee "$usb_dev/authorized" >/dev/null
+    sleep 1
+    echo 1 | sudo tee "$usb_dev/authorized" >/dev/null
+  done
+  (($found)) || echo "   no USB Bluetooth dongle found" >&2
+}
+
+# ---- detect the devices to reconnect (before tearing anything down) ----
 declare -a devs=()
-if [[ "$dev" == "none" ]]; then
-  : # skip reconnect
-elif [[ -n "$dev" ]]; then
+if [[ $dev == none ]]; then
+  : # repair only
+elif [[ -n $dev ]]; then
   devs+=("$dev")
 else
-  # Auto-detect: audio-class devices connected right now (the stuck ones).
-  # Filter by the BlueZ Icon property ("audio-headset", "audio-card", ...).
+  # Connected audio devices first, then paired ones, then merely trusted ones
+  # (headsets that do not persist a link key never show up as paired).
   while read -r mac; do
-    icon=$(bluetoothctl info "$mac" 2>/dev/null | awk -F': ' '/Icon:/{print $2; exit}')
-    case "$icon" in
-      audio-*) devs+=("$mac") ;;
-    esac
-  done < <(bluetoothctl devices Connected 2>/dev/null | awk '{print $2}')
-  if [[ ${#devs[@]} -eq 0 ]]; then
-    echo "bt-fix: no connected audio device found; pass a MAC (bt-fix <MAC>) or 'none'" >&2
+    is_audio_device "$mac" && devs+=("$mac")
+  done < <(device_macs Connected)
+  if ((${#devs[@]} == 0)); then
+    while read -r mac; do
+      is_audio_device "$mac" && devs+=("$mac")
+    done < <(device_macs Paired)
   fi
+  if ((${#devs[@]} == 0)); then
+    while read -r mac; do
+      is_audio_device "$mac" && is_trusted_device "$mac" && devs+=("$mac")
+    done < <(device_macs)
+  fi
+  ((${#devs[@]})) || echo "bt-fix: no known audio device; pass a MAC (bt-fix <MAC>) or 'none'" >&2
 fi
 
-# ---- 1. unblock rfkill (soft-block after updates/suspend) ----
+# ---- 1. unblock rfkill (soft-block after boot/suspend/update) ----
 echo "== rfkill unblock bluetooth =="
 rfkill unblock bluetooth 2>/dev/null || sudo rfkill unblock bluetooth 2>/dev/null || true
 
@@ -57,33 +120,38 @@ rfkill unblock bluetooth 2>/dev/null || sudo rfkill unblock bluetooth 2>/dev/nul
 echo "== stopping audio stack =="
 systemctl --user stop wireplumber pipewire pipewire-pulse 2>/dev/null || true
 
-# ---- 3. (optional) power-cycle the USB dongle ----
-if [[ $do_usb -eq 1 ]]; then
+# ---- 3. power-cycle the dongle if the controller is down (or forced) ----
+reset_done=0
+if [[ $usb_mode == force ]] || { [[ $usb_mode == auto ]] && ! controller_powered; }; then
   echo "== resetting USB Bluetooth dongle =="
-  for hci in /sys/class/bluetooth/hci*; do
-    [[ "$hci" =~ /hci[0-9]+$ ]] || continue
-    iface=$(readlink -f "$hci/device" 2>/dev/null) || continue
-    # Only USB adapters: the device node is the interface's parent dir.
-    [[ "$iface" == */usb* ]] || continue
-    usb_dev=$(dirname "$iface")
-    if [[ -f "$usb_dev/authorized" ]]; then
-      echo "   resetting $usb_dev"
-      echo 0 | sudo tee "$usb_dev/authorized" >/dev/null
-      sleep 1
-      echo 1 | sudo tee "$usb_dev/authorized" >/dev/null
-      sleep 2
-    fi
+  reset_usb_dongles
+  sleep 2
+  for _ in $(seq 1 15); do
+    controller_present && break
+    sleep 1
   done
+  reset_done=1
 fi
 
-# ---- 4. restart BlueZ ----
-echo "== restarting BlueZ (sudo) =="
-sudo systemctl restart bluetooth
-sleep 2
+# ---- 4. restart BlueZ, but only when it is actually needed ----
+if [[ $reset_done -eq 1 ]] || ! controller_powered || ! systemctl is-active --quiet bluetooth; then
+  echo "== restarting BlueZ (sudo) =="
+  sudo systemctl restart bluetooth
+  sleep 2
+fi
 
 # ---- 5. power on the controller ----
 echo "== powering on controller =="
-bluetoothctl power on 2>/dev/null || true
+for attempt in 1 2 3; do
+  bluetoothctl power on >/dev/null 2>&1 || true
+  controller_powered && break
+  echo "   still off (attempt $attempt/3)"
+  sleep 3
+done
+if ! controller_powered; then
+  echo "bt-fix: controller will not power on — check 'dmesg | grep -i bluetooth'" >&2
+  echo "        (a hung RTL8761BU usually needs the dongle unplugged and replugged)" >&2
+fi
 
 # ---- 6. clear sticky WirePlumber state ----
 echo "== clearing sticky WirePlumber state =="
@@ -99,10 +167,19 @@ systemctl --user start pipewire pipewire-pulse wireplumber
 sleep 6
 
 # ---- 8. reconnect ----
-if [[ ${#devs[@]} -gt 0 ]]; then
+if ((${#devs[@]} > 0)); then
   for mac in "${devs[@]}"; do
     echo "== reconnecting $mac =="
-    bluetoothctl connect "$mac" || true
+    bluetoothctl trust "$mac" >/dev/null 2>&1 || true
+    # Cycle the connection: a headset that was left in headset-head-unit mode
+    # (after the mic was used) can lose its A2DP profile from the card, and then
+    # WirePlumber cannot switch back — "Could not find valid non-headset
+    # profile" — so it stays connected but silent until it reconnects.
+    bluetoothctl disconnect "$mac" >/dev/null 2>&1 || true
+    sleep 1
+    if ! bluetoothctl connect "$mac"; then
+      echo "bt-fix: could not connect $mac (pairing mode needed?)" >&2
+    fi
   done
 else
   echo "== skipping reconnect =="
