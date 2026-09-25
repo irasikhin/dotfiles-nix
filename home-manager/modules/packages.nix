@@ -46,8 +46,24 @@ let
     src = inputs.express-appimage;
   };
   yaamp = pkgs.callPackage ../pkgs/yaamp.nix { };
+  # download.jetbrains.com is geo-blocked here, so fetch the IDEs from the
+  # JetBrains mirrors instead. They serve byte-identical archives (same hash).
+  jetbrainsMirrors = [
+    "download-cdn.jetbrains.com"
+    "download-cf.jetbrains.com"
+  ];
+  withJetbrainsMirrors =
+    drv:
+    drv.overrideAttrs (old: {
+      src = pkgs.fetchurl {
+        urls = builtins.concatMap (
+          url: map (host: builtins.replaceStrings [ "download.jetbrains.com" ] [ host ] url) jetbrainsMirrors
+        ) old.src.urls;
+        inherit (old.src) hash;
+      };
+    });
   ideaPlugins = inputs.nix-jetbrains-plugins.plugins.${system}.idea."${pkgs.jetbrains.idea.version}";
-  ideaWithPlugins = pkgs.jetbrains.plugins.addPlugins pkgs.jetbrains.idea (
+  ideaWithPlugins = pkgs.jetbrains.plugins.addPlugins (withJetbrainsMirrors pkgs.jetbrains.idea) (
     map (id: ideaPlugins.${id}) [
       "IdeaVIM"
       "org.jetbrains.IdeaVim-EasyMotion"
