@@ -254,7 +254,6 @@ in
     lnav
     mktoc
     mkdocs
-    soapui
     keepassxc
     nextcloud-client
     yazi
