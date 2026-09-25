@@ -4,7 +4,7 @@
   "height": 42,
   "modules-left": ["sway/workspaces", "sway/mode", "sway/window"],
   "modules-center": [],
-  "modules-right": ["custom/proxy-9999", "sway/language", "idle_inhibitor", "pulseaudio", "backlight", "bluetooth", "network", "cpu", "temperature", "memory", "disk#root", "disk#home", "battery", "clock", "custom/notification", "tray"],
+  "modules-right": ["sway/language", "idle_inhibitor", "pulseaudio", "backlight", "bluetooth", "network", "cpu", "temperature", "memory", "disk#root", "disk#home", "battery", "clock", "custom/notification", "tray"],
 
   "sway/workspaces": {
     "disable-scroll": true,
@@ -117,13 +117,6 @@
 
   "tray": {
     "spacing": 10
-  },
-
-  "custom/proxy-9999": {
-    "exec": "systemctl --user is-active gost-9999.service >/dev/null 2>&1 && echo '9' || echo ''",
-    "format": "󰒄 {}",
-    "interval": 30,
-    "tooltip-format": "Proxy 9999"
   },
 
   "custom/notification": {

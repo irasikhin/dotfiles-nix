@@ -6,8 +6,6 @@
 }:
 
 let
-  # sops-nix decrypts secrets here at activation (NixOS module).
-  secretsDir = "/run/secrets";
   wallpaperPath = lib.makeBinPath [
     pkgs.coreutils
     pkgs.findutils
@@ -90,24 +88,6 @@ in
 
     Install = {
       WantedBy = [ "timers.target" ];
-    };
-  };
-
-  systemd.user.services.gost-9999 = {
-    Unit = {
-      Description = "GOST proxy forwarder on port 9999";
-      After = [ "network-online.target" ];
-    };
-    Service = {
-      EnvironmentFile = "${secretsDir}/proxy_9999";
-      ExecStart = pkgs.writeShellScript "gost-9999" ''
-        exec ${pkgs.gost}/bin/gost -L :9999 -F "$PROXY_UPSTREAM"
-      '';
-      Restart = "always";
-      RestartSec = 5;
-    };
-    Install = {
-      WantedBy = [ "default.target" ];
     };
   };
 

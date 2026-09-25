@@ -145,6 +145,7 @@ in
     go-task
     dig
     inetutils
+    (pkgs.lib.hiPrio pkgs.traceroute)
     libreoffice
     cloc
     delta
@@ -354,8 +355,8 @@ in
     tigervnc
     remmina
     virt-viewer
-    gost
     vlc
     kooha
+    lmstudio
   ];
 }

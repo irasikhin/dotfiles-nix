@@ -15,8 +15,6 @@ in
     _JAVA_AWT_WM_NONREPARENTING = "1";
     GDK_DPI_SCALE = "1.4";
     MOZ_ENABLE_WAYLAND = "1";
-    LLM_WRAPPERS_PROXY_HOST = "127.0.0.1";
-    LLM_WRAPPERS_PROXY_PORT = "9999";
   };
 
   xresources.properties = {
@@ -48,6 +46,11 @@ in
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
+    # Ctrl-R history search: literal matching instead of fuzzy, so `sudo
+    # openconnect` does not match `o`, `p`, `e`, `n` scattered across words.
+    historyWidget = {
+      options = [ "--exact" ];
+    };
   };
 
   programs.gh = {
