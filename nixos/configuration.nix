@@ -82,4 +82,9 @@
   services.printing.enable = false;
 
   nixpkgs.config.allowUnfree = true;
+  # cherry-studio currently bundles electron 40, which nixpkgs flags as insecure
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-40.10.5"
+    "pnpm-10.29.2"
+  ];
 }

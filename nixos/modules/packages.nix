@@ -120,6 +120,7 @@ in
     firejail
     monero-cli
     monero-gui
+    cherry-studio
     inputs.burl.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.sandboxer.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.sandboxer.packages.${pkgs.stdenv.hostPlatform.system}.microsandbox
