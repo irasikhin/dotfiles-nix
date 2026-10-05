@@ -114,6 +114,7 @@ in
     fzf
     ripgrep
     jq
+    pkl
     tree
     eza
     foot
@@ -155,7 +156,6 @@ in
     imagemagick
     openconnect
     networkmanager-openconnect
-    networkmanager-vpnc
     spotify
     ansible
     go-task
@@ -187,6 +187,7 @@ in
     skopeo
     nmap
     kind
+    k3d
     sops
     age
     myHelm
