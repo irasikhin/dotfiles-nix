@@ -11,6 +11,10 @@ _:
     secrets = {
       example_secret = { };
 
+      # Internal CA certificate (PEM) for private endpoints. Kept out of this
+      # public repo on purpose; see modules/internal-ca.nix.
+      internal_ca_pem = { };
+
       # Encrypted SSH client config, split by context. Each file's `config`
       # key is a plaintext ssh_config block (organize environments as Host
       # sections inside). Rendered as symlinks into ~/.ssh/config.d/ and

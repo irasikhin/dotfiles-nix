@@ -10,6 +10,7 @@
     ./modules/networking.nix
     ./modules/locale.nix
     ./modules/display.nix
+    ./modules/internal-ca.nix
     ./modules/audio.nix
     ./modules/users.nix
     ./modules/packages.nix

@@ -10,6 +10,7 @@
     ./modules/terminals.nix
     ./modules/services.nix
     ./modules/desktop.nix
+    ./modules/internal-ca.nix
     ./modules/pi.nix
   ];
 
