@@ -106,6 +106,8 @@ in
     zig
     gnumake
     git
+    git-fame
+    git-quick-stats
     lua
     just
     lazygit
@@ -188,6 +190,7 @@ in
     nmap
     kind
     k3d
+    devspace
     sops
     age
     myHelm
@@ -221,6 +224,7 @@ in
     openapi-generator-cli
     gimp
     jmeter
+    k6
     librechat
     allure
     aider-chat
