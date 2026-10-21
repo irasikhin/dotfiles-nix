@@ -1,6 +1,8 @@
 * {
   font-family: "FiraCode Nerd Font";
-  font-size: 18px;
+  /* CSS px are multiplied by the sway output scale (1.5) on eDP-1, so the
+     sizes/paddings here are ~2/3 of the old scale-1.0 values. */
+  font-size: 12px;
 }
 
 /* ── Popup notifications ── */
@@ -18,7 +20,7 @@
   border: 1px solid #3c3836;
   border-left: 3px solid #a9b665;
   border-radius: 12px;
-  margin: 6px 10px;
+  margin: 4px 7px;
   padding: 0;
   color: #d4be98;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
@@ -30,7 +32,7 @@
 }
 
 .notification-content {
-  padding: 16px 18px;
+  padding: 11px 12px;
 }
 
 .notification-row {
@@ -41,10 +43,10 @@
   background: #3c3836;
   color: #a89984;
   border-radius: 50%;
-  margin: 8px;
-  padding: 2px;
-  min-width: 24px;
-  min-height: 24px;
+  margin: 5px;
+  padding: 1px;
+  min-width: 16px;
+  min-height: 16px;
 }
 
 .close-button:hover {
@@ -55,8 +57,8 @@
 .notification-default-action,
 .notification-action {
   border-radius: 8px;
-  margin: 4px 6px 8px;
-  padding: 8px 14px;
+  margin: 3px 4px 5px;
+  padding: 5px 9px;
   background: #282828;
   color: #d4be98;
   border: 1px solid #3c3836;
@@ -71,30 +73,30 @@
 .summary {
   color: #d4be98;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 13px;
 }
 
 .body {
   color: #a89984;
-  font-size: 17px;
-  margin-top: 4px;
+  font-size: 11px;
+  margin-top: 3px;
 }
 
 .time {
   color: #665c54;
-  font-size: 14px;
+  font-size: 9px;
 }
 
 .app-name {
   color: #7daea3;
-  font-size: 14px;
+  font-size: 9px;
   font-weight: bold;
   text-transform: uppercase;
 }
 
 .image {
   border-radius: 8px;
-  margin-right: 12px;
+  margin-right: 8px;
 }
 
 /* ── Control center panel ── */
@@ -105,12 +107,12 @@
   border-radius: 14px;
   color: #d4be98;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-  padding: 8px 0;
+  padding: 5px 0;
 }
 
 .control-center .notification-row {
   border-bottom: 1px solid #282828;
-  padding: 4px 0;
+  padding: 3px 0;
 }
 
 .control-center .notification-row:last-child {
@@ -135,8 +137,8 @@
 .widget-title {
   color: #d4be98;
   font-weight: bold;
-  font-size: 18px;
-  margin: 12px 16px 8px;
+  font-size: 12px;
+  margin: 8px 11px 5px;
 }
 
 .widget-title > button {
@@ -144,9 +146,9 @@
   color: #1d2021;
   border: none;
   border-radius: 8px;
-  padding: 6px 16px;
+  padding: 4px 11px;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 9px;
 }
 
 .widget-title > button:hover {
@@ -154,8 +156,8 @@
 }
 
 .widget-dnd {
-  margin: 4px 16px 12px;
-  padding: 8px 12px;
+  margin: 3px 11px 8px;
+  padding: 5px 8px;
   color: #a89984;
   background: #1d2021;
   border-radius: 10px;

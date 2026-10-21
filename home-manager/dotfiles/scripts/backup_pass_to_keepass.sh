@@ -34,9 +34,10 @@ EOF
 }
 
 require_pykeepass() {
-  if ! python3 - <<'PY' >/dev/null 2>&1; then
+  if ! python3 - <<'PY' >/dev/null 2>&1
 import pykeepass
 PY
+  then
     echo "python3 with pykeepass is required. Rebuild Home Manager and try again." >&2
     exit 1
   fi

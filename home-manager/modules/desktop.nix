@@ -11,17 +11,34 @@ let
   # Active Floorp profile (see ~/.floorp/profiles.ini -> Default=1). Host-specific.
   floorpProfile = ".floorp/vbsa7lco.default";
   # Floorp UI/content scale via layout.css.devPixelsPerPx — an ABSOLUTE
-  # devicePixelRatio override (ignores GDK_DPI_SCALE, no double-scaling). Set to
-  # 1.0 to match google-chrome, which renders at the sway output scale (1.0). To
-  # make both browsers bigger-but-equal, raise this AND add a matching chrome
-  # --force-device-scale-factor.
-  floorpUiScale = "1.0";
+  # devicePixelRatio override (no double-scaling). Keep it equal to the sway
+  # output scale of eDP-1 (1.5), which is what google-chrome renders at, so both
+  # browsers come out the same size. If the output scale changes, change this too.
+  floorpUiScale = "1.5";
 in
 {
   # Full icon theme so blueman-manager (and other GTK apps) resolve device
   # icons; hicolor alone lacks audio-headset/audio-headphones etc.
+  # Theme: Gruvbox Dark (dark0_hard #1d2021, i.e. the darkest gruvbox variant).
+  # Covers GTK3 apps and their dialogs -- LibreOffice, the
+  # xdg-desktop-portal-gtk file chooser, GIMP/Remmina/Deluge -- which otherwise
+  # fell back to light Adwaita. libadwaita (GTK4) apps ignore the theme name, so
+  # gtk3.colorScheme only feeds them dconf color-scheme=prefer-dark.
+  # Use tweakVariants = [ "black" ] for an even darker #141617 background.
   gtk = {
     enable = true;
+    theme = {
+      name = "Gruvbox-Dark";
+      package = pkgs.gruvbox-gtk-theme.override {
+        colorVariants = [ "dark" ];
+        sizeVariants = [ "standard" ];
+        themeVariants = [ "default" ];
+      };
+    };
+    # dconf color-scheme=prefer-dark (libadwaita reads this); set on gtk3 so
+    # Home Manager does not also emit the broken `gtk-interface-color-scheme`
+    # key into gtk-4.0/settings.ini.
+    gtk3.colorScheme = "dark";
     iconTheme = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
@@ -47,19 +64,14 @@ in
     };
   };
 
-  # Shadow the packaged software.Browsers.desktop to enlarge the picker. eDP-1 is
-  # 2560x1600 at sway output scale 1, so the chooser is tiny. On native WAYLAND
-  # GDK_SCALE does NOT enlarge (the compositor compensates via buffer_scale), so
-  # force the X11 backend (XWayland), where GDK_SCALE=2 actually doubles the
-  # window + icons. GDK_DPI_SCALE then enlarges the text so the window grows
-  # WIDER to fit its content (don't force a fixed sway width — that left empty
-  # side margins and clipped the settings panel; the window must auto-size).
+  # The browser picker is a plain GTK app: it follows the sway output scale like
+  # everything else, so no per-app GDK_SCALE/GDK_DPI_SCALE overrides are needed.
   xdg.desktopEntries."software.Browsers" = {
     type = "Application";
     name = "Browsers";
     comment = "Open the right browser at the right time";
     icon = "software.Browsers";
-    exec = "${pkgs.coreutils}/bin/env GDK_BACKEND=x11 GDK_SCALE=2 GDK_DPI_SCALE=1.3 ${pkgs.browsers}/bin/browsers %u";
+    exec = "${pkgs.browsers}/bin/browsers %u";
     terminal = false;
     startupNotify = true;
     categories = [

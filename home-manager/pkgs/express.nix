@@ -14,8 +14,10 @@ appimageTools.wrapType2 {
   extraInstallCommands = ''
     install -Dm444 ${appimageContents}/express_corporate.desktop \
       $out/share/applications/${pname}.desktop
+    # Electron defaults to XWayland, which sway upscales from 1x to our 1.5 output
+    # scale => blurry text. Native Wayland negotiates wp_fractional_scale (1.5).
     substituteInPlace $out/share/applications/${pname}.desktop \
-      --replace-fail "Exec=AppRun" "Exec=${pname}"
+      --replace-fail "Exec=AppRun" "Exec=${pname} --ozone-platform=wayland"
     cp -r ${appimageContents}/usr/share/icons $out/share/
   '';
 }

@@ -13,12 +13,7 @@ in
   home.sessionVariables = {
     EDITOR = "nvim";
     _JAVA_AWT_WM_NONREPARENTING = "1";
-    GDK_DPI_SCALE = "1.4";
     MOZ_ENABLE_WAYLAND = "1";
-  };
-
-  xresources.properties = {
-    "Xft.dpi" = 140;
   };
 
   home.sessionPath = [ "$HOME/.config/scripts" ];

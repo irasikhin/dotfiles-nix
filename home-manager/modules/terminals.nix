@@ -3,8 +3,16 @@
 {
   programs.zellij = {
     enable = true;
-    enableZshIntegration = true;
-    exitShellOnExit = true;
+    # Home Manager's shell integration auto-starts zellij from any shell that is
+    # not $TERM=dumb, and its SERVER keeps the environment of the FIRST client,
+    # so a bare tty login (`login` -> zsh, TERM=linux) creates the "main" server
+    # with no WAYLAND_DISPLAY and every pane spawned later inherits that broken
+    # env -- see the guarded replacement in programs.zsh.initContent below.
+    #
+    # With the integration off, the two variables it exports (`attachExistingSession`
+    # = false, `exitShellOnExit` = true) and the auto-start itself are restored
+    # below, so nothing else changes.
+    enableZshIntegration = false;
 
     settings = {
       theme = "gruvbox";
@@ -153,7 +161,37 @@
     '';
   };
 
+  # What Home Manager's zellij shell integration would otherwise export
+  # (exitShellOnExit = true, attachExistingSession = false); the integration
+  # itself is replaced below.
+  home.sessionVariables = {
+    ZELLIJ_AUTO_ATTACH = "false";
+    ZELLIJ_AUTO_EXIT = "true";
+  };
+
+  # The zellij SERVER inherits the environment of its FIRST client, and every
+  # pane (and every program in it) inherits the server's env -- not the env of
+  # the terminal that is currently attached. Home Manager's stock integration
+  # auto-starts zellij from any non-$TERM=dumb shell, so a tty login at boot
+  # (`login` -> zsh, TERM=linux, no WAYLAND_DISPLAY) creates the "main" session
+  # server. Attaching to it later from foot inside sway then leaves every pane
+  # without WAYLAND_DISPLAY, and `wl-copy` is the clipboard provider for nvim
+  # (`clipboard=unnamedplus`), zellij's own copy_command and cliphist -- so all
+  # copying fails with "clipboard: No provider".
+  #
+  # Guard: only auto-attach where there is a display we can actually reach, and
+  # as a belt-and-braces for a session born before this guard, let a pane that
+  # inherited no display adopt the compositor socket itself.
   programs.zsh.initContent = lib.mkOrder 1500 ''
+    if [[ -o interactive && -z "$ZELLIJ" && ( -n "$WAYLAND_DISPLAY" || -n "$DISPLAY" ) ]]; then
+      eval "$(${pkgs.zellij}/bin/zellij setup --generate-auto-start zsh)"
+    elif [[ -n "$ZELLIJ" && -z "$WAYLAND_DISPLAY" ]]; then
+      for _wl_sock in "$XDG_RUNTIME_DIR"/wayland-[0-9]*(N); do
+        [[ -S $_wl_sock ]] && export WAYLAND_DISPLAY=''${_wl_sock:t}
+      done
+      unset _wl_sock
+    fi
+
     if [[ -n "$ZELLIJ" ]]; then
       autoload -Uz add-zsh-hook
       _zellij_rename_tab() {
@@ -171,7 +209,10 @@
     enable = true;
     settings = {
       main = {
-        font = "FiraCode Nerd Font:size=18";
+        # pt size scales with the sway output scale (1.5 on eDP-1), so this is
+        # 26px on screen (the pre-scale-1.5 equivalent was size=18 at scale 1.0,
+        # now bumped a notch because 24px felt slightly small).
+        font = "FiraCode Nerd Font:size=13";
         shell = "${pkgs.zsh}/bin/zsh";
         # copy-on-select into clipboard AND primary: Shift+drag and plain drag
         # land the selection in the clipboard immediately. The highlight stays =

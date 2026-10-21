@@ -20,23 +20,32 @@ input "1149:32936:ORBIT_BT5.0_Mouse" {
 # Dedicated layout switch for the split (BCORNE): map a free key to F24 in Vial.
 # Avoids grp:ctrl_shift_toggle, which collided with terminal Ctrl+Shift+C/V.
 bindsym --to-code F24 input "type:keyboard" xkb_switch_layout next
-# External monitor: global GDK_DPI_SCALE/Xft.dpi are tuned for the HiDPI laptop
-# panel, so the BenQ 1080p renders oversized. Scale it down. Keyed by the output
-# identifier (make/model/serial), so it applies over both HDMI and DP.
-output "BNQ ZOWIE XL LCD EBN3N01670SL0" scale 0.9
 
 default_border none
 default_floating_border none
 titlebar_border_thickness 0
 titlebar_padding 4 2
 
+# Dialogs: X11/XWayland dialogs (window_type) float; sway already floats Wayland
+# windows that set a transient parent. The system file chooser
+# (xdg-desktop-portal-gtk, used by LibreOffice, Chrome, Electron) is a SEPARATE
+# process with no transient parent, so sway tiled it full-screen -- that is the
+# "dialog with weird size, buttons somewhere off at the edge" case. Give it a
+# dialog-sized box in the middle of the screen instead.
+for_window [window_type="dialog"] floating enable
+for_window [app_id="xdg-desktop-portal-gtk"] floating enable, resize set 1600 1000, move position center
+
+# Output: internal panel only. 2560x1600 on a 15.9" panel is ~188 PPI, so scale
+# 1.5 lands at ~125 PPI (comfortable size) without any GDK_DPI_SCALE/Xft.dpi font
+# hacks -- every toolkit sees the same scale.
+output "eDP-1" scale 1.5
+
 bindsym --to-code $mod+Return exec $terminal
 bindsym --to-code $alt+d exec $launcher
 bindsym --to-code $mod+Tab exec $window_switcher
 # Browser picker (software.Browsers) on demand: open the primary-selection URL
 # in a browser of choice. Default links already go to floorp via mimeApps.
-# GDK_BACKEND=x11 + GDK_SCALE=2 enlarge the picker (mirrors the desktop entry).
-bindsym --to-code $mod+Shift+b exec sh -c 'url=$(wl-paste -p | tr -d "\n"); GDK_BACKEND=x11 GDK_SCALE=2 GDK_DPI_SCALE=1.3 browsers "$url"'
+bindsym --to-code $mod+Shift+b exec sh -c 'url=$(wl-paste -p | tr -d "\n"); browsers "$url"'
 
 bindsym --to-code $alt+v exec cliphist list | fuzzel --dmenu -p "clipboard: " | cliphist decode | wl-copy
 bindsym --to-code $alt+p exec echo -e "lock\nlogout\nsuspend\nreboot\nshutdown" | fuzzel --dmenu -p "power: " | xargs -I {} sh -c 'case {} in lock) $lock_cmd;; logout) swaymsg exit;; suspend) systemctl suspend;; reboot) systemctl reboot;; shutdown) systemctl poweroff;; esac'
@@ -199,6 +208,9 @@ assign [class="(?i)^TelegramDesktop$"] $ws_msg
 
 assign [app_id="thunderbird"] $ws_thunderbird
 assign [class="(?i)^thunderbird$"] $ws_thunderbird
+# Evolution (work mail, EWS/Outlook-compatible) lives on the same mail workspace.
+assign [app_id="org.gnome.Evolution"] $ws_thunderbird
+assign [class="(?i)^evolution$"] $ws_thunderbird
 
 assign [app_id="feishin"] $ws_music
 assign [class="(?i)^feishin$"] $ws_music
@@ -238,15 +250,13 @@ exec_always --no-startup-id nm-applet --indicator
 exec_always --no-startup-id $HOME/.config/scripts/update_background_image.sh
 exec_always --no-startup-id sh -c 'pkill -x swayidle; exec swayidle -w timeout 900 "$1" before-sleep "$1"' _ "$lock_cmd"
 
-# Single-display: external connected -> internal eDP-1 off; no external ->
-# eDP-1 on. Reacts to hotplug, keeps exactly one screen.
-exec_always --no-startup-id $HOME/.config/scripts/single_display.sh
-
 exec --no-startup-id $terminal
 exec --no-startup-id floorp
 exec --no-startup-id idea
-exec --no-startup-id telegram-desktop
-exec --no-startup-id thunderbird
+# Telegram is Qt6: Qt rounds our 1.5 output scale up to 2 (devicePixelRatio 2 =>
+# UI ~33% too big). 0.75 * 2 = 1.5, and PassThrough keeps the fractional ratio.
+exec --no-startup-id env QT_SCALE_FACTOR=0.75 QT_SCALE_FACTOR_ROUNDING_POLICY=PassThrough Telegram
+exec --no-startup-id evolution
 exec --no-startup-id feishin
 
 # System info screen on its own workspace (live-refreshing fastfetch)

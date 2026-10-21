@@ -59,4 +59,13 @@ _:
       };
     };
   };
+
+  # F1-F12 without Fn. The ideapad EC boots in "hotkey first" mode (F1-F12 emit
+  # media keys, the real functions need Fn held); the ideapad_acpi `fn_lock`
+  # attribute (0 = hotkey first, 1 = F-keys first) flips it. Write it on device
+  # add so the setting does not depend on the EC keeping it across boots.
+  # Fn+Esc still toggles the same bit at runtime.
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="platform", KERNEL=="VPC2004:00", ATTR{fn_lock}="1"
+  '';
 }

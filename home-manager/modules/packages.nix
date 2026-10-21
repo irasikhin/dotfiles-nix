@@ -165,6 +165,19 @@ in
     inetutils
     (pkgs.lib.hiPrio pkgs.traceroute)
     libreoffice
+    # Outlook-compatible mail client for work mail: Evolution speaks Exchange Web
+    # Services (EWS) via evolution-ews, which covers Exchange Server, Exchange
+    # Online / Microsoft 365 (incl. OAuth2) -- mail, calendar, GAL. Thunderbird
+    # is not an option here: it has no EWS/OWA support without the paid Owl addon.
+    #
+    # NOTE for a fresh install: the EDS D-Bus service files
+    # (org.gnome.evolution.dataserver.Sources5 etc.) land in ~/.nix-profile/share,
+    # but the running session bus (dbus-broker) only scans service dirs at start,
+    # so Evolution dies with "Another Evolution instance may be unresponsive.
+    # ... no owner found". Fix once per session:
+    #   systemctl --user reload dbus-broker.service    (or just re-login)
+    evolution
+    evolution-ews
     cloc
     delta
     vscode

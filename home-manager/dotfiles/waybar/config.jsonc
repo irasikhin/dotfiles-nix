@@ -1,7 +1,7 @@
 {
   "layer": "top",
   "position": "top",
-  "height": 42,
+  "height": 28,
   "modules-left": ["sway/workspaces", "sway/mode", "sway/window"],
   "modules-center": [],
   "modules-right": ["sway/language", "idle_inhibitor", "pulseaudio", "backlight", "bluetooth", "network", "cpu", "temperature", "memory", "disk#root", "disk#home", "battery", "clock", "custom/notification", "tray"],
@@ -116,7 +116,7 @@
   },
 
   "tray": {
-    "spacing": 10
+    "spacing": 7
   },
 
   "custom/notification": {
