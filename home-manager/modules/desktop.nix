@@ -15,6 +15,26 @@ let
   # output scale of eDP-1 (1.5), which is what google-chrome renders at, so both
   # browsers come out the same size. If the output scale changes, change this too.
   floorpUiScale = "1.5";
+  # Launcher entry for the screenshot flow. swappy ships `Exec=swappy -f %f` with
+  # NoDisplay=true (it is an editor, not a capture tool), so the region grab has
+  # to be wrapped -- and a .desktop `Exec` cannot hold a pipe (`|`, `$(...)` are
+  # rejected by desktop-file-validate). Hence a real derivation instead of a
+  # hand-written script in the repo: writeShellApplication also shellchecks it at
+  # build time and pins grim/slurp/swappy on PATH.
+  screenshot = pkgs.writeShellApplication {
+    name = "screenshot-region";
+    runtimeInputs = with pkgs; [
+      grim
+      slurp
+      swappy
+    ];
+    text = ''
+      # Escape/empty selection aborts slurp non-zero: that is a cancel, not an error.
+      geometry=$(slurp -d) || exit 0
+      [ -n "$geometry" ] || exit 0
+      grim -g "$geometry" - | swappy -f -
+    '';
+  };
 in
 {
   # Full icon theme so blueman-manager (and other GTK apps) resolve device
@@ -84,6 +104,25 @@ in
     ];
   };
 
+  # Screenshot entry for fuzzel -- same flow as the Print bind in sway
+  # (grim | slurp -> swappy), because launching the editor alone is useless.
+  xdg.desktopEntries.screenshot = {
+    type = "Application";
+    name = "Screenshot";
+    genericName = "Screenshot region";
+    comment = "Select a region, then annotate/save/copy it (swappy)";
+    exec = "${screenshot}/bin/screenshot-region";
+    icon = "swappy";
+    terminal = false;
+    categories = [
+      "Utility"
+      "Graphics"
+    ];
+  };
+
+  # Same command on PATH, so `screenshot-region` works from a shell too.
+  home.packages = [ screenshot ];
+
   xdg.configFile."autostart/nextcloud.desktop".text = ''
     [Desktop Entry]
     Type=Application
@@ -131,6 +170,43 @@ in
     }
     CSS
         fi
+  '';
+
+  # DBeaver: the desktop is GTK Gruvbox-Dark (gtk-application-prefer-dark-theme),
+  # but DBeaver's own workbench theme defaults to the Light e4 theme. GTK still
+  # paints the editor/data widgets dark, so light-theme syntax colors (dark red
+  # keywords, dark blue identifiers) land on a near-black background -- unreadable
+  # -- while the toolbars and tabs stay white. Pin the workbench to the Dark e4
+  # theme: it brings the matching dark SQL editor palette and DBeaver's own dark
+  # widget CSS (e4-dark-dbeaver-widgets.css).
+  # DBeaver flushes this preference file from memory on startup and on exit, so
+  # patching it while DBeaver runs is pointless -- skip and let the user retry.
+  home.activation.dbeaverDarkTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    prefs="${config.home.homeDirectory}/.local/share/DBeaverData/workspace6/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.e4.ui.css.swt.theme.prefs"
+    dark="themeid=org.eclipse.e4.ui.css.theme.e4_dark"
+
+    # Never started DBeaver on this machine -> nothing to pin, it will inherit
+    # whatever theme new installs get.
+    [ -e "$prefs" ] || exit 0
+
+    if grep -qx "$dark" "$prefs"; then
+      exit 0
+    fi
+
+    # A running DBeaver would overwrite our edit when it exits; its cmdline is
+    # the only marker available in the activation PATH (no procps there).
+    for cmdline in /proc/[0-9]*/cmdline; do
+      if [ -r "$cmdline" ] && tr '\0' ' ' < "$cmdline" 2>/dev/null | grep -q 'dbeaver'; then
+        echo "dbeaverDarkTheme: DBeaver is running -- close it and re-run activation (nh home switch .) to pin the dark theme." >&2
+        exit 0
+      fi
+    done
+
+    if grep -q '^themeid=' "$prefs"; then
+      $DRY_RUN_CMD sed -i "s|^themeid=.*|$dark|" "$prefs"
+    else
+      printf '%s\n' "$dark" >> "$prefs"
+    fi
   '';
 
   home.activation.setupKeepassNextcloud = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

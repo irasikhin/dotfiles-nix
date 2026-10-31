@@ -33,7 +33,6 @@
 
   # Silent kernel/userspace boot so Plymouth is not overdrawn by text
   boot.consoleLogLevel = 0;
-  boot.initrd.verbose = false;
   boot.kernelParams = [
     "btusb.enable_autosuspend=0"
     "quiet"

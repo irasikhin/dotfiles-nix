@@ -1,0 +1,20 @@
+# swappy defaults (see man swappy). Used by the Print binds in sway:
+#   grim -g "$(slurp -d)" - | swappy -f -
+#
+# Defaults are tuned for this setup: output scale is 1.5 (see
+# nixos/modules/display.nix), so annotations drawn at line_size 5 end up ~7
+# device pixels wide -- readable but not chunky.
+[Default]
+# Swappy creates the directory if it is missing.
+save_dir=$HOME/Pictures/Screenshots
+save_filename_format=screenshot-%Y%m%d-%H%M%S.png
+# Close the editor once the shot is saved or copied: the flow is "drag, mark,
+# done", not "keep the window around".
+early_exit=true
+show_panel=true
+line_size=5
+text_size=20
+text_font=FiraCode Nerd Font
+paint_mode=brush
+# Same accent as the rest of the setup (gruvbox blue #83a598).
+custom_color=rgba(131,165,152,1)

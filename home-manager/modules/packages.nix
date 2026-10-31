@@ -46,8 +46,20 @@ let
     src = inputs.express-appimage;
   };
   yaamp = pkgs.callPackage ../pkgs/yaamp.nix { };
-  # download.jetbrains.com is geo-blocked here, so fetch the IDEs from the
-  # JetBrains mirrors instead. They serve byte-identical archives (same hash).
+  # obsidian.md times out from this network, so the logo SVG nixpkgs'
+  # obsidian fetches is vendored (byte-identical, hash verified below). This
+  # fixed-output derivation lands on the exact store path nixpkgs' fetchurl
+  # expects, so the build uses the local copy instead of the dead URL.
+  obsidianIcon = pkgs.runCommand "obsidian-logo-gradient.svg" {
+    outputHash = "sha256-EZsBuWyZ9zYJh0LDKfRAMTtnY70q6iLK/ggXlplDEoA=";
+    outputHashMode = "flat";
+    outputHashAlgo = "sha256";
+  } "cp ${../pkgs/obsidian-logo-gradient.svg} $out";
+  # download.jetbrains.com is geo-blocked here (HTTP 451), so fetch the IDEs
+  # from the JetBrains mirrors instead (byte-identical archives, same hash).
+  # The mirrors started answering 404 for the 2026.2.3 archive, so it was
+  # downloaded through the yggdrasil SOCKS5 peer and pre-seeded into the store
+  # with `nix-store --add-fixed sha256`; repeat that for version bumps.
   jetbrainsMirrors = [
     "download-cdn.jetbrains.com"
     "download-cf.jetbrains.com"
@@ -240,12 +252,10 @@ in
     k6
     librechat
     allure
-    aider-chat
     aichat
     google-chrome
     jbang
-    flameshot # screenshot+annotate (works on wayland via xdg-desktop-portal)
-    satty # wayland annotated-screenshot tool; bound to Print in sway (pipes grim+slurp)
+    swappy # wayland screenshot annotator: grim|slurp -> swappy, bound to Print in sway
     grim
     slurp
     fuzzel
@@ -392,4 +402,9 @@ in
     kooha
     lmstudio
   ];
+
+  # Realise the vendored Obsidian logo (see `obsidianIcon`) so nixpkgs' icon
+  # fetchurl keeps resolving to the local copy, and install it into the
+  # hicolor theme along the way.
+  home.file.".local/share/icons/hicolor/scalable/apps/obsidian.svg".source = obsidianIcon;
 }

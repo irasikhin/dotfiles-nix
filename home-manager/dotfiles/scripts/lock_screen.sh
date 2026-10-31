@@ -37,6 +37,18 @@ if [ -r "$wall" ]; then
   fi
 fi
 
+# Sizing notes (output scale is 1.5 on eDP-1, see nixos/modules/display.nix):
+#  * --indicator-radius/--indicator-thickness are multiplied by the output
+#    scale, so 170 here renders as a ~360px-wide ring on a 1707x1067 logical
+#    screen -- big enough to read at a glance, small enough not to hide the
+#    wallpaper.
+#  * --font-size is NOT scaled by swaylock (it is buffer pixels), so the clock
+#    needs 1.5x the size you want on screen: 52 buffer px ~ 35 logical px.
+#  * the date under the clock is drawn at arc_radius/6 and its baseline sits
+#    arc_radius/3.5 below the centre, i.e. its font size grows with the ring
+#    and its available width shrinks. Long formats ("%A, %d %B" = "пятница, 21
+#    октября") overflow the ring, so the weekday is abbreviated.
+
 # Single output (eDP-1) per sway config; `-s fill` keeps the aspect ratio.
 if [ -s "$bg" ]; then
   bgspec="-i $bg -s fill"
@@ -47,9 +59,9 @@ fi
 # shellcheck disable=SC2086 # $bgspec is our own whitespace-free flag pair
 if swaylock -f $bgspec \
   --fade-in 0.15 \
-  --clock --timestr "%H:%M" --datestr "%A, %d %B" \
+  --clock --timestr "%H:%M" --datestr "%a, %d %B" \
   --indicator --indicator-idle-visible \
-  --indicator-radius 130 --indicator-thickness 10 \
+  --indicator-radius 170 --indicator-thickness 10 \
   --ring-color 83a598a0 \
   --ring-ver-color fabd2fff \
   --ring-wrong-color fb4934ff \
@@ -71,7 +83,7 @@ if swaylock -f $bgspec \
   --text-wrong-color fb4934ff \
   --text-clear-color b8bb26ff \
   --font "FiraCode Nerd Font" \
-  --font-size 36; then
+  --font-size 52; then
   exit 0
 fi
 
