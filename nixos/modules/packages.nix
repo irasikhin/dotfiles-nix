@@ -43,22 +43,23 @@ in
     ];
   };
 
-  # Podman: mirror docker.io through same public mirrors via registries.conf
-  virtualisation.containers.registries.search = [ "docker.io" ];
-  environment.etc."containers/registries.conf.d/00-mirrors.conf".text = ''
-    [[registry]]
-    prefix = "docker.io"
-    location = "registry-1.docker.io"
-
-    [[registry.mirror]]
-    location = "mirror.gcr.io"
-
-    [[registry.mirror]]
-    location = "dockerhub.timeweb.cloud"
-
-    [[registry.mirror]]
-    location = "huecker.io"
-  '';
+  # Podman: mirror docker.io through same public mirrors. Podman 6.0 dropped
+  # the V1 registries.conf options, so this is the V2 schema as TOML
+  # (registries.settings is rendered to /etc/containers/registries.conf.d/).
+  virtualisation.containers.registries.settings = {
+    "unqualified-search-registries" = [ "docker.io" ];
+    registry = [
+      {
+        prefix = "docker.io";
+        location = "registry-1.docker.io";
+        mirror = [
+          { location = "mirror.gcr.io"; }
+          { location = "dockerhub.timeweb.cloud"; }
+          { location = "huecker.io"; }
+        ];
+      }
+    ];
+  };
 
   # Install essential system packages
   environment.systemPackages = with pkgs; [
@@ -71,7 +72,10 @@ in
     python312Packages.pip-system-certs
     python312Packages.click
     libvirt
-    vagrant
+    # withLibvirt pulls libguestfs, which is broken in nixpkgs (stuck on
+    # fuse2) and aborts evaluation. Without it `vagrant package` loses
+    # virt-sysprep/qemu-img for the libvirt provider; everything else works.
+    (vagrant.override { withLibvirt = false; })
     wireguard-tools
     tinyproxy
     xvfb-run

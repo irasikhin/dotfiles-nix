@@ -39,14 +39,9 @@ edit-secrets:
     sops secrets/secrets.yaml
     git add secrets/secrets.yaml
 
-# edit the VNC console secrets (read at runtime by scripts — no rebuild needed)
-edit-vnc:
-    sops secrets/vnc.yaml
-    git add secrets/vnc.yaml
-
 # re-encrypt all secrets to current .sops.yaml recipients (after adding a host/key)
 rekey:
-    sops updatekeys -y secrets/secrets.yaml secrets/ssh/home.yaml secrets/ssh/work.yaml secrets/vnc.yaml
+    sops updatekeys -y secrets/secrets.yaml secrets/ssh/home.yaml secrets/ssh/work.yaml
 
 # update all flake inputs (or `just update <input>`)
 update input="":

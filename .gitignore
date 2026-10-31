@@ -11,7 +11,6 @@ logs*.txt
 # allow only sops-encrypted files which are safe to commit.
 secrets/*
 !secrets/secrets.yaml
-!secrets/vnc.yaml
 !secrets/kpass.yaml
 # ssh host configs split by context (re-include the subdir, then its files)
 !secrets/ssh/
