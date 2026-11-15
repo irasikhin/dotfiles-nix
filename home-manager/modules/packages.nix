@@ -401,6 +401,7 @@ in
     vlc
     kooha
     lmstudio
+    silverbullet-cli # SilverBullet space client (Lua eval, screenshots, logs)
   ];
 
   # Realise the vendored Obsidian logo (see `obsidianIcon`) so nixpkgs' icon
