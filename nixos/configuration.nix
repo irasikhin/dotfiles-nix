@@ -18,6 +18,7 @@
     ./modules/security.nix
     ./modules/mesh.nix
     ./modules/power.nix
+    ./modules/silverbullet.nix
   ];
 
   # Configure system bootloader
