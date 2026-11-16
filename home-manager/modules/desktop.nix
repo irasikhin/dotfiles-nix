@@ -144,24 +144,27 @@ in
   # which we can add if pointer-disable proves insufficient.
   home.activation.floorpDisableUrlbar = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         profile="${config.home.homeDirectory}/${floorpProfile}"
-        [ -d "$profile" ] || exit 0
         userjs="$profile/user.js"
         css="$profile/chrome/userChrome.css"
-        $DRY_RUN_CMD mkdir -p "$profile/chrome"
 
-        if ! { [ -e "$userjs" ] && grep -q "legacyUserProfileCustomizations.stylesheets" "$userjs"; }; then
-          echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$userjs"
-        fi
+        # activation runs flat under `set -eu`; an `exit` here would skip
+        # every later step (linkGeneration included).
+        if [ -d "$profile" ]; then
+          $DRY_RUN_CMD mkdir -p "$profile/chrome"
 
-        # HM:ui-scale -- explicit zoom; strip any prior managed line then re-add so
-        # the value stays in sync with floorpUiScale across rebuilds.
-        if [ -e "$userjs" ]; then
-          $DRY_RUN_CMD sed -i '/HM:ui-scale/d' "$userjs"
-        fi
-        echo 'user_pref("layout.css.devPixelsPerPx", "${floorpUiScale}"); // HM:ui-scale' >> "$userjs"
+          if ! { [ -e "$userjs" ] && grep -q "legacyUserProfileCustomizations.stylesheets" "$userjs"; }; then
+            echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$userjs"
+          fi
 
-        if ! { [ -e "$css" ] && grep -q "HM:disable-urlbar" "$css"; }; then
-          cat >> "$css" <<'CSS'
+          # HM:ui-scale -- explicit zoom; strip any prior managed line then re-add so
+          # the value stays in sync with floorpUiScale across rebuilds.
+          if [ -e "$userjs" ]; then
+            $DRY_RUN_CMD sed -i '/HM:ui-scale/d' "$userjs"
+          fi
+          echo 'user_pref("layout.css.devPixelsPerPx", "${floorpUiScale}"); // HM:ui-scale' >> "$userjs"
+
+          if ! { [ -e "$css" ] && grep -q "HM:disable-urlbar" "$css"; }; then
+            cat >> "$css" <<'CSS'
 
     /* HM:disable-urlbar -- inert URL input (visible, not click-focusable) */
     @-moz-document url(chrome://browser/content/browser.xhtml) {
@@ -169,6 +172,7 @@ in
       #urlbar-input { opacity: 0.7; }
     }
     CSS
+          fi
         fi
   '';
 
@@ -181,31 +185,31 @@ in
   # widget CSS (e4-dark-dbeaver-widgets.css).
   # DBeaver flushes this preference file from memory on startup and on exit, so
   # patching it while DBeaver runs is pointless -- skip and let the user retry.
+  # NOTE: activation runs under `set -eu` as one flat script, so `exit` in a
+  # block kills every later step (including linkGeneration). Guard, never exit.
   home.activation.dbeaverDarkTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     prefs="${config.home.homeDirectory}/.local/share/DBeaverData/workspace6/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.e4.ui.css.swt.theme.prefs"
     dark="themeid=org.eclipse.e4.ui.css.theme.e4_dark"
 
     # Never started DBeaver on this machine -> nothing to pin, it will inherit
-    # whatever theme new installs get.
-    [ -e "$prefs" ] || exit 0
+    # whatever theme new installs get. Already pinned -> nothing to do.
+    if [ -e "$prefs" ] && ! grep -qx "$dark" "$prefs"; then
+      # A running DBeaver would overwrite our edit when it exits; its cmdline is
+      # the only marker available in the activation PATH (no procps there).
+      running=""
+      for cmdline in /proc/[0-9]*/cmdline; do
+        if [ -r "$cmdline" ] && tr '\0' ' ' < "$cmdline" 2>/dev/null | grep -q 'dbeaver'; then
+          running=yes
+        fi
+      done
 
-    if grep -qx "$dark" "$prefs"; then
-      exit 0
-    fi
-
-    # A running DBeaver would overwrite our edit when it exits; its cmdline is
-    # the only marker available in the activation PATH (no procps there).
-    for cmdline in /proc/[0-9]*/cmdline; do
-      if [ -r "$cmdline" ] && tr '\0' ' ' < "$cmdline" 2>/dev/null | grep -q 'dbeaver'; then
+      if [ -n "$running" ]; then
         echo "dbeaverDarkTheme: DBeaver is running -- close it and re-run activation (nh home switch .) to pin the dark theme." >&2
-        exit 0
+      elif grep -q '^themeid=' "$prefs"; then
+        $DRY_RUN_CMD sed -i "s|^themeid=.*|$dark|" "$prefs"
+      else
+        printf '%s\n' "$dark" >> "$prefs"
       fi
-    done
-
-    if grep -q '^themeid=' "$prefs"; then
-      $DRY_RUN_CMD sed -i "s|^themeid=.*|$dark|" "$prefs"
-    else
-      printf '%s\n' "$dark" >> "$prefs"
     fi
   '';
 
