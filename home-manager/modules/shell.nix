@@ -16,7 +16,10 @@ in
     MOZ_ENABLE_WAYLAND = "1";
   };
 
-  home.sessionPath = [ "$HOME/.config/scripts" ];
+  home.sessionPath = [
+    "$HOME/.config/scripts"
+    "$HOME/.local/bin"
+  ];
   home.shellAliases = {
     l = "eza";
     ls = "eza";
@@ -36,6 +39,11 @@ in
     enable = true;
     enableZshIntegration = true;
     nix-direnv.enable = true;
+    # uv-installed tools live in ~/.local/bin, which the direnv devshell
+    # PATH would otherwise shadow.
+    stdlib = ''
+      PATH_add "$HOME/.local/bin"
+    '';
   };
 
   programs.fzf = {

@@ -259,11 +259,6 @@ exec --no-startup-id idea
 # Telegram is Qt6: Qt rounds our 1.5 output scale up to 2 (devicePixelRatio 2 =>
 # UI ~33% too big). 0.75 * 2 = 1.5, and PassThrough keeps the fractional ratio.
 exec --no-startup-id env QT_SCALE_FACTOR=0.75 QT_SCALE_FACTOR_ROUNDING_POLICY=PassThrough Telegram
-exec --no-startup-id evolution
-exec --no-startup-id feishin
-
-# System info screen on its own workspace (live-refreshing fastfetch)
-exec --no-startup-id foot --app-id=sysinfo -e watch -ctn 2 fastfetch
 
 # Don't leave empty workspace 1 on startup — focus terminal
 exec --no-startup-id swaymsg workspace $ws_terminal
