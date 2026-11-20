@@ -6,6 +6,7 @@
 {
   imports = [
     ./modules/packages.nix
+    ./modules/neovim.nix
     ./modules/shell.nix
     ./modules/terminals.nix
     ./modules/services.nix

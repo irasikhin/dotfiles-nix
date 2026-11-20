@@ -14,15 +14,6 @@
     # Hardware
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
-    # Shared flake-compat, otherwise nvf pulls its own slow copy from
-    # git.lix.systems and direnv stalls on every cache renew.
-    flake-compat.url = "github:nix-community/flake-compat";
-
-    # Nvf
-    nvf.url = "github:notashelf/nvf";
-    nvf.inputs.nixpkgs.follows = "nixpkgs";
-    nvf.inputs.flake-compat.follows = "flake-compat";
-
     # JetBrains plugins
     nix-jetbrains-plugins.url = "github:nix-community/nix-jetbrains-plugins";
     nix-jetbrains-plugins.inputs.nixpkgs.follows = "nixpkgs";
@@ -80,7 +71,6 @@
       nixpkgs,
       home-manager,
       nixos-hardware,
-      nvf,
       treefmt-nix,
       sops-nix,
       git-hooks,
@@ -125,7 +115,6 @@
         irnixos = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs flakeDir; };
           modules = [
-            nvf.nixosModules.default
             sops-nix.nixosModules.sops
             ./nixos/configuration.nix
             nixos-hardware.nixosModules.lenovo-thinkpad-p14s-amd-gen2

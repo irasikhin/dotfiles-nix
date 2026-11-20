@@ -6,7 +6,6 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./nvf
     ./modules/networking.nix
     ./modules/locale.nix
     ./modules/display.nix
